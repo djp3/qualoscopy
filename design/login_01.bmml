@@ -1,0 +1,55 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1033" measuredH="612" mockupW="1022" mockupH="600">
+  <controls>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="11" y="12" w="800" h="600" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1"/>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Title" x="192" y="262" w="-1" h="-1" measuredW="439" measuredH="43" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Welcome%20to%20Qualoscopy</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::SubTitle" x="311" y="378" w="-1" h="-1" measuredW="164" measuredH="27" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Marketing%20Text</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::TextInput" x="32" y="93" w="97" h="-1" measuredW="45" measuredH="27" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>email</text>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::TextInput" x="138" y="93" w="97" h="-1" measuredW="71" measuredH="27" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>password</text>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::StickyNote" x="821" y="12" w="212" h="188" measuredW="109" measuredH="123" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>1%29%20web%20client%20generates%20a%20token%0A2%29%20web%20client%20requests%20salt%0A3%29%20user%20enters%20email%20and%20password%0A4%29%20client%20hashes%20salt%20and%20password%0A5%29%20client%20requests%20session%20id%0A6%29%20If%20it%27s%20a%20good%20login%20then%2C%20client%20stores%20session%20id</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Button" x="241" y="93" w="97" h="27" measuredW="61" measuredH="27" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>11982760</color>
+        <href>login_success%26bm%3Blogin_success.bmml%26bm%3Blogin_success.bmml%26bm%3Blogin_success.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22230%2C81%2C327%2C108%22%20href%3D%22login_success.bmml%22%20alt%3D%22login_success%22%20id%3D%227%22/%3E</map>
+        <text>Log%20In</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Canvas" x="17" y="87" w="789" h="48" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="-1"/>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::Button" x="638" y="93" w="158" h="27" measuredW="156" measuredH="27" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>11982760</color>
+        <href>register%26bm%3Bregister.bmml%26bm%3Bregister.bmml%26bm%3Bregister.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22627%2C81%2C785%2C108%22%20href%3D%22register.bmml%22%20alt%3D%22register%22%20id%3D%229%22/%3E</map>
+        <text>Create%20a%20New%20Account</text>
+      </controlProperties>
+    </control>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Label" x="351" y="96" w="-1" h="-1" measuredW="53" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16711935</color>
+        <href>login_fail%26bm%3Blogin_fail.bmml%26bm%3Blogin_fail.bmml%26bm%3Blogin_fail.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22340%2C84%2C393%2C105%22%20href%3D%22login_fail.bmml%22%20alt%3D%22login_fail%22%20id%3D%2210%22/%3E</map>
+        <text>bad%20login</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
