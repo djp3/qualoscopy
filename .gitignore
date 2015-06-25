@@ -1,0 +1,20 @@
+/* temporary files */
+*.swp 
+
+/* password files */
+*.pem
+
+/* archive files */
+*.zip
+
+/* log files */
+*.log
+
+
+/* binary files */
+*.so
+*.jnilib
+*.dll
+
+src/web/server/bin/**
+src/web/server/target/classes/**
