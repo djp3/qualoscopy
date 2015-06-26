@@ -29,6 +29,10 @@ import java.util.concurrent.Executors;
 
 import net.djp3.qualoscopy.events.QEvent;
 import net.djp3.qualoscopy.events.QEventType;
+import net.djp3.qualoscopy.events.QEventWrapper;
+import net.djp3.qualoscopy.events.QEventWrapperFactory;
+import net.djp3.qualoscopy.events.QEventWrapperHandler;
+import net.djp3.qualoscopy.events.QEventWrapperQueuer;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;

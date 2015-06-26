@@ -71,7 +71,7 @@ public JSONObject checkParameters(long eventTime, QEvent event){
 	}*/
 	
 	//Make sure globals is not null
-	GlobalsQualoscopy g = GlobalsQualoscopy.getGlobalsTerraTower();
+	GlobalsQualoscopy g = GlobalsQualoscopy.getGlobalsQualoscopy();
 	if(g == null){
 		ret.put("error","true");
 		JSONArray errors = new JSONArray();

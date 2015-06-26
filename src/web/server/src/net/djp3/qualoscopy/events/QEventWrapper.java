@@ -18,14 +18,15 @@
     You should have received a copy of the GNU General Public License
     along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
 */
-package net.djp3.qualoscopy;
+package net.djp3.qualoscopy.events;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.djp3.qualoscopy.events.QEvent;
-import net.djp3.qualoscopy.events.QEventType;
+import net.djp3.qualoscopy.QEventHandlerResultListener;
+import net.djp3.qualoscopy.QEventHandlerVoid;
+import net.djp3.qualoscopy.QEventVoid;
 import net.djp3.qualoscopy.events.handlers.QEventHandler;
 import net.minidev.json.JSONObject;
 
@@ -165,7 +166,7 @@ QEventWrapper(long eventTime,QEventType eventType,QEvent event,QEventHandlerResu
 }
 
 
-QEventWrapper(QEventType eventType,QEvent event,List<QEventHandlerResultListener> resultListeners){
+public QEventWrapper(QEventType eventType,QEvent event,List<QEventHandlerResultListener> resultListeners){
 	this(System.currentTimeMillis(),eventType,event,resultListeners);
 }
 
@@ -190,7 +191,7 @@ QEventWrapper(long eventTime,QEventType eventType,QEvent event,List<QEventHandle
 	}
 }
 
-void set(QEventWrapper ttEventWrapper){
+public void set(QEventWrapper ttEventWrapper){
 	this.setTimestamp(ttEventWrapper.getTimestamp());
 	this.setEventType(ttEventWrapper.getEventType());
 	this.setEvent(ttEventWrapper.getEvent());

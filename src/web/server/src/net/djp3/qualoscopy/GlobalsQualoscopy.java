@@ -74,10 +74,9 @@ public GlobalsQualoscopy(String version, boolean testing){
 	setLog4JPropertyFileName(LOG4J_CONFIG_FILE_DEFAULT);
 }
 
-public static GlobalsQualoscopy getGlobalsTerraTower(){
+public static GlobalsQualoscopy getGlobalsQualoscopy(){
 	return (GlobalsQualoscopy) Globals.getGlobals();
 }
-
 
 
 }

@@ -18,19 +18,19 @@
  You should have received a copy of the GNU General Public License
  along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.djp3.qualoscopy;
+package net.djp3.qualoscopy.events;
 
-import net.djp3.qualoscopy.events.QEventType;
+import net.djp3.qualoscopy.QEventHandlerResultListener;
 
 import com.lmax.disruptor.EventFactory;
 
 public class QEventWrapperFactory implements EventFactory<QEventWrapper> {
-	QEventType defaultEventType = QEventType.VOID;
+	public QEventType defaultEventType = QEventType.VOID;
 
-	QEventWrapperFactory() {
+	public QEventWrapperFactory() {
 	}
 
-	QEventWrapperFactory(QEventType d) {
+	public QEventWrapperFactory(QEventType d) {
 		this.defaultEventType = d;
 	}
 

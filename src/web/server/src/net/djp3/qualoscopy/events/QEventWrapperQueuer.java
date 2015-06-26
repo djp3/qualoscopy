@@ -18,7 +18,7 @@
     You should have received a copy of the GNU General Public License
     along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
 */
-package net.djp3.qualoscopy;
+package net.djp3.qualoscopy.events;
 
 
 import java.io.BufferedWriter;
@@ -27,6 +27,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
