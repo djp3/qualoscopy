@@ -10,6 +10,7 @@ $(document).ready(function() {
     var email = $('#email').val();
     var pword = $('#pword').val();
     console.log("Email=" + email + " Password=" + pword);
+    window.location.href = "main.html";
   });
 
   $('#jsonp').click(function() {
