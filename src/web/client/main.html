@@ -54,16 +54,34 @@
       </div>
     </nav>
 
+    <!-- Modal or Pop up  that we can do anything in-->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Header</h4>
+          </div>
+          <div class="modal-body">
+            <p>This is a small modal.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-
+    <!--My Table-->
     <div class="my-table">
-      <div class="container">
+      <div class="container-fluid">
         <div class="row">
           <div class="col-md-2">
-            <button class="btn btn-primary btn-lg pull-left">Identifiers</button>
+            <button class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#myModal">Identifiers</button>
           </div>
-          <div class="col-md-10">
-            <table class="table table-bordered table-striped pull-right">
+          <div class="col-md-6">
+            <table class="table table-condensed table-striped">
               <tr>
                 <th>Account Number</th>
                 <th>Date of Service</th>
@@ -82,10 +100,11 @@
 
         <div class="row">
           <div class="col-md-2">
-            <button class="btn btn-primary btn-lg pull-left">Preparation</button>
+            <button class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#myModal">Preparation</button>
           </div>
-          <div class="col-md-10">
-            <table class="table table-bordered table-striped pull-right">
+          <div class="col-md-6">
+            <table class="table table-condensed table-striped">
               <tr>
                 <th>Prep Liters</th>
                 <th>Split Prep</th>
@@ -102,10 +121,11 @@
 
         <div class="row">
           <div class="col-md-2">
-            <button class="btn btn-primary btn-lg pull-left">Indications</button>
+            <button class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#myModal">Indications</button>
           </div>
-          <div class="col-md-10">
-            <table class="table table-bordered table-striped pull-right">
+          <div class="col-md-6">
+            <table class="table table-condensed table-striped">
               <tr>
                 <th>Last Colon</th>
                 <th>Indication</th>
@@ -125,10 +145,11 @@
 
         <div class="row">
           <div class="col-md-2">
-            <button class="btn btn-primary btn-lg pull-left">Scope</button>
+            <button class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#myModal">Scope</button>
           </div>
-          <div class="col-md-10">
-            <table class="table table-bordered table-striped pull-right">
+          <div class="col-md-6">
+            <table class="table table-condensed table-striped">
               <tr>
                 <th>Scopes</th>
                 <th>Underwater?</th>
@@ -147,10 +168,11 @@
 
         <div class="row">
           <div class="col-md-2">
-            <button class="btn btn-primary btn-lg pull-left">Sedation</button>
+            <button class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#myModal">Sedation</button>
           </div>
-          <div class="col-md-10">
-            <table class="table table-bordered table-striped pull-right">
+          <div class="col-md-6">
+            <table class="table table-condensed table-striped">
               <tr>
                 <th>Sedation Level</th>
                 <th>Versed</th>
@@ -173,10 +195,11 @@
 
         <div class="row">
           <div class="col-md-2">
-            <button class="btn btn-primary btn-lg pull-left">Extent</button>
+            <button class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#myModal">Extent</button>
           </div>
-          <div class="col-md-10">
-            <table class="table table-bordered table-striped pull-right">
+          <div class="col-md-6">
+            <table class="table table-condensed table-striped">
               <tr>
                 <th>Extent</th>
                 <th>Reason Incomplete</th>
@@ -191,10 +214,11 @@
 
         <div class="row">
           <div class="col-md-2">
-            <button class="btn btn-primary btn-lg pull-left">Prep Quality</button>
+            <button class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#myModal">Prep Quality</button>
           </div>
-          <div class="col-md-10">
-            <table class="table table-bordered table-striped pull-right">
+          <div class="col-md-6">
+            <table class="table table-condensed table-striped">
               <tr>
                 <th>Prep Left</th>
                 <th>Prep Mid</th>
@@ -211,10 +235,11 @@
 
         <div class="row">
           <div class="col-md-2">
-            <button class="btn btn-primary btn-lg pull-left">Times</button>
+            <button class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#myModal">Times</button>
           </div>
-          <div class="col-md-10">
-            <table class="table table-bordered table-striped pull-right">
+          <div class="col-md-6">
+            <table class="table table-condensed table-striped">
               <tr>
                 <th>Time Insertion</th>
                 <th>Time Begin Withdrawal</th>
@@ -231,10 +256,11 @@
 
         <div class="row">
           <div class="col-md-2">
-            <button class="btn btn-primary btn-lg pull-left">Add Polyps or Mass</button>
+            <button class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#myModal">Add Polyps or Mass</button>
           </div>
-          <div class="col-md-10">
-            <table class="table table-bordered table-striped pull-right">
+          <div class="col-md-9">
+            <table class="table table-condensed table-striped">
               <tr>
                 <th>Loc</th>
                 <th>Phe</th>

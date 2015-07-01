@@ -3,6 +3,7 @@
   margin-top: 10px;
 }
 
-.my-table button {
-  margin-top: 15px;
+.my-table table {
+  margin-bottom: 0px;
+  font-size: small;
 }
