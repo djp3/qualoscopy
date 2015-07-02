@@ -1,3 +1,90 @@
 $(document).ready(function() {
+  // The function tableMaker
+  var tableMaker = function(buttonName, numberOfColumns, buttonTarget,
+      tableLength, tableId, columnNames, columnValues){
+
+       var tableHeading = "";
+       for(var i = 0; i < numberOfColumns; i++){
+         tableHeading += "<th>" + columnNames[i] + "</th>\n";
+       }
+
+       var tableValues = "";
+       for(var i = 0; i < numberOfColumns; i++){
+         tableValues += "<td>" + columnValues[i] + "</td>\n";
+       }
+
+       var $element = $(" \
+        <div class='row'> \
+          <div class='col-md-2'> \
+            <button class='btn btn-primary pull-right' data-toggle='modal' \
+            data-target='" + buttonTarget + "'>" + buttonName + "</button> \
+          </div> \
+          <div class=" + tableLength + "> \
+            <table id="+ tableId +" class='table table-condensed table-striped'> \
+              <tr> \
+                " + tableHeading + " \
+              </tr> \
+              <tr> \
+                " + tableValues + " \
+              </tr> \
+            </table> \
+          </div> \
+        </div> ");
+
+        return $element;
+  };
+
+  // For all the tables
+  var $allTables = [];
+
+  // Created each table programically
+  // Identifiers
+  $allTables.push(tableMaker("Identifiers", 4, "#myModal", "col-md-6", "table0",
+  ["Account Number", "Date of Service", "Faculty", "Fellow"],
+  ["00000000", "2/15/2015", "Karnes, William", "None"]));
+
+  // Preparation
+  $allTables.push(tableMaker("Preparation", 3, "#myModal", "col-md-6", "table1",
+  ["Prep Liters", "Split Prep", "Bisacodyl"],
+  ["3", "Yes", "Yes"]));
+
+  // Indications
+  $allTables.push(tableMaker("Indications", 5, "#myModal", "col-md-6", "table2",
+  ["Last Colon", "Indication", "Category", "Subcategory", "Specifics"],
+  ["5 yrs", "Surveillance", "Personal History", "Colorectal Cancer", "(One)"]));
+
+  // Scope
+  $allTables.push(tableMaker("Scope", 4, "#myModal", "col-md-6", "table3",
+  ["Scopes", "Underwater", "CapAssisted", "EndoCuff"],
+  ["Pediatric Colonscope", "Yes", "No", "Yes"]));
+
+  // Sedation
+  $allTables.push(tableMaker("Sedation", 6, "#myModal", "col-md-6", "table4",
+  ["Sedation Level", "Versed", "Fentanyl", "Dernerol", "Benadryl", "Other Med"],
+  ["Moderate", "3", "75", "0", "0", "NA"]));
+
+  // Extent
+  $allTables.push(tableMaker("Extent", 2, "#myModal", "col-md-6", "table5",
+  ["Extent", "Reson Incomplete"],
+  ["Cecum", "N/A"]));
+
+  // Prep Quality
+  $allTables.push(tableMaker("Prep Quality", 3, "#myModal", "col-md-6", "table6",
+  ["Prep Left", "Prep Mid", "Prep Right"],
+  ["3", "3", "3"]));
+
+  // Times
+  $allTables.push(tableMaker("Times", 3, "#myModal", "col-md-6", "table7",
+  ["Time Insertion", "Time Begin Withdrawal", "Time Scope Withdrawn"],
+  ["08:12", "08:12", "08:35"]));
+
+  // Add Polyps or Mass
+  $allTables.push(tableMaker("Add Polyps or Mass", 8, "#myModal", "col-md-9", "table7",
+  ["Loc", "Phe", "Num", "Size", "Tx", "Residual", "Bottle", "Path"],
+  ["Cecum", "Sessile", "1", "3", "Cold Snare", "No", "1", "Tubular Adenoma"]));
+
+  for (var i = 0; i < $allTables.length; i++) {
+      $("#tables").append($allTables[i]);
+  }
 
 });
