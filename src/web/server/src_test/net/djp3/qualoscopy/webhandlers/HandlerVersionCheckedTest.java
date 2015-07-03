@@ -17,7 +17,9 @@
 
  You should have received a copy of the GNU General Public License
  along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
+
 package net.djp3.qualoscopy.webhandlers;
 
 import static org.junit.Assert.assertEquals;

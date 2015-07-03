@@ -19,6 +19,7 @@
     along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 package net.djp3.qualoscopy;
 
 import java.util.HashMap;
