@@ -21,13 +21,16 @@
 package net.djp3.qualoscopy.events.handlers;
 
 import net.djp3.qualoscopy.events.QEvent;
-import net.djp3.qualoscopy.events.QEventVoid;
+import net.djp3.qualoscopy.events.QEventCheckVersion;
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
+public class QEventHandlerCheckVersion extends QEventHandler {
 
-public class QEventHandlerVoid extends QEventHandler {
-	
+	public static final String ERROR_API_VERSION_MISMATCH = "Requested API version is not supported";
 	private boolean parametersChecked = false;
+	private String correctVersion = null;
+	private String proposedVersion = null;
 
 	@Override
 	protected boolean getParametersChecked() {
@@ -38,9 +41,9 @@ public class QEventHandlerVoid extends QEventHandler {
 		this.parametersChecked = parametersChecked;
 	}
 	
-	
+
 	protected boolean typeMatches(QEvent q){
-		return (q instanceof QEventVoid);
+		return (q instanceof QEventCheckVersion);
 	}
 
 	@Override
@@ -53,15 +56,18 @@ public class QEventHandlerVoid extends QEventHandler {
 
 		ret = new JSONObject();
 
-		if (! (typeMatches(_event)) ) {
+		QEventCheckVersion event = null;
+		if (typeMatches(_event)) {
+			event = ((QEventCheckVersion) _event);
+			correctVersion = event.getCorrectVersion();
+			proposedVersion = event.getProposedVersion();
+			this.setParametersChecked(true);
+			return null;
+		} else {
 			return checkParametersTypeError(_event, ret);
 		}
-
-		this.setParametersChecked(true);
-
-		return null;
 	}
-	
+
 	@Override
 	public JSONObject onEvent() {
 
@@ -74,13 +80,23 @@ public class QEventHandlerVoid extends QEventHandler {
 			return onEventParameterCheckError();
 		}
 
-		/* Not sure why I'm doing this exactly.  It prevents an event from being executed twice
-		 * without being rechecked */
-		this.setParametersChecked(false);
-		
-		return ret;
+		try{
+			if(!correctVersion.equals(proposedVersion)){
+				ret.put("error", "true");
+				JSONArray errors = new JSONArray();
+				errors.add(ERROR_API_VERSION_MISMATCH+": requested: "+proposedVersion+", provided: "+correctVersion);
+				ret.put("errors", errors);
+				return ret;
+			} else {
+				ret.put("version", correctVersion);
+				return ret;
+			}
+		}
+		finally{
+			/* Not sure why I'm doing this exactly.  It prevents an event from being executed twice
+			 * without being rechecked */
+			this.setParametersChecked(false);
+		}
 	}
-
-
 
 }

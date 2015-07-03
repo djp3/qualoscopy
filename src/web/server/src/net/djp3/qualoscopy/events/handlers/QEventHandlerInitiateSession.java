@@ -20,13 +20,14 @@
  */
 package net.djp3.qualoscopy.events.handlers;
 
+import net.djp3.qualoscopy.datastore.Interface;
 import net.djp3.qualoscopy.events.QEvent;
-import net.djp3.qualoscopy.events.QEventVoid;
+import net.djp3.qualoscopy.events.QEventInitiateSession;
 import net.minidev.json.JSONObject;
 
+public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
 
-public class QEventHandlerVoid extends QEventHandler {
-	
+
 	private boolean parametersChecked = false;
 
 	@Override
@@ -40,9 +41,10 @@ public class QEventHandlerVoid extends QEventHandler {
 	
 	
 	protected boolean typeMatches(QEvent q){
-		return (q instanceof QEventVoid);
+		return (q instanceof QEventInitiateSession);
 	}
-
+	
+	
 	@Override
 	public JSONObject checkParameters(long eventTime, QEvent _event) {
 		// Check parent
@@ -51,17 +53,11 @@ public class QEventHandlerVoid extends QEventHandler {
 			return ret;
 		}
 
-		ret = new JSONObject();
-
-		if (! (typeMatches(_event)) ) {
-			return checkParametersTypeError(_event, ret);
-		}
-
 		this.setParametersChecked(true);
 
 		return null;
 	}
-	
+
 	@Override
 	public JSONObject onEvent() {
 
@@ -74,13 +70,17 @@ public class QEventHandlerVoid extends QEventHandler {
 			return onEventParameterCheckError();
 		}
 
-		/* Not sure why I'm doing this exactly.  It prevents an event from being executed twice
-		 * without being rechecked */
-		this.setParametersChecked(false);
-		
-		return ret;
+		try{
+			ret.put("session_id",Interface.getInstance().createSessionID());
+			ret.put("session_salt",Interface.getInstance().createSalt());
+			
+			return ret;
+		}
+		finally{
+			/* Not sure why I'm doing this exactly.  It prevents an event from being executed twice
+			 * without being rechecked */
+			this.setParametersChecked(false);
+		}
 	}
-
-
 
 }

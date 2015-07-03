@@ -20,42 +20,28 @@
  */
 package net.djp3.qualoscopy.events;
 
-import net.minidev.json.JSONObject;
+import static org.junit.Assert.*;
 
-public class QEvent {
+import org.junit.Test;
 
-	public QEvent() {
-	}
+public class QEventTest {
 
-	public JSONObject toJSON() {
-		JSONObject ret = new JSONObject();
-		return ret;
-	}
-
-	static public QEvent fromJSON(JSONObject in) {
-		return (new QEvent());
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof QEvent)) {
-			return false;
-		}
-		return true;
+	@Test
+	public void test() {
+		String s = "thing";
+		QEvent thing1 = new QEvent();
+		QEvent thing2 = new QEvent();
+		
+		assertTrue(!thing1.equals(null));
+		assertTrue(!thing1.equals(s));
+		assertTrue(thing1.equals(thing1));
+		
+		assertEquals(thing1.hashCode(),thing1.hashCode());
+		assertEquals(thing1.hashCode(),thing2.hashCode());
+		
+		assertEquals(thing1,QEvent.fromJSON(thing1.toJSON()));
+		assertEquals(thing1,QEvent.fromJSON(thing2.toJSON()));
+		
 	}
 
 }

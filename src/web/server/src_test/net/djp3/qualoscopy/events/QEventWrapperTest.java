@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.djp3.qualoscopy.QEventHandlerResultListener;
-import net.djp3.qualoscopy.QEventVoid;
-import net.djp3.qualoscopy.events.QEvent;
-import net.djp3.qualoscopy.events.QEventType;
-import net.djp3.qualoscopy.events.QEventWrapper;
 import net.minidev.json.JSONObject;
 
 import org.junit.After;
@@ -20,16 +16,22 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.uci.ics.luci.utility.Globals;
+
 
 
 public class QEventWrapperTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		while(Globals.getGlobals() != null){
+			Thread.sleep(100);
+		}
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		Globals.setGlobals(null);
 	}
 
 	@Before
@@ -51,10 +53,9 @@ public class QEventWrapperTest {
 	@Test
 	public void testBasics() {
 		
-		QEventWrapper t1;
+		QEventWrapper q1;
 		try{
-			//t1 = new QEventWrapper(QEventType.VOID,new QEventVoid(),(QEventHandlerResultListener) null);
-			t1 = new QEventWrapper(null,new QEventVoid(),(QEventHandlerResultListener) null);
+			q1 = new QEventWrapper(null,new QEventVoid(),(QEventHandlerResultListener) null);
 			fail("Should throw an exception");
 		}catch(IllegalArgumentException e){
 			//ok
@@ -63,8 +64,7 @@ public class QEventWrapperTest {
 		}
 		
 		try{
-			//t1 = new QEventWrapper(QEventType.VOID,new QEventVoid(),(QEventHandlerResultListener) null);
-			t1 = new QEventWrapper(null,new QEventVoid(),(List<QEventHandlerResultListener>) null);
+			q1 = new QEventWrapper(null,new QEventVoid(),(List<QEventHandlerResultListener>) null);
 			fail("Should throw an exception");
 		}catch(IllegalArgumentException e){
 			//ok
@@ -73,24 +73,24 @@ public class QEventWrapperTest {
 		}
 		
 		try{
-			t1 = new QEventWrapper(QEventType.VOID,null,(QEventHandlerResultListener) null);
+			q1 = new QEventWrapper(QEventType.VOID,null,(QEventHandlerResultListener) null);
 		}catch(RuntimeException e){
 			fail("Should not throw an exception");
 		}
 		
 		try{
-			t1 = new QEventWrapper(QEventType.VOID,null,(List<QEventHandlerResultListener>) null);
+			q1 = new QEventWrapper(QEventType.VOID,null,(List<QEventHandlerResultListener>) null);
 		}catch(RuntimeException e){
 			fail("Should not throw an exception");
 		}
 		
-		QEvent ttEvent1 = new QEvent("name","password");
+		QEvent qEvent1 = new QEvent();
 		QEventHandlerResultListener rl = new MyQEventHandlerResultListener();
 		List<QEventHandlerResultListener> list = new ArrayList<QEventHandlerResultListener>();
 		list.add(rl);
 		try{
-			t1 = new QEventWrapper(QEventType.CREATE_WORLD,ttEvent1,rl);
-			t1 = new QEventWrapper(QEventType.CREATE_TERRITORY,ttEvent1,list);
+			q1 = new QEventWrapper(QEventType.CHECK_VERSION,qEvent1,rl);
+			q1 = new QEventWrapper(QEventType.VOID,qEvent1,list);
 		}catch(RuntimeException e){
 			fail("Should not throw an exception");
 		}
@@ -99,16 +99,16 @@ public class QEventWrapperTest {
 	@Test
 	public void testResetEventHandler() {
 		for(QEventType tet : QEventType.values()){
-			QEventWrapper t1 = new QEventWrapper(tet,new QEventVoid(),new ResultChecker(false));
-			QEventWrapper t2 = new QEventWrapper(tet,new QEventVoid(),new ResultChecker(false));
-			t1.resetEvent();
-			t1.resetEventHandler();
+			QEventWrapper q1 = new QEventWrapper(tet,new QEventVoid(),new ResultChecker(false));
+			QEventWrapper q2 = new QEventWrapper(tet,new QEventVoid(),new ResultChecker(false));
+			q1.resetEvent();
+			q1.resetEventHandler();
 			try{
-				assertTrue(t1.getHandler() != null);
-				t2.set(t1);
-				assertEquals(t1,t2);
-				assertEquals(t1.hashCode(),t2.hashCode());
-				assertEquals(t1,t1.fromJSON(t1.toJSON()));
+				assertTrue(q1.getHandler() != null);
+				q2.set(q1);
+				assertEquals(q1,q2);
+				assertEquals(q1.hashCode(),q2.hashCode());
+				assertEquals(q1,q1.fromJSON(q1.toJSON()));
 			}
 			catch(AssertionError e){
 				System.err.println("Failed trying to handle: "+tet);
@@ -119,31 +119,54 @@ public class QEventWrapperTest {
 	
 	@Test
 	public void testEquals() {
-		QEventWrapper t1 = new QEventWrapper(QEventType.VOID,new QEventVoid(),new ResultChecker(false));
-		QEventWrapper t2 = new QEventWrapper(QEventType.VOID,new QEventVoid(),new ResultChecker(false));
-		assertEquals(t1,t1);
-		assertTrue(t1.hashCode() == t2.hashCode());
-		assertEquals(t1,t2);
-		assertTrue(!t1.equals(null));
-		assertTrue(!t1.equals("foo"));
 		
+		/* Check basics */
+		long now = System.currentTimeMillis();
+		QEventWrapper q1 = new QEventWrapper(now,QEventType.VOID,new QEventVoid(),new ResultChecker(false));
+		QEventWrapper q2 = new QEventWrapper(now,QEventType.VOID,new QEventVoid(),new ResultChecker(false));
+		assertEquals(q1,q1);
+		assertTrue(q1.hashCode() == q1.hashCode());
+		assertEquals(q1.hashCode(),q2.hashCode());
+		assertEquals(q1,q2);
+		assertTrue(!q1.equals(null));
+		assertTrue(!q1.equals("foo"));
 		
-		t2 = new QEventWrapper(QEventType.CREATE_WORLD,new QEvent("a","b"),new ResultChecker(false));
-		t1.set(t2);
-		assertEquals(t1,t1);
-		assertTrue(t1.equals(t2));
+		/*Check after using set*/
+		q2 = new QEventWrapper(now, QEventType.CHECK_VERSION,new QEventCheckVersion("0.1","0.2"),new ResultChecker(false));
+		q1.set(q2);
+		assertEquals(q1,q1);
+		assertTrue(q1.equals(q2));
 		
-		t2 = new QEventWrapper(QEventType.CREATE_WORLD,null,new ResultChecker(false));
-		assertEquals(t2,t2);
-		assertTrue(t1.hashCode() != t2.hashCode());
-		assertTrue(!t1.equals(t2));
-		assertTrue(!t2.equals(t1));
+		/*Check after using set with mismatched Version*/
+		q2 = new QEventWrapper(now, QEventType.CHECK_VERSION,new QEvent(),new ResultChecker(false));
+		try{
+			q1.set(q2);
+			fail("There should be an exception thrown because object and version don't match");
+		}
+		catch(IllegalArgumentException e){
+			/*This should throw an exception */
+		}
 		
-		t2 = new QEventWrapper(QEventType.CREATE_WORLD,new QEvent("c","d"),new ResultChecker(false));
-		assertEquals(t2,t2);
-		assertTrue(t1.hashCode() != t2.hashCode());
-		assertTrue(!t1.equals(t2));
-		assertTrue(!t2.equals(t1));
+		/* Check when object is null */
+		q2 = new QEventWrapper(QEventType.CHECK_VERSION,null,new ResultChecker(false));
+		assertEquals(q2,q2);
+		assertTrue(q1.hashCode() != q2.hashCode());
+		assertTrue(!q1.equals(q2));
+		assertTrue(!q2.equals(q1));
+		
+		/* Check when eventType is different */
+		q2 = new QEventWrapper(QEventType.VOID,new QEventVoid(),new ResultChecker(false));
+		assertEquals(q2,q2);
+		assertTrue(q1.hashCode() != q2.hashCode());
+		assertTrue(!q1.equals(q2));
+		assertTrue(!q2.equals(q1));
+		
+		/* Check when only time is different*/
+		q2 = new QEventWrapper(now-1,QEventType.CHECK_VERSION,new QEvent(),new ResultChecker(false));
+		assertEquals(q2,q2);
+		assertTrue(q1.hashCode() != q2.hashCode());
+		assertTrue(!q1.equals(q2));
+		assertTrue(!q2.equals(q1));
 		
 	}
 	

@@ -21,20 +21,12 @@
 package net.djp3.qualoscopy.events;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.djp3.qualoscopy.events.QEventType;
-import net.djp3.qualoscopy.events.QEventWrapper;
-import net.djp3.qualoscopy.events.QEventWrapperQueuer;
+import net.djp3.qualoscopy.GlobalsQualoscopy;
+import net.djp3.qualoscopy.QualoscopyWebServer;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -48,10 +40,14 @@ public class QEventWrapperQueuerTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		while(Globals.getGlobals() != null){
+			Thread.sleep(100);
+		}
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		Globals.setGlobals(null);
 	}
 
 	@Before
@@ -70,18 +66,17 @@ public class QEventWrapperQueuerTest {
 		
 		String logFileName = "test/test_"+this.getClass().getCanonicalName();     
 		
-		GlobalsTerraTower globals = new GlobalsTerraTower("TEST_VERSION",true);
+		GlobalsQualoscopy globals = new GlobalsQualoscopy("TEST_VERSION",true);
 		Globals.setGlobals(globals);
 		
-		QEventWrapperQueuer eventPublisher = TerraTower.createEventQueue(logFileName);     
+		QEventWrapperQueuer eventPublisher = QualoscopyWebServer.createEventQueue(logFileName);     
 		globals.addQuittable(eventPublisher);
 		
-		String worldName = "earth";
-		String worldPassword = "earthPassword";
+		String proposedVersion = Globals.getGlobals().getSystemVersion();
 		
-		QEventCreateWorld ttEvent1 = new QEventCreateWorld(worldName,worldPassword);
+		QEventCheckVersion qEvent1 = new QEventCheckVersion(Globals.getGlobals().getSystemVersion(),proposedVersion);
 		ResultChecker resultChecker = new ResultChecker(false);
-		QEventWrapper event = new QEventWrapper(QEventType.CREATE_WORLD,ttEvent1,resultChecker);
+		QEventWrapper event = new QEventWrapper(QEventType.CHECK_VERSION,qEvent1,resultChecker);
 		events.add(event);
 		eventPublisher.onData(event);
 		synchronized(resultChecker.getSemaphore()){
@@ -100,9 +95,9 @@ public class QEventWrapperQueuerTest {
 			throw e;
 		}
 		
-		QEventCreateTerritory ttEvent2 = new QEventCreateTerritory(worldName,worldPassword,-180.0,180.0,10,-90.0,90.0,10);
+		QEventInitiateSession qEvent2 =  new QEventInitiateSession(Globals.getGlobals().getSystemVersion(),proposedVersion);
 		resultChecker = new ResultChecker(false);
-		event = new QEventWrapper(QEventType.CREATE_TERRITORY,ttEvent2,resultChecker);
+		event = new QEventWrapper(QEventType.INITIATE_SESSION,qEvent2,resultChecker);
 		events.add(event);
 		eventPublisher.onData(event);
 		synchronized(resultChecker.getSemaphore()){
@@ -114,203 +109,12 @@ public class QEventWrapperQueuerTest {
 			}
 		}
 		try{
+			System.out.println(resultChecker.getResults().toJSONString());
 			assertTrue(resultChecker.getResultOK());
 		}
 		catch(AssertionError e){
 			System.err.println(resultChecker.getResults().toJSONString());
 			throw e;
-		}
-		
-		String playerName = "Player Name";
-		String playerPassword = "Player Password";
-		QEventCreatePlayer ttEvent3 = new QEventCreatePlayer(worldName,worldPassword,playerName,playerPassword);
-		resultChecker = new ResultChecker(false);
-		event = new QEventWrapper(QEventType.CREATE_PLAYER,ttEvent3,resultChecker);
-		events.add(event);
-		eventPublisher.onData(event);
-		synchronized(resultChecker.getSemaphore()){
-			while(resultChecker.getResultOK() == null){
-				try {
-					resultChecker.getSemaphore().wait();
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		try{
-			assertTrue(resultChecker.getResultOK());
-		}
-		catch(AssertionError e){
-			System.err.println(resultChecker.getResults().toJSONString());
-			throw e;
-		}
-		
-		double lat = 0.0d;
-		double lng = 0.0d;
-		double alt = 0.0d;
-		QEventBuildTower ttEvent4 = new QEventBuildTower(worldName,worldPassword,playerName,playerPassword,lat,lng,alt);
-		resultChecker = new ResultChecker(false);
-		event = new QEventWrapper(QEventType.BUILD_TOWER,ttEvent4,resultChecker);
-		events.add(event);
-		eventPublisher.onData(event);
-		synchronized(resultChecker.getSemaphore()){
-			while(resultChecker.getResultOK() == null){
-				try {
-					resultChecker.getSemaphore().wait();
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		try{
-			assertTrue(resultChecker.getResultOK());
-		}
-		catch(AssertionError e){
-			System.err.println(resultChecker.getResults().toJSONString());
-			throw e;
-		}
-		
-		QEventStepTowerTerritoryGrowth ttEvent5 = new QEventStepTowerTerritoryGrowth(worldName,worldPassword);
-		resultChecker = new ResultChecker(false);
-		event = new QEventWrapper(QEventType.STEP_TOWER_TERRITORY_GROWTH,ttEvent5,resultChecker);
-		events.add(event);
-		eventPublisher.onData(event);
-		synchronized(resultChecker.getSemaphore()){
-			while(resultChecker.getResultOK() == null){
-				try {
-					resultChecker.getSemaphore().wait();
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		try{
-			assertTrue(resultChecker.getResultOK());
-		}
-		catch(AssertionError e){
-			System.err.println(resultChecker.getResults().toJSONString());
-			throw e;
-		}
-		
-		QEventDropBomb ttEvent6 = new QEventDropBomb(worldName,worldPassword,playerName,playerPassword,lat,lng,alt);
-		resultChecker = new ResultChecker(false);
-		event = new QEventWrapper(QEventType.DROP_BOMB,ttEvent6,resultChecker);
-		events.add(event);
-		eventPublisher.onData(event);
-		synchronized(resultChecker.getSemaphore()){
-			while(resultChecker.getResultOK() == null){
-				try {
-					resultChecker.getSemaphore().wait();
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		try{
-			assertTrue(resultChecker.getResultOK());
-		}
-		catch(AssertionError e){
-			System.err.println(resultChecker.getResults().toJSONString());
-			throw e;
-		}
-		
-		QEventBurnBombFuse ttEvent7 = new QEventBurnBombFuse(worldName,worldPassword);
-		resultChecker = new ResultChecker(false);
-		event = new QEventWrapper(QEventType.BURN_BOMB_FUSE,ttEvent7,resultChecker);
-		events.add(event);
-		eventPublisher.onData(event);
-		synchronized(resultChecker.getSemaphore()){
-			while(resultChecker.getResultOK() == null){
-				try {
-					resultChecker.getSemaphore().wait();
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		try{
-			assertTrue(resultChecker.getResultOK());
-		}
-		catch(AssertionError e){
-			System.err.println(resultChecker.getResults().toJSONString());
-			throw e;
-		}
-		
-		
-
-		QEventCreatePowerUp ttEvent8 = new QEventCreatePowerUp(worldName,worldPassword,"code",-1000L,-1000L,-1000L);
-		resultChecker = new ResultChecker(false);
-		event = new QEventWrapper(QEventType.CREATE_POWER_UP,ttEvent8,resultChecker);
-		events.add(event);
-		eventPublisher.onData(event);
-		synchronized(resultChecker.getSemaphore()){
-			while(resultChecker.getResultOK() == null){
-				try {
-					resultChecker.getSemaphore().wait();
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		try{
-			assertTrue(resultChecker.getResultOK());
-		}
-		catch(AssertionError e){
-			System.err.println(resultChecker.getResults().toJSONString());
-			throw e;
-		}
-		
-		
-		QEventRedeemPowerUp ttEvent9 = new QEventRedeemPowerUp(worldName,worldPassword,playerName,playerPassword,"code");
-		resultChecker = new ResultChecker(false);
-		event = new QEventWrapper(QEventType.REDEEM_POWER_UP,ttEvent9,resultChecker);
-		events.add(event);
-		eventPublisher.onData(event);
-		synchronized(resultChecker.getSemaphore()){
-			while(resultChecker.getResultOK() == null){
-				try {
-					resultChecker.getSemaphore().wait();
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		try{
-			assertTrue(resultChecker.getResultOK());
-		}
-		catch(AssertionError e){
-			System.err.println(resultChecker.getResults().toJSONString());
-			throw e;
-		}
-		
-		Globals.getGlobals().setQuitting(true);
-		
-		for(QEventWrapper loopEvent: events){
-			//System.err.println("loopEvent "+loopEvent.toJSON().toJSONString());
-			BufferedReader reader = null;
-			boolean foundTheLine = false;
-			try{
-				Path newFile = Paths.get(logFileName);
-				reader = Files.newBufferedReader(newFile, Charset.defaultCharset());
-				String lineFromFile = "";
-				while((lineFromFile = reader.readLine()) != null){
-					//System.err.println(lineFromFile);
-					if(lineFromFile.contains(loopEvent.toJSON().toJSONString())){
-						foundTheLine = true;
-					}
-				}
-				try{
-					assertTrue(foundTheLine);
-				}
-				catch(AssertionError e){
-					System.err.println("Couldn't find: "+loopEvent.toJSON().toJSONString());
-					throw e;
-				}
-				reader.close();
-			}catch(IOException e){
-				fail(e.toString());
-			}
-			finally{
-				if(reader!= null){
-					try {
-						reader.close();
-					} catch (IOException e) {
-					}
-				}
-			}
 		}
 		
 		

@@ -20,11 +20,7 @@
  */
 package net.djp3.qualoscopy.events;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import net.djp3.qualoscopy.events.QEventType;
-import net.djp3.qualoscopy.events.QEventWrapper;
-import net.djp3.qualoscopy.events.QEventWrapperFactory;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,13 +30,10 @@ import org.junit.Test;
 
 import edu.uci.ics.luci.utility.Globals;
 
-public class QEventWrapperFactoryTest {
+public class QEventInitiateSessionTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		while(Globals.getGlobals() != null){
-			Thread.sleep(100);
-		}
 	}
 
 	@AfterClass
@@ -56,24 +49,31 @@ public class QEventWrapperFactoryTest {
 	public void tearDown() throws Exception {
 	}
 
+	static final String goodVersion = "0.1";
+	static final String badVersion = "0.2";
+
 	@Test
-	public void test() {
-		QEventWrapperFactory x = new QEventWrapperFactory();
-		QEventWrapper a = x.newInstance();
-		QEventWrapper b = x.newInstance();
-		assertEquals(a.getEventType(),x.defaultEventType);
-		assertEquals(b.getEventType(),x.defaultEventType);
-		assertEquals(a,b);
+	public void testNormal() {
+		QEvent s = new QEvent();
+		QEventInitiateSession thing1 = new QEventInitiateSession(goodVersion,goodVersion);
+		QEventInitiateSession thing2 = new QEventInitiateSession(goodVersion,goodVersion);
 		
-		QEventWrapperFactory y = new QEventWrapperFactory(QEventType.VOID);
-		QEventWrapper c = y.newInstance();
-		QEventWrapper d = y.newInstance();
-		assertEquals(c.getEventType(),y.defaultEventType);
-		assertEquals(d.getEventType(),y.defaultEventType);
-		assertEquals(a,b);
+		assertTrue(!thing1.equals(null));
+		assertTrue(!thing1.equals(s));
+		assertTrue(!thing1.equals(new QEventCheckVersion(goodVersion,goodVersion)));//class != superclass
+		assertTrue(thing1.equals(thing1));
+		assertTrue(thing1.equals(thing2));
+		assertTrue(thing2.equals(thing2));
 		
-		assertTrue(a!=c);
-		assertTrue(b!=d);
+		assertEquals(thing1.hashCode(),thing1.hashCode());
+		assertEquals(thing1.hashCode(),thing2.hashCode());
+		
+		assertEquals(thing1,QEventInitiateSession.fromJSON(thing1.toJSON()));
+		assertEquals(thing1,QEventInitiateSession.fromJSON(thing2.toJSON()));
+		
+		assertEquals(thing1.hashCode(),thing1.hashCode());
+		assertEquals(thing1.hashCode(),thing2.hashCode());
+		
 	}
 
 }

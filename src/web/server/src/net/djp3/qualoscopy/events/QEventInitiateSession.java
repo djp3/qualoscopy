@@ -22,24 +22,28 @@ package net.djp3.qualoscopy.events;
 
 import net.minidev.json.JSONObject;
 
-public class QEvent {
+public class QEventInitiateSession extends QEventCheckVersion {
 
-	public QEvent() {
+	public QEventInitiateSession(String correctVersion,String proposedVersion) {
+		super(correctVersion,proposedVersion);
 	}
 
+	
 	public JSONObject toJSON() {
-		JSONObject ret = new JSONObject();
+		JSONObject ret = super.toJSON();
 		return ret;
 	}
 
-	static public QEvent fromJSON(JSONObject in) {
-		return (new QEvent());
+	static public QEventInitiateSession fromJSON(JSONObject in) {
+		QEventCheckVersion parent = QEventCheckVersion.fromJSON(in);
+
+		return (new QEventInitiateSession(parent.getCorrectVersion(),parent.getProposedVersion()));
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result;
 		return result;
 	}
@@ -49,10 +53,10 @@ public class QEvent {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (!super.equals(obj)) {
 			return false;
 		}
-		if (!(obj instanceof QEvent)) {
+		if (!(obj instanceof QEventInitiateSession)) {
 			return false;
 		}
 		return true;

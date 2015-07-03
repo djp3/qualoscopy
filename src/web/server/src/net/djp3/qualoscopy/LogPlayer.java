@@ -102,7 +102,7 @@ public class LogPlayer implements Runnable{
 			}
 		}
 	}
-	
+	/*
 	public static class MyResultListener implements QEventHandlerResultListener{
 		
 		private Boolean resultOK = null;
@@ -139,7 +139,7 @@ public class LogPlayer implements Runnable{
 			
 		}
 
-	}
+	}*/
 
 	@Override
 	public void run() {

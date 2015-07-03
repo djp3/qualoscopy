@@ -36,10 +36,14 @@ public class PasswordUtilsTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		while(Globals.getGlobals() != null){
+			Thread.sleep(100);
+		}
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		Globals.setGlobals(null);
 	}
 
 	@Before

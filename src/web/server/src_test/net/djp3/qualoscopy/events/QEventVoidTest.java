@@ -22,9 +22,6 @@ package net.djp3.qualoscopy.events;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import net.djp3.qualoscopy.events.QEventType;
-import net.djp3.qualoscopy.events.QEventWrapper;
-import net.djp3.qualoscopy.events.QEventWrapperFactory;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,7 +31,7 @@ import org.junit.Test;
 
 import edu.uci.ics.luci.utility.Globals;
 
-public class QEventWrapperFactoryTest {
+public class QEventVoidTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -56,24 +53,28 @@ public class QEventWrapperFactoryTest {
 	public void tearDown() throws Exception {
 	}
 
+	static final String goodVersion = "0.1";
+	static final String badVersion = "0.2";
+
 	@Test
 	public void test() {
-		QEventWrapperFactory x = new QEventWrapperFactory();
-		QEventWrapper a = x.newInstance();
-		QEventWrapper b = x.newInstance();
-		assertEquals(a.getEventType(),x.defaultEventType);
-		assertEquals(b.getEventType(),x.defaultEventType);
-		assertEquals(a,b);
+		String s = "thing";
+		QEventVoid thing1 = new QEventVoid();
+		QEventVoid thing2 = new QEventVoid();
 		
-		QEventWrapperFactory y = new QEventWrapperFactory(QEventType.VOID);
-		QEventWrapper c = y.newInstance();
-		QEventWrapper d = y.newInstance();
-		assertEquals(c.getEventType(),y.defaultEventType);
-		assertEquals(d.getEventType(),y.defaultEventType);
-		assertEquals(a,b);
+		assertTrue(!thing1.equals(null));
+		assertTrue(!thing1.equals(s));
+		assertTrue(!thing1.equals(new QEvent()));//class != superclass
+		assertTrue(thing1.equals(thing1));
+		assertTrue(thing1.equals(thing2));
+		assertTrue(thing2.equals(thing2));
 		
-		assertTrue(a!=c);
-		assertTrue(b!=d);
+		assertEquals(thing1.hashCode(),thing1.hashCode());
+		assertEquals(thing1.hashCode(),thing2.hashCode());
+		
+		assertEquals(thing1,QEventVoid.fromJSON(thing1.toJSON()));
+		assertEquals(thing1,QEventVoid.fromJSON(thing2.toJSON()));
+		
 	}
 
 }

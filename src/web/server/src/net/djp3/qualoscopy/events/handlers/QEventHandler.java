@@ -27,18 +27,34 @@ import net.minidev.json.JSONObject;
 
 public class QEventHandler {
 
+	public static final String ERROR_TYPE_MISMATCH = "Internal error, event type mismatch";
 	public static final String ERROR_PARAMETERS_NOT_CHECKED = "Parameters were not checked before calling onEvent";
-	public static final String ERROR_QINSTANCE_NULL = "QInstance can't have a null name";
 	public static final String ERROR_GLOBALS_NULL = "Global variables have not been initialized";
 	private boolean parametersChecked = false;
 
-	private boolean getParametersChecked() {
+	protected boolean getParametersChecked() {
 		return parametersChecked;
 	}
 
 	private void setParametersChecked(boolean parametersChecked) {
 		this.parametersChecked = parametersChecked;
 	}
+	
+
+	protected JSONObject checkParametersTypeError(QEvent _event, JSONObject ret) {
+		ret.put("error", "true");
+		JSONArray errors = new JSONArray();
+		errors.add(ERROR_TYPE_MISMATCH+"\n"
+				+ this.getClass().getCanonicalName() + " was called with "
+				+ _event.getClass().getCanonicalName());
+		ret.put("errors", errors);
+		return ret;
+	}
+	
+	protected boolean typeMatches(QEvent q){
+		return (q instanceof QEvent);
+	}
+	
 
 	/**
 	 * 
@@ -47,17 +63,7 @@ public class QEventHandler {
 	 * @return JSONObject with description of error or null if no errors
 	 */
 	public JSONObject checkParameters(long eventTime, QEvent event) {
-
 		JSONObject ret = new JSONObject();
-
-		// Make sure the world name is not null
-		if (event.getQInstance() == null) {
-			ret.put("error", "true");
-			JSONArray errors = new JSONArray();
-			errors.add(ERROR_QINSTANCE_NULL);
-			ret.put("errors", errors);
-			return ret;
-		}
 
 		// Make sure globals is not null
 		GlobalsQualoscopy g = GlobalsQualoscopy.getGlobalsQualoscopy();
@@ -93,5 +99,6 @@ public class QEventHandler {
 			return onEventParameterCheckError();
 		}
 	}
+
 
 }

@@ -24,18 +24,46 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import net.djp3.qualoscopy.events.QEventType;
+import net.djp3.qualoscopy.events.QEventVoid;
 import net.djp3.qualoscopy.events.QEventWrapper;
 import net.djp3.qualoscopy.events.QEventWrapperFactory;
 import net.djp3.qualoscopy.events.QEventWrapperHandler;
 import net.djp3.qualoscopy.events.QEventWrapperQueuer;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 
+import edu.uci.ics.luci.utility.Globals;
+
 public class DisruptorTest
 {
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		while(Globals.getGlobals() != null){
+			Thread.sleep(100);
+		}
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		Globals.setGlobals(null);
+	}
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+	
 	@Test
     public void testDisruptor() 
     {

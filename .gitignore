@@ -9,6 +9,7 @@
 
 /* log files */
 *.log
+*.log.gz
 
 
 /* binary files */
@@ -18,3 +19,7 @@
 
 src/web/server/bin/**
 src/web/server/target/classes/**
+
+/*Don't put password files or keys in the repo */
+myClientTrustStore
+mySrvKeystore

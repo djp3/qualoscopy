@@ -21,18 +21,16 @@
 
 package net.djp3.qualoscopy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import net.djp3.qualoscopy.events.QEvent;
-import net.djp3.qualoscopy.events.QEventType;
 import net.djp3.qualoscopy.events.QEventWrapper;
 import net.djp3.qualoscopy.events.QEventWrapperFactory;
 import net.djp3.qualoscopy.events.QEventWrapperHandler;
 import net.djp3.qualoscopy.events.QEventWrapperQueuer;
+import net.djp3.qualoscopy.webhandlers.HandlerInitiateSession;
+import net.djp3.qualoscopy.webhandlers.HandlerVersionChecked;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -120,58 +118,11 @@ public class QualoscopyWebServer {
 		eventPublisher = createEventQueue(logFileName);
 		Globals.getGlobals().addQuittable(eventPublisher);
 		
-		/* Create a world */
-		String worldName = config.getString("world.name"); 
-		String worldPassword = config.getString("world.password"); 
-		EventHandlerResultChecker rc = new EventHandlerResultChecker();
-		QEventWrapper wrapper = new QEventWrapper(QEventType.VOID, new QEventVoid(worldName,worldPassword),rc);
-		eventPublisher.onData(wrapper);
-		rc.block();
-		if(rc.getResults().get("error").equals("true")){
-			getLog().error("Couldn't create a world:"+rc.getResults().get("errors"));
-		}
-		
-		
-		/* Create a territory */
-		//Double west = config.getDouble("world.longitude.west");
-		////Double east = config.getDouble("world.longitude.east");
-		////Double north = config.getDouble("world.latitude.north");
-		//Double south = config.getDouble("world.latitude.south");
-		//Integer numXSplits = config.getInt("world.xsplits");
-		//Integer numYSplits = config.getInt("world.ysplits");
-		rc = new EventHandlerResultChecker();
-		wrapper = new QEventWrapper(QEventType.VOID, new QEventVoid(worldName,worldPassword),rc);
-		eventPublisher.onData(wrapper);
-		rc.block();
-		if(rc.getResults().get("error").equals("true")){
-			getLog().error("Couldn't create a territory:"+rc.getResults().get("errors"));
-		}
-		
-		/*Create players */
-		List<Object> players = config.getList("player.name");
-		List<Object> passwords = config.getList("player.password");
-		if(players.size()!= passwords.size()){
-			getLog().error("number of players and number of passwords not equal");
-		}
-		List<EventHandlerResultChecker> results = new ArrayList<EventHandlerResultChecker>();
-		for(int i = 0; i < players.size(); i++){
-			rc = new EventHandlerResultChecker();
-			results.add(rc);
-			wrapper = new QEventWrapper(QEventType.CREATE_PLAYER, new QEvent(worldName,worldPassword),rc);
-			eventPublisher.onData(wrapper);
-		}
-		for(EventHandlerResultChecker r :results){
-			r.block();
-			if(r.getResults().get("error").equals("true")){
-				getLog().error("Couldn't create a player:"+r.getResults().get("errors"));
-			}
-		}
-		
 		WebServer ws = null;
 		HashMap<String, HandlerAbstract> requestHandlerRegistry;
 
 		try {
-			boolean secure = false;
+			boolean secure = true;
 			
 			HTTPInputOverSocket inputChannel = new HTTPInputOverSocket(port,secure);
 					
@@ -180,7 +131,8 @@ public class QualoscopyWebServer {
 			requestHandlerRegistry.put(null, new HandlerVersion(VERSION));
 			requestHandlerRegistry.put("", new HandlerVersion(VERSION));
 			requestHandlerRegistry.put("/", new HandlerVersion(VERSION));
-			requestHandlerRegistry.put("/version", new HandlerVersion(VERSION));
+			requestHandlerRegistry.put("/version", new HandlerVersionChecked(eventPublisher,VERSION));
+			requestHandlerRegistry.put("/initiate_session", new HandlerInitiateSession(eventPublisher,null));
 			requestHandlerRegistry.put("/shutdown", new HandlerShutdown(Globals.getGlobals()));
 						
 			RequestDispatcher requestDispatcher = new RequestDispatcher(requestHandlerRegistry);
@@ -196,42 +148,10 @@ public class QualoscopyWebServer {
 			return;
 		}
 
-		long clockStep = 30000;//config.getLong("clock.step");
-		/* Start the game server */
-		long lastTime = System.currentTimeMillis();
-		long startTime = lastTime;
 		while(!Globals.getGlobals().isQuitting()){
-			/*In case Thread.sleep is interrupted we wrap in a loop */
-			
-			while(!Globals.getGlobals().isQuitting() && ((System.currentTimeMillis() - lastTime) < clockStep)){
-				try {
-					Thread.sleep(GlobalsQualoscopy.ONE_SECOND);
-				} catch (InterruptedException e) {
-				}
-			}
-			
-			if(!Globals.getGlobals().isQuitting()){
-				/* Step the tower growth by one */
-				rc = new EventHandlerResultChecker();
-				wrapper = new
-				QEventWrapper(QEventType.STEP_TOWER_TERRITORY_GROWTH, new QEvent(worldName,worldPassword),rc);
-				eventPublisher.onData(wrapper);
-				rc.block();
-				if(rc.getResults().get("error").equals("true")){
-					getLog().error("Couldn't step tower territory:"+rc.getResults().get("errors"));
-				}
-			
-				/* Burn the bomb fuses */
-				rc = new EventHandlerResultChecker();
-				wrapper = new QEventWrapper(QEventType.BURN_BOMB_FUSE, new QEvent(worldName,worldPassword),rc);
-				eventPublisher.onData(wrapper);
-				rc.block();
-				if(rc.getResults().get("error").equals("true")){
-					getLog().error("Couldn't burn the bomb fuse:"+rc.getResults().get("errors"));
-				}
-			
-				lastTime = System.currentTimeMillis();
-				
+			try {
+				Thread.sleep(GlobalsQualoscopy.ONE_SECOND);
+			} catch (InterruptedException e) {
 			}
 		}
 		getLog().info("Qualoscopy shutdown");
