@@ -44,9 +44,7 @@ public class QEventHandlerTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		while(Globals.getGlobals() != null){
-			Thread.sleep(100);
-		}
+		Globals.setGlobals(null);
 	}
 
 	@AfterClass
