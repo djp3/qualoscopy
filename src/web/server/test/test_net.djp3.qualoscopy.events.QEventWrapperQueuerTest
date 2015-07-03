@@ -1,0 +1,2 @@
+{"eventType":"CHECK_VERSION","event":{"correct_version":"TEST_VERSION","proposed_version":"TEST_VERSION"},"timestamp":"1435959109775"}
+{"eventType":"INITIATE_SESSION","event":{"correct_version":"TEST_VERSION","proposed_version":"TEST_VERSION"},"timestamp":"1435959109804"}

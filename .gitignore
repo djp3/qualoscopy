@@ -1,0 +1,26 @@
+/* temporary files */
+*.swp 
+
+/* password files */
+*.pem
+
+/* archive files */
+*.zip
+
+/* log files */
+*.log
+*.log.gz
+
+
+/* binary files */
+*.so
+*.jnilib
+*.dll
+
+src/web/server/bin/**
+src/web/server/target/classes/**
+
+/*Don't put password files or keys in the repo */
+runMe.sh
+myClientTrustStore
+mySrvKeystore
