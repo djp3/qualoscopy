@@ -1,9 +1,15 @@
 
-.radio {
+.radio label {
+  text-align: left;
   font-size: large;
-  border-radius: 25px;
-  border: 2px solid #1E90FF;
-  padding: 4px;
+}
+
+.form-control {
+  font-size: large;
+}
+
+select option {
+  font-size: large;
 }
 
 .my-table {
