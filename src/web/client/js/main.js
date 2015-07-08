@@ -39,12 +39,12 @@ $(document).ready(function() {
 
   // Created each table programically
   // Identifiers
-  $allTables.push(tableMaker("Identifiers", 4, "#myModal", "col-md-6", "table0",
+  $allTables.push(tableMaker("Identifiers", 4, "#identifiers", "col-md-6", "table0",
   ["Account Number", "Date of Service", "Faculty", "Fellow"],
   ["00000000", "2/15/2015", "Karnes, William", "None"]));
 
   // Preparation
-  $allTables.push(tableMaker("Preparation", 3, "#myModal", "col-md-6", "table1",
+  $allTables.push(tableMaker("Preparation", 3, "#preparation", "col-md-6", "table1",
   ["Prep Liters", "Split Prep", "Bisacodyl"],
   ["3", "Yes", "Yes"]));
 
@@ -86,5 +86,13 @@ $(document).ready(function() {
   for (var i = 0; i < $allTables.length; i++) {
       $("#tables").append($allTables[i]);
   }
+
+  $(function () {
+      $('#datepicker1').datepicker({
+        todayBtn: "linked",
+        autoclose: true,
+        todayHighlight: true
+      });
+  });
 
 });

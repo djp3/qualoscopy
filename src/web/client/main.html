@@ -21,6 +21,9 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="css/jumbotron.css">
     <link rel="stylesheet" href="css/main.css">
+    <!-- Downaloded CSS files -->
+    <link rel="stylesheet" href="css/bootstrap-datepicker3.standalone.css">
+    <link rel="stylesheet" href="css/bootstrap-select.css">
 
 
     <!-- HTML5 shim and Respond.js for IE8 support
@@ -55,8 +58,101 @@
       </div>
     </nav>
 
-    <!-- Modal or Pop up  that we can do anything in-->
-    <div class="modal fade" id="myModal" role="dialog">
+    <!-- Identifiers popup  -->
+    <div class="modal fade" id="identifiers" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">PreProcedure</h3>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+
+              <!-- Text input -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>AC</h4>
+                  <label><input type="text" name="AC"></label>
+                </div>
+              </div>
+
+              <!-- Dropdown -->
+              <div class="row">
+                <div class="col-md-12">
+                  <label for="Location" name="location"><h4>Location</h4></label>
+                  <select class="form-control" id="Location">
+                    <option>Bldg200</option>
+                    <option>CathLab</option>
+                    <option>OSS</option>
+                    <option>OR</option>
+                    <option>CDDC</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class='col-md-6'>
+                <h4>Date of Service</h4>
+                <div class='input-group date' id='datepicker1'>
+                  <input type='text' class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class='col-md-12'>
+                <h4>Faculty</h4>
+                <select class="selectpicker show-tick" data-live-search="true">
+                  <option>None</option>
+                  <option>Karnes, Willam</option>
+                  <option>Saget, Bob</option>
+                  <option>Doctor, 3</option>
+                  <option>Doctor, 4</option>
+                  <option>Doctor, 5</option>
+                  <option>Doctor, 6</option>
+                  <option>Doctor, 7</option>
+                  <option>Doctor, 8</option>
+                  <option>Doctor, 9</option>
+                </select>
+                </div>
+              </div>
+
+
+            <div class="row">
+              <div class='col-md-12'>
+                <h4>Fellow</h4>
+                <select class="selectpicker show-tick" title="" data-live-search="true">
+                  <option>None</option>
+                  <option>Skywalker, Luke</option>
+                  <option>Solo, Hans</option>
+                  <option>Fellow, 3</option>
+                  <option>Fellow, 4</option>
+                  <option>Fellow, 5</option>
+                  <option>Fellow, 6</option>
+                  <option>Fellow, 7</option>
+                  <option>Fellow, 8</option>
+                  <option>Fellow, 9</option>
+                </select>
+                </div>
+              </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- preparation popup -->
+    <div class="modal fade" id="preparation" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
           <div class="modal-header">
@@ -67,76 +163,65 @@
 
             <!-- Dropdown -->
             <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label for="sel1"><h4>Drug</h4></label>
-                  <select class="form-control" id="sel1">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                  </select>
+              <div class='col-md-12'>
+                <h4>Prep</h4>
+                <select class="selectpicker show-tick" data-live-search="true">
+                  <option>None</option>
+                  <option>Drug 1</option>
+                  <option>Drug 2</option>
+                  <option>Drug 3</option>
+                  <option>Drug 4</option>
+                  <option>Drug 5</option>
+                  <option>Drug 6</option>
+                  <option>Drug 7</option>
+                  <option>Drug 8</option>
+                  <option>Drug 9</option>
+                </select>
                 </div>
               </div>
-            </div>
+
 
             <!-- Radio Group -->
             <div class="row">
               <div class="col-md-4">
                 <h4>Prep Liters</h4>
                 <form role="form">
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                  <div class="radio btn-group-vertical btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">None</label>
-                  </div>
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">1</label>
-                  </div>
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">2</label>
-                  </div>
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">3</label>
-                  </div>
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">4</label>
-                  </div>
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">5</label>
-                  </div>
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">6 or more</label>
                   </div>
                 </form>
               </div>
               <div class="col-md-4">
-                <h4>Split Prep</h4>
+                <h4>Split Prep?</h4>
                 <form role="form">
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                  <div class="radio btn-group-vertical btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">Yes</label>
-                  </div>
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">No</label>
                   </div>
                 </form>
               </div>
               <div class="col-md-4">
-                <h4>Bisacodyl</h4>
+                <h4>Bisacodyl?</h4>
                 <form role="form">
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                  <div class="radio btn-group-vertical btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">Yes</label>
-                  </div>
-                  <div class="radio">
-                    <label class="btn btn-primary btn-block">
+                    <label class="btn btn-primary">
                       <input type="radio" name="optradio">No</label>
                   </div>
                 </form>
@@ -158,30 +243,6 @@
       <div class="container-fluid">
         <!-- ID used to load the tables via Javascript -->
         <div id="tables"></div>
-
-        <!-- <div class="row">
-          <div class="col-md-2">
-            <button class="btn btn-primary pull-right" data-toggle="modal"
-            data-target="#myModal">Identifiers</button>
-          </div>
-          <div class="col-md-6">
-            <table class="table table-condensed table-striped">
-              <tr>
-                <th>Account Number</th>
-                <th>Date of Service</th>
-                <th>Faculty</th>
-                <th>Fellow</th>
-              </tr>
-              <tr>
-                <td>00000000</td>
-                <td>2/15/2015</td>
-                <td>Karnes, William</td>
-                <td>None</td>
-              </tr>
-            </table>
-          </div>
-        </div> -->
-
       </div>
     </div>
 
@@ -193,7 +254,10 @@
     <script src="js/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-    <!-- My Login JS -->
+    <!-- Downloaded JS Files -->
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap-select.js"></script>
+    <!-- My JS -->
     <script src="js/main.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="./js/ie10-viewport-bug-workaround.js"></script>
