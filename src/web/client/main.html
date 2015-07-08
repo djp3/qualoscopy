@@ -13,10 +13,10 @@
     <title>Qualoscopy:Main</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="css/bootstrap/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
 
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="css/my/jumbotron.css">
@@ -58,7 +58,7 @@
       </div>
     </nav>
 
-    <!-- Identifiers popup  -->
+<!-- Identifiers popup  -->
     <div class="modal fade" id="identifiers" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -151,7 +151,7 @@
       </div>
     </div>
 
-    <!-- preparation popup -->
+<!-- Preparation popup -->
     <div class="modal fade" id="preparation" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -227,15 +227,110 @@
                 </form>
               </div>
             </div>
-
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
           </div>
         </div>
       </div>
-
     </div>
+
+<!-- Indications popup -->
+    <div class="modal fade" id="indications" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Current Indications</h3>
+          </div>
+          <div class="modal-body">
+
+            <!-- Dropdown -->
+            <div class="row">
+              <div class='col-md-12'>
+                <h4>Last Colon</h4>
+                <select class="selectpicker show-tick" data-live-search="true">
+                  <option>None</option>
+                  <option>Drug 1</option>
+                  <option>Drug 2</option>
+                  <option>Drug 3</option>
+                  <option>Drug 4</option>
+                  <option>Drug 5</option>
+                  <option>Drug 6</option>
+                  <option>Drug 7</option>
+                  <option>Drug 8</option>
+                  <option>Drug 9</option>
+                </select>
+              </div>
+            </div>
+
+
+            <!-- Radio Group -->
+            <div class="row">
+              <div class="col-md-6">
+                <h4>Prep Liters</h4>
+                <form role="form">
+                  <div class="radio btn-group-vertical btn-block">
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">Screening</label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Surveillance</label>
+                        <label class="btn btn-primary">
+                          <input type="radio" name="optradio">Diagnostic</label>
+                          <label class="btn btn-primary">
+                            <input type="radio" name="optradio">T</label>
+                            <label class="btn btn-primary">
+                              <input type="radio" name="optradio">Therapeutic</label>
+                              <label class="btn btn-primary">
+                                <input type="radio" name="optradio">Preoperatice</label>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class='col-md-12'>
+                            <h4>Primary Indication</h4>
+                            <select class="selectpicker show-tick" data-live-search="true">
+                              <option>None</option>
+                              <option>Drug 1</option>
+                              <option>Drug 2</option>
+                              <option>Drug 3</option>
+                              <option>Drug 4</option>
+                              <option>Drug 5</option>
+                              <option>Drug 6</option>
+                              <option>Drug 7</option>
+                              <option>Drug 8</option>
+                              <option>Drug 9</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class='col-md-12'>
+                            <h4>Other Indications</h4>
+                            <select class="selectpicker show-tick" data-live-search="true">
+                              <option>None</option>
+                              <option>Drug 1</option>
+                              <option>Drug 2</option>
+                              <option>Drug 3</option>
+                              <option>Drug 4</option>
+                              <option>Drug 5</option>
+                              <option>Drug 6</option>
+                              <option>Drug 7</option>
+                              <option>Drug 8</option>
+                              <option>Drug 9</option>
+                            </select>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
 
     <!--My Table-->
@@ -251,9 +346,9 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <!-- jquery-1 -->
-    <script src="js/bootstrap/jquery.min.js"></script>
+    <script src="js/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
-    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <!-- Downloaded JS Files -->
     <script src="js/downloaded/bootstrap-datepicker.js"></script>
     <script src="js/downloaded/bootstrap-select.js"></script>

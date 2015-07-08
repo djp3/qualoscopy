@@ -49,7 +49,7 @@ $(document).ready(function() {
   ["3", "Yes", "Yes"]));
 
   // Indications
-  $allTables.push(tableMaker("Indications", 5, "#myModal", "col-md-6", "table2",
+  $allTables.push(tableMaker("Indications", 5, "#indications", "col-md-6", "table2",
   ["Last Colon", "Indication", "Category", "Subcategory", "Specifics"],
   ["5 yrs", "Surveillance", "Personal History", "Colorectal Cancer", "(One)"]));
 
