@@ -102,6 +102,12 @@ $(document).ready(function() {
     $('#timepicker3').datetimepicker({
       format: 'LT'
     });
+    $('#timepicker4').datetimepicker({
+      format: 'LT'
+    });
+    $('#timepicker5').datetimepicker({
+      format: 'LT'
+    });
 
     // Link Timepickers
     $("#timepicker1").on("dp.change", function (e) {
@@ -110,6 +116,10 @@ $(document).ready(function() {
 
     $("#timepicker2").on("dp.change", function (e) {
         $('#timepicker3').data("DateTimePicker").minDate(e.date);
+    });
+    
+    $("#timepicker4").on("dp.change", function (e) {
+        $('#timepicker5').data("DateTimePicker").minDate(e.date);
     });
   });
 

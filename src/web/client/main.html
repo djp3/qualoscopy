@@ -35,7 +35,6 @@
 
 
   <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -57,7 +56,7 @@
       </div>
     </nav>
 
-<!-- Identifiers popup  -->
+    <!-- Identifiers popup  -->
     <div class="modal fade" id="identifiers" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -73,7 +72,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <h4>AC</h4>
-                  <label><input type="text" name="AC"></label>
+                  <label><input class="form-control" type="text" name="AC"></label>
                 </div>
               </div>
 
@@ -150,7 +149,7 @@
       </div>
     </div>
 
-<!-- Preparation popup -->
+    <!-- Preparation popup -->
     <div class="modal fade" id="preparation" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -245,7 +244,7 @@
       </div>
     </div>
 
-<!-- Indications popup -->
+    <!-- Indications popup -->
     <div class="modal fade" id="indications" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -357,7 +356,7 @@
             <div class="row">
               <div class="col-md-12">
                 <h4>Other Indications</h4>
-                <label><input type="text" name="indications"></label>
+                <label><input class="form-control" type="text" name="indications"></label>
               </div>
             </div>
 
@@ -370,7 +369,7 @@
       </div>
     </div>
 
-<!-- Scope popup -->
+    <!-- Scope popup -->
     <div class="modal fade" id="scope" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -462,7 +461,7 @@
       </div>
     </div>
 
-<!-- Sedation popup -->
+    <!-- Sedation popup -->
     <div class="modal fade" id="sedation" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -568,7 +567,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <h4>Other Med</h4>
-                  <label><input type="text" name="AC"></label>
+                  <label><input class="form-control" type="text" name="AC"></label>
                 </div>
               </div>
 
@@ -581,7 +580,7 @@
       </div>
     </div>
 
-<!-- Extent popup -->
+    <!-- Extent popup -->
     <div class="modal fade" id="extent" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -645,7 +644,7 @@
         </div>
       </div>
 
-<!-- Prep Quality popup -->
+    <!-- Prep Quality popup -->
     <div class="modal fade" id="quality" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -734,7 +733,7 @@
       </div>
     </div>
 
-<!-- Times popup -->
+    <!-- Times popup -->
     <div class="modal fade" id="times" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -790,7 +789,7 @@
       </div>
     </div>
 
-<!-- Add Poplyps or Mass popup MIGHT CHANGE TO OWN PAGE -->
+    <!-- Add Poplyps or Mass popup MIGHT CHANGE TO OWN PAGE -->
     <div class="modal fade" id="addPolypOrMass" role="dialog">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -801,7 +800,7 @@
           <div class="modal-body">
             <div class="form-group">
 
-              <!-- Dropdown -->
+              <!-- Dropdown row -->
               <div class="row">
                 <div class='col-md-2'>
                   <h4>Location</h4>
@@ -851,7 +850,115 @@
                     <option>Drug 2</option>
                   </select>
                 </div>
-              </div >
+              </div>
+
+              <!-- Dropdown row -->
+              <div class="row">
+                <div class='col-md-2'>
+                  <div class="checkbox">
+                    <label class="btn btn-primary">
+                      <input type="checkbox" value="">Clipped?
+                    </label>
+                    <label class="btn btn-primary" >
+                      <input type="checkbox" value="">Submitted?
+                    </label>
+                  </div>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Bottle</h4>
+                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                    <option>None</option>
+                    <option>1</option>
+                    <option>2</option>
+                  </select>
+                </div>
+
+                <div class='col-md-3'>
+                  <h4>Time Start</h4>
+                  <div class='input-group date'>
+                    <input id='timepicker4' type='text' class="form-control" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class='col-md-3'>
+                  <h4>Time End</h4>
+                  <div class='input-group date'>
+                    <input id='timepicker5' type='text' class="form-control" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Image#</h4>
+                  <label><input class="form-control" type="text" name="Image#"></label>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <h5>Nice Criteria</h5>
+                  <img src="assets/NICE_Criteria.png">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h5>Primary NICECriteria</h5>
+                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                        <option>None</option>
+                        <option>Bland/capillaries</option>
+                        <option>Dark Spots</option>
+                        <option>Light Spots</option>
+                        <option>Tubulogyrus</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <h5>Secondary NICECriteria</h5>
+                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                        <option>None</option>
+                        <option>Bland/capillaries</option>
+                        <option>Dark Spots</option>
+                        <option>Light Spots</option>
+                        <option>Tubulogyrus</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h5>Path Best Guess</h5>
+                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                        <option>None</option>
+                        <option>Adenoma</option>
+                        <option>Hyperplastic</option>
+                        <option>SSA</option>
+                        <option>Inflamatory</option>
+                        <option>Lymphoid</option>
+                        <option>Malignancy</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <h5>Guess Confidence</h5>
+                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                        <option>None</option>
+                        <option>High</option>
+                        <option>Low</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <img src="assets/addImage.png" class="img-responsive" alt="Add Image">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <button class='btn btn-primary pull-right'>Add Image</button>
+                    </div>
+                    <div class="col-md-6">
+                      <button class='btn btn-primary pull-left'>Remove Image</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
             </div>
           </div>
@@ -861,13 +968,14 @@
         </div>
       </div>
     </div>
-        <!--My Table-->
-        <div class="my-table">
-          <div class="container-fluid">
-            <!-- ID used to load the tables via Javascript -->
-            <div id="tables"></div>
-          </div>
-        </div>
+
+    <!--My Table-->
+    <div class="my-table">
+      <div class="container-fluid">
+        <!-- ID used to load the tables via Javascript -->
+        <div id="tables"></div>
+      </div>
+    </div>
 
 
     <!-- Bootstrap core JavaScript
