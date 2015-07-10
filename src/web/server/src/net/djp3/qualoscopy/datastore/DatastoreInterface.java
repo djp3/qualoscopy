@@ -33,52 +33,25 @@ import edu.uci.ics.luci.utility.webserver.handlers.login.Datastore;
 
 public class DatastoreInterface {
 	
-	final static Integer ITERATIONS = 200;
-
+	private static final Integer ITERATIONS = 200;
+	private static Random r = new Random(System.currentTimeMillis());
 
 	private static transient volatile Logger log = null;
-
-
 	public static Logger getLog(){
 		if(log == null){
 			log = LogManager.getLogger(DatastoreInterface.class);
 		}
 		return log;
 	}
-	
-	private static volatile DatastoreInterface instance = null;
-	
-	public static DatastoreInterface getInstance(){
-		if(instance == null){
-			getLog().info("Creating a default Datastore Interface");
-			instance = new DatastoreInterface(null);
-		}
-		return(instance);
-	}
-	
-	static void createInterface(Datastore db){
-		instance = new DatastoreInterface(db);
-	}
-	
-	/**
-	 * This is supported just for testing
-	 * @param db
-	 * @param seed
-	 */
-	static void createInterface(Datastore db,long seed){
-		instance = new DatastoreInterface(db,seed);
-	}
-	
-	Random r = new Random(System.currentTimeMillis());
-	
-	private Datastore db;
-	
-	private DatastoreInterface(Datastore db){
-		this(db,System.currentTimeMillis());
-	}
+
+	private Datastore db = null;
 	
 	void setRandom(Random r){
-		this.r = r;
+		DatastoreInterface.r = r;
+	}
+	
+	public DatastoreInterface(Datastore db){
+		this(db,System.currentTimeMillis());
 	}
 	
 	/**

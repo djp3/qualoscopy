@@ -26,7 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import net.djp3.qualoscopy.api.handlers.QualoscopyCallHandler_VersionCheck;
+import net.djp3.qualoscopy.api.handlers.H_InitiateSession;
+import net.djp3.qualoscopy.api.handlers.H_VersionCheck;
+import net.djp3.qualoscopy.datastore.DatastoreInterface;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -98,8 +100,8 @@ public class QualoscopyWebServer {
 			requestHandlerRegistry.put(null, new ServerCallHandler_Version(VERSION));
 			requestHandlerRegistry.put("", new ServerCallHandler_Version(VERSION));
 			requestHandlerRegistry.put("/", new ServerCallHandler_Version(VERSION));
-			requestHandlerRegistry.put("/version", new QualoscopyCallHandler_VersionCheck(VERSION));
-			//requestHandlerRegistry.put("/initiate_session", new HandlerInitiateSession(eventPublisher,null));
+			requestHandlerRegistry.put("/version", new H_VersionCheck(VERSION));
+			requestHandlerRegistry.put("/initiate_session", new H_InitiateSession(new DatastoreInterface(null)));
 			//requestHandlerRegistry.put("/login", new HandlerLogin(eventPublisher,null));
 			requestHandlerRegistry.put("/shutdown", new ServerCallHandler_Shutdown(Globals.getGlobals()));
 						
