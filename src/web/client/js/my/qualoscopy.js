@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  // http://104.237.152.218:9021/version
+  // https://104.237.152.218:9021/version
   var ipAddress = "104.237.152.218";
   var port = 9021;
   var versionNumber = 0.1;
@@ -75,7 +75,8 @@ $(document).ready(function() {
     $.ajax({
       dataType: 'jsonp',
       url: "https://" + ipAddress + ":" + port
-          + "/",
+          + "/version",
+      data: {"version": versionNumber},
       context: document.body
     }).done(function(data) {
       console.log(data);
