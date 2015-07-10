@@ -66,9 +66,20 @@ $(document).ready(function() {
     }
   });
 
+  // $('#read').click(function() {
+  //   console.log(JSON.parse(getCookie("salts")));
+  //   console.log(getCookie("session_id"));
+  // });
+
   $('#read').click(function() {
-    console.log(JSON.parse(getCookie("salts")));
-    console.log(getCookie("session_id"));
+    $.ajax({
+      dataType: 'jsonp',
+      url: "https://" + ipAddress + ":" + port
+          + "/",
+      context: document.body
+    }).done(function(data) {
+      console.log(data);
+    });
   });
 
 

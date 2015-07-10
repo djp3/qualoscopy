@@ -10,7 +10,7 @@
   for main screen of application">
   <meta name="author" content="Luke Raus">
 
-  <title>Qualoscopy:Admin</title>
+  <title>Qualoscopy:Patient</title>
 
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -44,6 +44,7 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="index.html">Home</a>
+      <a class="navbar-brand" href="javascript:history.back()">Back</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <form class="navbar-form navbar-right">
@@ -52,6 +53,68 @@
       </div><!--/.navbar-collapse -->
     </div>
   </nav>
+
+  <div class="modal fade" id="schedualProcedure" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="modal-title">Schedual an Procedure</h3>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+
+            <!-- Text input -->
+            <div class="row">
+              <div class="col-md-3">
+                <h4>AC</h4>
+                <label>
+                  <input class="form-control" type="text" placeholder="Enter AC">
+                </label>
+              </div>
+              <div class="col-md-3">
+                <h4>Operation Date</h4>
+                <div class='input-group date'>
+                  <input id='operationDate' type='text' class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <h4>Operation Time</h4>
+                <div class='input-group date'>
+                  <input id='operationTime' type='text' class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <h4>Faculty</h4>
+                <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                  <option>None</option>
+                  <option>Karnes, Willam</option>
+                  <option>Saget, Bob</option>
+                  <option>Doctor, 3</option>
+                  <option>Doctor, 4</option>
+                  <option>Doctor, 5</option>
+                  <option>Doctor, 6</option>
+                  <option>Doctor, 7</option>
+                  <option>Doctor, 8</option>
+                  <option>Doctor, 9</option>
+                </select>
+              </div>
+            </div><!-- /.row -->
+
+          </div><!-- form-group -->
+        </div><!-- modal-body -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <div class="container">
 
@@ -63,7 +126,7 @@
 
   <div class='row'>
     <div class='col-md-8'>
-      <table class='table'>
+      <table class='table table-striped'>
         <tr>
           <th>MR</th>
           <th>Last Name</th>
@@ -81,35 +144,36 @@
       </table>
     </div><!-- /.col -->
     <div class='col-md-4'>
-      <button class="btn btn-primary btn-lg">Schedual a Procedure</button>
+      <button class="btn btn-primary btn-lg" data-toggle='modal'
+        data-target='#schedualProcedure'>Schedual a Procedure</button>
     </div>
   </div><!-- /.row -->
 
   <div class='row'>
     <div class='col-md-12'>
-      <h3>Past and Schedualed Operations</h3>
+      <h3>Past and Schedualed Procedures</h3>
     </div><!-- /.col -->
   </div><!-- /.row -->
 
   <div class='row'>
     <div class='col-md-12'>
-      <table class='table'>
+      <table class='table table-hover table-striped operations-table '>
         <tr>
           <th>AC</th>
           <th>DOS</th>
           <th>Completed?</th>
           <th>Faculty</th>
         </tr>
-        <tr>
+        <tr class='clickable-row' data-href='main.html'>
           <td>00000</td>
           <td>7/3/2015</td>
           <td>YES</td>
           <td>Karnes</td>
         </tr>
-        <tr>
+        <tr class='clickable-row' data-href='main.html'>
           <td>00000</td>
           <td>7/20/2015</td>
-          <td>YES</td>
+          <td>NO</td>
           <td>Karnes</td>
         </tr>
       </table>
@@ -133,6 +197,7 @@
 <script src="js/downloaded/bootstrap-datetimepicker.js"></script>
 <script src="js/downloaded/bootstrap-select.js"></script>
 <!-- My JS -->
+<script src="js/my/patient.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 </body>
