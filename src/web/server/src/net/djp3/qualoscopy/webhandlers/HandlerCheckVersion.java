@@ -50,70 +50,78 @@ import edu.uci.ics.luci.utility.webserver.output.response.Response;
  * @author djp3
  *
  */
-public class HandlerVersionChecked extends HandlerVersion{
+public class HandlerCheckVersion extends HandlerPublisher{
 	
 	public static final String ERROR_NULL_VERSION = "Version was null";
 	
 	private static transient volatile Logger log = null;
 	public static Logger getLog(){
 		if(log == null){
-			log = LogManager.getLogger(HandlerVersionChecked.class);
+			log = LogManager.getLogger(HandlerCheckVersion.class);
 		}
 		return log;
 	}
 
-	String proposedVersion = null;
-	private QEventWrapperQueuer eventPublisher;
-	
-	protected QEventWrapperQueuer getEventPublisher() {
-		return eventPublisher;
-	}
+	String aPIVersion = null;
+	String requestedVersion = null;
 
 	/**
 	 * 
-	 * @param version, the correct API version
 	 * @param eventPublisher, the queue to put events on
+	 * @param aPIVersion, the correct API version
 	 */
-	public HandlerVersionChecked(QEventWrapperQueuer eventPublisher, String version) {
-		super(version);
-		this.eventPublisher = eventPublisher;
+	public HandlerCheckVersion(QEventWrapperQueuer eventPublisher, String aPIVersion) {
+		super(eventPublisher);
+		this.setAPIVersion(aPIVersion);
 	}
 	
 	@Override
 	public HandlerAbstract copy() {
-		return new HandlerVersionChecked(getEventPublisher(),getVersion());
+		return new HandlerCheckVersion(getEventPublisher(),getAPIVersion());
+	}
+	
+	public String getAPIVersion(){
+		return aPIVersion;
 	}
 
-	protected String getProposedVersion(){
-		return proposedVersion;
+	public String getRequestedVersion(){
+		return requestedVersion;
+	}
+	
+	protected String setRequestedVersion(String requestedVersion){
+		this.requestedVersion = requestedVersion;
+		return getRequestedVersion();
 	}
 
-	protected JSONArray getVersionParameters(String restFunction,Map<String,Set<String>> parameters){
+	@Override
+	protected JSONArray getParameters(Request r){
 		JSONArray errors = new JSONArray();
 		
-		Set<String> _version = parameters.get("version");
-		if((_version == null) || ((proposedVersion = (_version.iterator().next()))==null)){
-			errors.add("Problem handling "+restFunction+":"+ERROR_NULL_VERSION);
+		Set<String> _version = r.getParameters().get("version");
+		if((_version == null) || ((setRequestedVersion(_version.iterator().next()))==null)){
+			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_VERSION);
 		} 
 		
 		return errors;
 	}
-
-	protected JSONObject queueEvent(QEventType type, QEvent q){
-		EventHandlerResultChecker resultChecker = new EventHandlerResultChecker();
-		QEventWrapper event = new QEventWrapper(type,q,resultChecker);
-		getEventPublisher().onData(event);
-		synchronized(resultChecker.getSemaphore()){
-			while(resultChecker.getResults() == null){
-				try {
-					resultChecker.getSemaphore().wait();
-				} catch (InterruptedException e) {
-				}
+	
+	@Override
+	protected JSONObject constructReply(Request r){
+		JSONObject ret = super.constructReply(r);
+		if(ret.get("error").equals("false")){
+			JSONArray errors = getParameters(r);
+			if(errors.size() != 0){
+				ret.put("error", "true");
+				ret.put("errors", errors);
+			}
+			else{
+				QEventCheckVersion q = new QEventCheckVersion(getAPIVersion(),getRequestedVersion());
+				ret = this.processRequestEvent(QEventType.CHECK_VERSION, q);
 			}
 		}
-		return(resultChecker.getResults());
+		return ret;
 	}
-	
+
 	
 	/**
 	 * @param parameters a map of key and value that was passed through the REST request
@@ -127,6 +135,7 @@ public class HandlerVersionChecked extends HandlerVersion{
 		
 		Response response = o.makeOutputChannelResponse();
 		
+		
 		JSONArray errors = new JSONArray();
 		
 		errors.addAll(getVersionParameters(request.getCommand(),request.getParameters()));
@@ -136,7 +145,7 @@ public class HandlerVersionChecked extends HandlerVersion{
 			ret.put("errors", errors);
 		}
 		else{
-			QEventCheckVersion q = new QEventCheckVersion(getVersion(),getProposedVersion());
+			QEventCheckVersion q = new QEventCheckVersion(getAPIVersion(),getRequestedVersion());
 			ret = this.queueEvent(QEventType.CHECK_VERSION, q);
 		}
 		

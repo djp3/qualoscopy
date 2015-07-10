@@ -139,7 +139,7 @@ public class HandlerVersionCheckedTest {
 			ws.getRequestDispatcher() .updateRequestHandlerRegistry( null, new HandlerVersion(Globals.getGlobals() .getSystemVersion()));
 			ws.getRequestDispatcher() .updateRequestHandlerRegistry( "", new HandlerVersion(Globals.getGlobals() .getSystemVersion()));
 			ws.getRequestDispatcher() .updateRequestHandlerRegistry( "/", new HandlerVersion(Globals.getGlobals() .getSystemVersion()));
-			ws.getRequestDispatcher() .updateRequestHandlerRegistry( "/version", new HandlerVersionChecked(eventPublisher,Globals.getGlobals().getSystemVersion()));
+			ws.getRequestDispatcher() .updateRequestHandlerRegistry( "/version", new HandlerCheckVersion(eventPublisher,Globals.getGlobals().getSystemVersion()));
 			ws.getRequestDispatcher().updateRequestHandlerRegistry("/shutdown", new HandlerShutdown(Globals.getGlobals()));
 
 		} catch (RuntimeException e) {
@@ -267,7 +267,7 @@ public class HandlerVersionCheckedTest {
 			assertEquals("true", response.get("error"));
 			JSONArray errors = (JSONArray) response.get("errors");
 			String error = (String) errors.get(0);
-			assertTrue(error.contains(HandlerVersionChecked.ERROR_NULL_VERSION));
+			assertTrue(error.contains(HandlerCheckVersion.ERROR_NULL_VERSION));
 		} catch (ClassCastException e) {
 			fail("Bad JSON Response");
 		}
@@ -302,7 +302,7 @@ public class HandlerVersionCheckedTest {
 			assertEquals("true", response.get("error"));
 			JSONArray errors = (JSONArray) response.get("errors");
 			String error = (String) errors.get(0);
-			assertTrue(error.contains(HandlerVersionChecked.ERROR_NULL_VERSION));
+			assertTrue(error.contains(HandlerCheckVersion.ERROR_NULL_VERSION));
 		} catch (ClassCastException e) {
 			fail("Bad JSON Response");
 		}

@@ -24,18 +24,14 @@ package net.djp3.qualoscopy.events.handlers;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 import net.djp3.qualoscopy.events.QEvent;
-import net.djp3.qualoscopy.events.QEventCheckSession;
-import net.djp3.qualoscopy.events.QEventCheckVersion;
-import net.djp3.qualoscopy.events.QEventInitiateSession;
-import net.djp3.qualoscopy.webhandlers.HandlerCheckSession;
-import net.djp3.qualoscopy.webhandlers.HandlerCheckVersion;
+import net.djp3.qualoscopy.events.QEventLogin;
 import net.minidev.json.JSONObject;
 
-public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
+public class QEventHandlerLogin extends QEventHandlerCheckSession {
 
 
 	private boolean parametersChecked = false;
-	protected String source = null;
+	private String hashedSaltedPassword = null;
 
 	@Override
 	protected boolean getParametersChecked() {
@@ -48,7 +44,7 @@ public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
 	
 	
 	protected boolean typeMatches(QEvent q){
-		return (q instanceof QEventInitiateSession);
+		return (q instanceof QEventLogin);
 	}
 	
 	
@@ -60,20 +56,17 @@ public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
 			return ret;
 		}
 		
-		QEventInitiateSession event = null;
+		QEventLogin event = null;
 		if (typeMatches(_event)) {
-			event = ((QEventInitiateSession) _event);
-			source = event.getSource();
+			event = ((QEventLogin) _event);
+			hashedSaltedPassword = event.getSaltedHashedPassword();
 			
-			/* TODO: Make sure that the sessionID matches the user and the source */
-			/* This will require looking it up in the database */
 			this.setParametersChecked(true);
 			return null;
 		} else {
 			return checkParametersTypeError(_event, ret);
 		}
 
-		return null;
 	}
 
 	@Override
@@ -88,10 +81,12 @@ public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
 			return onEventParameterCheckError();
 		}
 
+		/* TODO: Make sure that the password matches userid */
+		/* This will require looking it up in the database */
+		
 		try{
-			ret.put("session_id",DatastoreInterface.getInstance().createAndStoreInitialSessionID(null));
-			ret.put("session_salt",DatastoreInterface.getInstance().createAndStoreSalt(null));
-			
+			ret.put("login","success");
+			ret.put("session_salt",DatastoreInterface.getInstance().createAndStoreSalt(userID));
 			return ret;
 		}
 		finally{

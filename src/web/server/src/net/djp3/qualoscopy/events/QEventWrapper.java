@@ -29,6 +29,7 @@ import net.djp3.qualoscopy.QEventHandlerResultListener;
 import net.djp3.qualoscopy.events.handlers.QEventHandler;
 import net.djp3.qualoscopy.events.handlers.QEventHandlerCheckVersion;
 import net.djp3.qualoscopy.events.handlers.QEventHandlerInitiateSession;
+import net.djp3.qualoscopy.events.handlers.QEventHandlerLogin;
 import net.djp3.qualoscopy.events.handlers.QEventHandlerVoid;
 import net.minidev.json.JSONObject;
 
@@ -112,6 +113,9 @@ public class QEventWrapper {
 		case INITIATE_SESSION:
 			this.setHandler(new QEventHandlerInitiateSession());
 			break;
+		case LOGIN:
+			this.setHandler(new QEventHandlerLogin());
+			break;
 		case VOID:
 			this.setHandler(new QEventHandlerVoid());
 			break;
@@ -132,6 +136,10 @@ public class QEventWrapper {
 		case INITIATE_SESSION:
 			problem = (!(this.getEvent() instanceof QEventInitiateSession));
 			problem |= (!(this.getHandler() instanceof QEventHandlerInitiateSession));
+			break;
+		case LOGIN:
+			problem = (!(this.getEvent() instanceof QEventLogin));
+			problem |= (!(this.getHandler() instanceof QEventHandlerLogin));
 			break;
 		case VOID:
 			problem = (!(this.getEvent() instanceof QEventVoid));
@@ -250,8 +258,10 @@ public class QEventWrapper {
 			event = QEventCheckVersion.fromJSON((JSONObject) in.get("event"));
 			break;
 		case INITIATE_SESSION:
-			event = QEventInitiateSession
-					.fromJSON((JSONObject) in.get("event"));
+			event = QEventInitiateSession .fromJSON((JSONObject) in.get("event"));
+			break;
+		case LOGIN:
+			event = QEventLogin.fromJSON((JSONObject) in.get("event"));
 			break;
 		case VOID:
 			event = QEventVoid.fromJSON((JSONObject) in.get("event"));

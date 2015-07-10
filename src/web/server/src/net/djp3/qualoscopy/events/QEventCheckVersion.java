@@ -22,41 +22,56 @@
 
 package net.djp3.qualoscopy.events;
 
+import net.djp3.qualoscopy.webhandlers.HandlerCheckVersion;
 import net.minidev.json.JSONObject;
 
 public class QEventCheckVersion extends QEvent {
 
-	private String correctVersion;
-	private String proposedVersion;
+	private String aPIVersion = null;
+	private String requestedVersion = null;
 
-	public QEventCheckVersion(String correctVersion,String proposedVersion) {
-		super();
-		this.correctVersion = correctVersion;
-		this.proposedVersion = proposedVersion;
-	}
-
-	public String getCorrectVersion() {
-		return this.correctVersion;
+	public QEventCheckVersion(HandlerCheckVersion checkVersion) {
+		this(checkVersion.getAPIVersion(),checkVersion.getRequestedVersion());
 	}
 	
-	public String getProposedVersion() {
-		return this.proposedVersion;
+	public QEventCheckVersion(String aPIVersion,String requestedVersion) {
+		super();
+		this.setAPIVersion(aPIVersion);
+		this.setRequestedVersion(requestedVersion);
 	}
+	
+
+	private void setAPIVersion(String aPIVersion){
+		this.aPIVersion = aPIVersion;
+	}
+	
+	private void setRequestedVersion(String requestedVersion){
+		this.requestedVersion = requestedVersion;
+	}
+	
+	public String getAPIVersion(){
+		return this.aPIVersion;
+	}
+	
+	public String getRequestedVersion(){
+		return this.requestedVersion;
+	}
+
 
 	public JSONObject toJSON() {
 		JSONObject ret = super.toJSON();
-		ret.put("correct_version", this.getCorrectVersion());
-		ret.put("proposed_version", this.getProposedVersion());
+		ret.put("api_version", getAPIVersion());
+		ret.put("requested_version", getRequestedVersion());
 		return ret;
 	}
 
 	static public QEventCheckVersion fromJSON(JSONObject in) {
 		//QEvent parent = QEvent.fromJSON(in);
 
-		String correctVersion = (String) in.get("correct_version");
-		String proposedVersion = (String) in.get("proposed_version");
+		String _APIVersion = (String) in.get("api_version");
+		String _RequestedVersion = (String) in.get("requested_version");
 
-		return (new QEventCheckVersion(correctVersion,proposedVersion));
+		return (new QEventCheckVersion(_APIVersion,_RequestedVersion));
 	}
 
 	@Override
@@ -64,9 +79,10 @@ public class QEventCheckVersion extends QEvent {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result
-				+ ((correctVersion == null) ? 0 : correctVersion.hashCode());
-		result = prime * result
-				+ ((proposedVersion == null) ? 0 : proposedVersion.hashCode());
+				+ ((aPIVersion == null) ? 0 : aPIVersion.hashCode());
+		result = prime
+				* result
+				+ ((requestedVersion == null) ? 0 : requestedVersion.hashCode());
 		return result;
 	}
 
@@ -82,21 +98,22 @@ public class QEventCheckVersion extends QEvent {
 			return false;
 		}
 		QEventCheckVersion other = (QEventCheckVersion) obj;
-		if (correctVersion == null) {
-			if (other.correctVersion != null) {
+		if (aPIVersion == null) {
+			if (other.aPIVersion != null) {
 				return false;
 			}
-		} else if (!correctVersion.equals(other.correctVersion)) {
+		} else if (!aPIVersion.equals(other.aPIVersion)) {
 			return false;
 		}
-		if (proposedVersion == null) {
-			if (other.proposedVersion != null) {
+		if (requestedVersion == null) {
+			if (other.requestedVersion != null) {
 				return false;
 			}
-		} else if (!proposedVersion.equals(other.proposedVersion)) {
+		} else if (!requestedVersion.equals(other.requestedVersion)) {
 			return false;
 		}
 		return true;
 	}
+
 
 }

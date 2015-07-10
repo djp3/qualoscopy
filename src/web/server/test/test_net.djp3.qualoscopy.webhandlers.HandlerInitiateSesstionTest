@@ -1,2 +1,3 @@
-{"eventType":"VOID","event":{},"timestamp":"1435959114536"}
-{"eventType":"VOID","event":{},"timestamp":"1435959114536"}
+{"eventType":"VOID","event":{},"timestamp":"1436212265423"}
+{"eventType":"VOID","event":{},"timestamp":"1436212265423"}
+{"eventType":"INITIATE_SESSION","event":{"requested_version":"-999","api_version":"-999"},"timestamp":"1436212266443"}

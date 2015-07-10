@@ -1,2 +1,2 @@
-{"eventType":"CHECK_VERSION","event":{"correct_version":"TEST_VERSION","proposed_version":"TEST_VERSION"},"timestamp":"1435959109775"}
-{"eventType":"INITIATE_SESSION","event":{"correct_version":"TEST_VERSION","proposed_version":"TEST_VERSION"},"timestamp":"1435959109804"}
+{"eventType":"CHECK_VERSION","event":{"requested_version":"TEST_VERSION","api_version":"TEST_VERSION"},"timestamp":"1436212260931"}
+{"eventType":"INITIATE_SESSION","event":{"requested_version":"TEST_VERSION","api_version":"TEST_VERSION"},"timestamp":"1436212260943"}

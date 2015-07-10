@@ -25,17 +25,15 @@ package net.djp3.qualoscopy.events.handlers;
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 import net.djp3.qualoscopy.events.QEvent;
 import net.djp3.qualoscopy.events.QEventCheckSession;
-import net.djp3.qualoscopy.events.QEventCheckVersion;
-import net.djp3.qualoscopy.events.QEventInitiateSession;
-import net.djp3.qualoscopy.webhandlers.HandlerCheckSession;
-import net.djp3.qualoscopy.webhandlers.HandlerCheckVersion;
 import net.minidev.json.JSONObject;
 
-public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
+public class QEventHandlerCheckSession extends QEventHandlerCheckVersion {
 
 
 	private boolean parametersChecked = false;
 	protected String source = null;
+	protected String userID = null;
+	protected String hashedSaltedSessionID = null;
 
 	@Override
 	protected boolean getParametersChecked() {
@@ -48,7 +46,7 @@ public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
 	
 	
 	protected boolean typeMatches(QEvent q){
-		return (q instanceof QEventInitiateSession);
+		return (q instanceof QEventCheckSession);
 	}
 	
 	
@@ -60,10 +58,12 @@ public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
 			return ret;
 		}
 		
-		QEventInitiateSession event = null;
+		QEventCheckSession event = null;
 		if (typeMatches(_event)) {
-			event = ((QEventInitiateSession) _event);
+			event = ((QEventCheckSession) _event);
 			source = event.getSource();
+			userID = event.getUserID();
+			hashedSaltedSessionID = event.getHashedSaltedSessionID();
 			
 			/* TODO: Make sure that the sessionID matches the user and the source */
 			/* This will require looking it up in the database */
@@ -72,8 +72,6 @@ public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
 		} else {
 			return checkParametersTypeError(_event, ret);
 		}
-
-		return null;
 	}
 
 	@Override
@@ -89,8 +87,8 @@ public class QEventHandlerInitiateSession extends QEventHandlerCheckVersion {
 		}
 
 		try{
-			ret.put("session_id",DatastoreInterface.getInstance().createAndStoreInitialSessionID(null));
-			ret.put("session_salt",DatastoreInterface.getInstance().createAndStoreSalt(null));
+			ret.put("session_id",DatastoreInterface.getInstance().createAndStoreSessionID(userID));
+			ret.put("session_salt",DatastoreInterface.getInstance().createAndStoreSalt(userID));
 			
 			return ret;
 		}

@@ -22,6 +22,8 @@
 
 package net.djp3.qualoscopy;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -30,8 +32,6 @@ import net.djp3.qualoscopy.events.QEventWrapper;
 import net.djp3.qualoscopy.events.QEventWrapperFactory;
 import net.djp3.qualoscopy.events.QEventWrapperHandler;
 import net.djp3.qualoscopy.events.QEventWrapperQueuer;
-import net.djp3.qualoscopy.webhandlers.HandlerInitiateSession;
-import net.djp3.qualoscopy.webhandlers.HandlerVersionChecked;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -44,11 +44,10 @@ import com.lmax.disruptor.dsl.Disruptor;
 
 import edu.uci.ics.luci.utility.Globals;
 import edu.uci.ics.luci.utility.webserver.AccessControl;
-import edu.uci.ics.luci.utility.webserver.RequestDispatcher;
 import edu.uci.ics.luci.utility.webserver.WebServer;
-import edu.uci.ics.luci.utility.webserver.handlers.HandlerAbstract;
-import edu.uci.ics.luci.utility.webserver.handlers.HandlerShutdown;
-import edu.uci.ics.luci.utility.webserver.handlers.HandlerVersion;
+import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandlerInterface;
+import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandler_Shutdown;
+import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandler_Version;
 import edu.uci.ics.luci.utility.webserver.input.channel.socket.HTTPInputOverSocket;
 
 public class QualoscopyWebServer {
@@ -112,36 +111,47 @@ public class QualoscopyWebServer {
 
 		/* Set up the global variable */
 		GlobalsQualoscopy globalsQualoscopy = new GlobalsQualoscopy(VERSION,false);
+		globalsQualoscopy.setTesting(false);
 		Globals.setGlobals(globalsQualoscopy);
 		
-		/* Set up an event queue with logging */
+		/* Set up a log file */
 		String logFileName = config.getString("event.logfile");
-		eventPublisher = createEventQueue(logFileName);
-		Globals.getGlobals().addQuittable(eventPublisher);
+		File logFile = new File(logFileName);
+		if(logFile.exists()){
+			logFile.delete();
+		}
+		try {
+			logFile.createNewFile();
+		} catch (IOException e1) {
+			getLog().error(e1);
+		}
 		
 		WebServer ws = null;
-		HashMap<String, HandlerAbstract> requestHandlerRegistry;
+		HashMap<String, ServerCallHandlerInterface> requestHandlerRegistry;
 
 		try {
 			boolean secure = true;
 			
 			HTTPInputOverSocket inputChannel = new HTTPInputOverSocket(port,secure);
+
 					
+			requestHandlerRegistry = new HashMap<String,ServerCallHandlerInterface>();
 			// Null is a default Handler
-			requestHandlerRegistry = new HashMap<String, HandlerAbstract>();
-			requestHandlerRegistry.put(null, new HandlerVersion(VERSION));
-			requestHandlerRegistry.put("", new HandlerVersion(VERSION));
-			requestHandlerRegistry.put("/", new HandlerVersion(VERSION));
-			requestHandlerRegistry.put("/version", new HandlerVersionChecked(eventPublisher,VERSION));
-			requestHandlerRegistry.put("/initiate_session", new HandlerInitiateSession(eventPublisher,null));
-			requestHandlerRegistry.put("/shutdown", new HandlerShutdown(Globals.getGlobals()));
+			requestHandlerRegistry.put(null, new ServerCallHandler_Version(VERSION));
+			requestHandlerRegistry.put("", new ServerCallHandler_Version(VERSION));
+			requestHandlerRegistry.put("/", new ServerCallHandler_Version(VERSION));
+			//requestHandlerRegistry.put("/version", new ServerCallHandler_Version(eventPublisher,VERSION));
+			//requestHandlerRegistry.put("/initiate_session", new HandlerInitiateSession(eventPublisher,null));
+			//requestHandlerRegistry.put("/login", new HandlerLogin(eventPublisher,null));
+			requestHandlerRegistry.put("/shutdown", new ServerCallHandler_Shutdown(Globals.getGlobals()));
 						
-			RequestDispatcher requestDispatcher = new RequestDispatcher(requestHandlerRegistry);
 			AccessControl accessControl = new AccessControl();
 			accessControl.reset();
-			ws = new WebServer(inputChannel, requestDispatcher, accessControl);
-			ws.start();
+			ws = new WebServer(inputChannel, requestHandlerRegistry, accessControl,logFile);
+			
 			Globals.getGlobals().addQuittable(ws);
+			
+			ws.start();
 
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -149,10 +159,13 @@ public class QualoscopyWebServer {
 			return;
 		}
 
-		while(!Globals.getGlobals().isQuitting()){
-			try {
-				Thread.sleep(GlobalsQualoscopy.ONE_SECOND);
-			} catch (InterruptedException e) {
+		synchronized(ws){
+			while(!Globals.getGlobals().isQuitting()){
+				try {
+					ws.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		getLog().info("Qualoscopy shutdown");

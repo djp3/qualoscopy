@@ -31,8 +31,8 @@ public class QEventHandlerCheckVersion extends QEventHandler {
 
 	public static final String ERROR_API_VERSION_MISMATCH = "Requested API version is not supported";
 	private boolean parametersChecked = false;
-	private String correctVersion = null;
-	private String proposedVersion = null;
+	private String aPIVersion = null;
+	private String requestedVersion = null;
 
 	@Override
 	protected boolean getParametersChecked() {
@@ -56,13 +56,11 @@ public class QEventHandlerCheckVersion extends QEventHandler {
 			return ret;
 		}
 
-		ret = new JSONObject();
-
 		QEventCheckVersion event = null;
 		if (typeMatches(_event)) {
 			event = ((QEventCheckVersion) _event);
-			correctVersion = event.getCorrectVersion();
-			proposedVersion = event.getProposedVersion();
+			aPIVersion = event.getAPIVersion();
+			requestedVersion = event.getRequestedVersion();
 			this.setParametersChecked(true);
 			return null;
 		} else {
@@ -83,14 +81,14 @@ public class QEventHandlerCheckVersion extends QEventHandler {
 		}
 
 		try{
-			if(!correctVersion.equals(proposedVersion)){
+			if(!aPIVersion.equals(requestedVersion)){
 				ret.put("error", "true");
 				JSONArray errors = new JSONArray();
-				errors.add(ERROR_API_VERSION_MISMATCH+": requested: "+proposedVersion+", provided: "+correctVersion);
+				errors.add(ERROR_API_VERSION_MISMATCH+": requested: "+requestedVersion+", provided: "+aPIVersion);
 				ret.put("errors", errors);
 				return ret;
 			} else {
-				ret.put("version", correctVersion);
+				ret.put("version", aPIVersion);
 				return ret;
 			}
 		}

@@ -24,7 +24,7 @@ package net.djp3.qualoscopy.events;
 
 public enum QEventType {
 
-	VOID, CHECK_VERSION,INITIATE_SESSION;
+	VOID, CHECK_VERSION,INITIATE_SESSION,LOGIN;
 
 	public static String toString(QEventType x) {
 		switch (x) {
@@ -32,6 +32,8 @@ public enum QEventType {
 			return "CHECK_VERSION";
 		case INITIATE_SESSION:
 			return "INITIATE_SESSION";
+		case LOGIN:
+			return "LOGIN";
 		default:
 			return "VOID";
 		}
@@ -43,6 +45,8 @@ public enum QEventType {
 			return CHECK_VERSION;
 		case "INITIATE_SESSION":
 			return INITIATE_SESSION;
+		case "LOGIN":
+			return LOGIN;
 		default:
 			return VOID;
 		}

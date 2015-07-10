@@ -58,21 +58,21 @@ public class InterfaceTest {
 	public void test() {
 		
 		/* Check to make sure that Interface makes a default instance */
-		assertTrue(Interface.getInstance() != null);
-		String uniqueSessionID_1 = Interface.getInstance().createSessionID();
-		String uniqueSessionSalt_1 = Interface.getInstance().createSalt();
+		assertTrue(DatastoreInterface.getInstance() != null);
+		String uniqueSessionID_1 = DatastoreInterface.getInstance().createSessionID();
+		String uniqueSessionSalt_1 = DatastoreInterface.getInstance().createSalt();
 		
-		Interface.createInterface(null);
-		String uniqueSessionID_2 = Interface.getInstance().createSessionID();
-		String uniqueSessionSalt_2 = Interface.getInstance().createSalt();
+		DatastoreInterface.createInterface(null);
+		String uniqueSessionID_2 = DatastoreInterface.getInstance().createSessionID();
+		String uniqueSessionSalt_2 = DatastoreInterface.getInstance().createSalt();
 		
 		/* Check to make sure that Interface's are consistent */
 		long seed = System.currentTimeMillis();
-		Interface.createInterface(null, seed);
-		Interface interface1 = Interface.getInstance();
+		DatastoreInterface.createInterface(null, seed);
+		DatastoreInterface interface1 = DatastoreInterface.getInstance();
 		
-		Interface.createInterface(null, seed);
-		Interface interface2 = Interface.getInstance();
+		DatastoreInterface.createInterface(null, seed);
+		DatastoreInterface interface2 = DatastoreInterface.getInstance();
 		
 		assertTrue(interface1 != interface2);
 		

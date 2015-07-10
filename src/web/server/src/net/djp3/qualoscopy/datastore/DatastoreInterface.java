@@ -28,9 +28,10 @@ import java.util.Random;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.uci.ics.luci.utility.datastructure.Pair;
 import edu.uci.ics.luci.utility.webserver.handlers.login.Datastore;
 
-public class Interface {
+public class DatastoreInterface {
 	
 	final static Integer ITERATIONS = 200;
 
@@ -40,23 +41,23 @@ public class Interface {
 
 	public static Logger getLog(){
 		if(log == null){
-			log = LogManager.getLogger(Interface.class);
+			log = LogManager.getLogger(DatastoreInterface.class);
 		}
 		return log;
 	}
 	
-	private static volatile Interface instance = null;
+	private static volatile DatastoreInterface instance = null;
 	
-	public static Interface getInstance(){
+	public static DatastoreInterface getInstance(){
 		if(instance == null){
 			getLog().info("Creating a default Datastore Interface");
-			instance = new Interface(null);
+			instance = new DatastoreInterface(null);
 		}
 		return(instance);
 	}
 	
 	static void createInterface(Datastore db){
-		instance = new Interface(db);
+		instance = new DatastoreInterface(db);
 	}
 	
 	/**
@@ -65,14 +66,14 @@ public class Interface {
 	 * @param seed
 	 */
 	static void createInterface(Datastore db,long seed){
-		instance = new Interface(db,seed);
+		instance = new DatastoreInterface(db,seed);
 	}
 	
 	Random r = new Random(System.currentTimeMillis());
 	
 	private Datastore db;
 	
-	private Interface(Datastore db){
+	private DatastoreInterface(Datastore db){
 		this(db,System.currentTimeMillis());
 	}
 	
@@ -85,13 +86,13 @@ public class Interface {
 	 * @param db
 	 * @param seed
 	 */
-	private Interface(Datastore db,long seed){
+	private DatastoreInterface(Datastore db,long seed){
 		this.db = db;
 		this.setRandom(new Random(seed));
 	}
 	
 	
-	public String createSessionID(){
+	protected String createSessionID(){
 		try {
 			return SHA256.sha256(r.nextLong()+"",ITERATIONS);
 		} catch (IllegalArgumentException e) {
@@ -102,7 +103,7 @@ public class Interface {
 		return null;
 	}
 	
-	public synchronized String createSalt(){
+	protected synchronized String createSalt(){
 		try {
 			return SHA256.sha256(r.nextLong()+"",ITERATIONS);
 		} catch (IllegalArgumentException e) {
@@ -111,5 +112,17 @@ public class Interface {
 			getLog().fatal(e.toString());
 		}
 		return null;
+	}
+	
+	public synchronized Pair<String,String> createAndStoreInitialSessionIDAndSalt(String source){
+		//TODO: Store in database somewhere
+		String sessionID = createSessionID();
+		String salt = createSalt();
+		return new Pair<String,String>(sessionID,salt);
+	}
+	
+	public synchronized String createAndStoreSalt(String userID){
+		//TODO: Store salt in database somewhere
+		return createSalt();
 	}
 }

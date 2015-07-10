@@ -137,7 +137,7 @@ public class HandlerInitiateSesstionTest {
 			ws.getRequestDispatcher() .updateRequestHandlerRegistry( null, new HandlerVersion(Globals.getGlobals() .getSystemVersion()));
 			ws.getRequestDispatcher() .updateRequestHandlerRegistry( "", new HandlerVersion(Globals.getGlobals() .getSystemVersion()));
 			ws.getRequestDispatcher() .updateRequestHandlerRegistry( "/", new HandlerVersion(Globals.getGlobals() .getSystemVersion()));
-			ws.getRequestDispatcher() .updateRequestHandlerRegistry( "/version", new HandlerVersionChecked(eventPublisher,Globals.getGlobals().getSystemVersion()));
+			ws.getRequestDispatcher() .updateRequestHandlerRegistry( "/version", new HandlerCheckVersion(eventPublisher,Globals.getGlobals().getSystemVersion()));
 			ws.getRequestDispatcher() .updateRequestHandlerRegistry( "/initiate_session", new HandlerInitiateSession(eventPublisher,null));
 			ws.getRequestDispatcher().updateRequestHandlerRegistry("/shutdown", new HandlerShutdown(Globals.getGlobals()));
 
@@ -308,7 +308,7 @@ public class HandlerInitiateSesstionTest {
 			assertEquals("true", response.get("error"));
 			JSONArray errors = (JSONArray) response.get("errors");
 			String error = (String) errors.get(0);
-			assertTrue(error.contains(HandlerVersionChecked.ERROR_NULL_VERSION));
+			assertTrue(error.contains(HandlerCheckVersion.ERROR_NULL_VERSION));
 		} catch (ClassCastException e) {
 			fail("Bad JSON Response");
 		}

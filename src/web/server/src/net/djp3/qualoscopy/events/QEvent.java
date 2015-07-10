@@ -26,23 +26,39 @@ import net.minidev.json.JSONObject;
 
 public class QEvent {
 
-	public QEvent() {
+	private QEventType type;
+
+	public QEvent(QEventType type) {
+		setType(type);
+	}
+	
+	public QEventType getType() {
+		return type;
+	}
+
+	private void setType(QEventType type) {
+		this.type = type;
 	}
 
 	public JSONObject toJSON() {
 		JSONObject ret = new JSONObject();
+		ret.put("event_type", QEventType.toString(getType()));
 		return ret;
 	}
+	
 
 	static public QEvent fromJSON(JSONObject in) {
-		return (new QEvent());
+		//QEvent parent = QEvent.fromJSON(in);
+
+		String _type = (String) in.get("event_type");
+		return (new QEvent(QEventType.fromString(_type)));
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result;
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -57,7 +73,13 @@ public class QEvent {
 		if (!(obj instanceof QEvent)) {
 			return false;
 		}
+		QEvent other = (QEvent) obj;
+		if (type != other.type) {
+			return false;
+		}
 		return true;
 	}
+
+	
 
 }
