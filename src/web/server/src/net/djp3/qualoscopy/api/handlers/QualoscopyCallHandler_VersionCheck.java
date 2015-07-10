@@ -103,11 +103,13 @@ public class QualoscopyCallHandler_VersionCheck extends ServerCallHandler_Versio
 		Set<String> _version = r.getParameters().get("version");
 		if((_version == null) || ((setRequestedVersion(_version.iterator().next()))==null)){
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_VERSION);
+			response.put("error", "true");
 			response.put("errors", errors);
 		}
 		else{
 			if(!getRequestedVersion().equals(this.getAPIVersion())){
 				errors.add("Incorrect API version request"+", providing:"+this.getAPIVersion()+", requested:"+getRequestedVersion());
+				response.put("error", "true");
 				response.put("errors", errors);
 			}
 		}
