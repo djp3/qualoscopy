@@ -1,5 +1,14 @@
 
-.radio {
+.radio label {
+  text-align: left;
+  font-size: large;
+}
+
+.form-control {
+  font-size: large;
+}
+
+select option {
   font-size: large;
 }
 
