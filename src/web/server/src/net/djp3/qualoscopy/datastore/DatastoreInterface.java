@@ -227,6 +227,7 @@ public class DatastoreInterface {
 	 * @return
 	 */
 	public boolean checkSession(String user_id, String shsid, String shsk, String source) {
+		getLog().info("in checkSession "+user_id+" "+shsid+" "+shsk+" "+source);
 		if(user_id == null){
 			return false;
 		}
