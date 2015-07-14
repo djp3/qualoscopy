@@ -190,12 +190,14 @@ public class DatastoreInterface {
 	public synchronized String createAndStoreSalt(String userID){
 		//TODO: Store salt in database somewhere
 		String salt = createSalt();
-		Set<String> salts = unusedSalts.get(userID);
-		if(salts == null){
-			salts = new HashSet<String>();
+		synchronized(unusedSalts){
+			Set<String> salts = unusedSalts.get(userID);
+			if(salts == null){
+				salts = new HashSet<String>();
+			}
+			salts.add(salt);
+			unusedSalts.put(userID,salts);
 		}
-		salts.add(salt);
-		unusedSalts.put(userID,salts);
 		return salt;
 	}
 
@@ -242,6 +244,7 @@ public class DatastoreInterface {
 		}
 		
 		for(Session session: sessions){
+			getLog().info("Got one session:"+session.toString());
 			if(user_id.equals(session.getUser_id())){
 				synchronized(unusedSalts){
 					Set<String> saltSet = unusedSalts.get(session.getUser_id());
