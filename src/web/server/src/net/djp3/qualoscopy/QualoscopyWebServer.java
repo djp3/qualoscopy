@@ -97,13 +97,14 @@ public class QualoscopyWebServer {
 
 					
 			requestHandlerRegistry = new HashMap<String,APIEvent>();
+			DatastoreInterface db = new DatastoreInterface(null);
 			// Null is a default Handler
 			requestHandlerRegistry.put(null, new APIEvent_Version(VERSION));
 			requestHandlerRegistry.put("", new APIEvent_Version(VERSION));
 			requestHandlerRegistry.put("/", new APIEvent_Version(VERSION));
 			requestHandlerRegistry.put("/version", new QAPIEvent_VersionCheck(VERSION));
-			requestHandlerRegistry.put("/initiate_session", new QAPIEvent_InitiateSession(VERSION,new DatastoreInterface(null)));
-			requestHandlerRegistry.put("/login", new QAPIEvent_Login(VERSION,null));
+			requestHandlerRegistry.put("/initiate_session", new QAPIEvent_InitiateSession(VERSION,db));
+			requestHandlerRegistry.put("/login", new QAPIEvent_Login(VERSION,db));
 			requestHandlerRegistry.put("/shutdown", new APIEvent_Shutdown(Globals.getGlobals()));
 						
 			AccessControl accessControl = new AccessControl();
