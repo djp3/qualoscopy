@@ -244,8 +244,9 @@ public class DatastoreInterface {
 			return false;
 		}
 		
+		System.err.println("Session size:"+sessions.size());
 		for(Session session: sessions){
-			getLog().info("Got one session:"+session.toString());
+			System.err.println("Got one session:"+session.toString());
 			if(user_id.equals(session.getUser_id())){
 				synchronized(unusedSalts){
 					Set<String> saltSet = unusedSalts.get(session.getUser_id());
@@ -255,14 +256,14 @@ public class DatastoreInterface {
 							if(shsid.equals(SHA256.sha256(session.getSession_ID()+salt,1))){
 								if(shsk.equals(SHA256.sha256(session.getSession_key()+salt, 1))){
 									removeMe = salt;
-									getLog().info("Good authentication");
+									System.err.println("Good authentication");
 								}
 								else{
-									getLog().info("shsk did not match the session, sessionID="+session.getSession_key());
+									System.err.println("shsk did not match the session, sessionID="+session.getSession_key());
 								}
 							}
 							else{
-								getLog().info("shsid did not match the session, sessionID="+session.getSession_ID());
+								System.err.println("shsid did not match the session, sessionID="+session.getSession_ID());
 							}
 						}
 					}
@@ -274,7 +275,7 @@ public class DatastoreInterface {
 				}
 			}
 			else{
-				getLog().info("User id did not match one salt:"+session.toString());
+				System.err.println("User id did not match one salt:"+session.toString());
 			}
 		}
 		return false;
