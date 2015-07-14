@@ -25,13 +25,14 @@ package net.djp3.qualoscopy.api.handlers;
 import java.util.Set;
 
 import net.djp3.qualoscopy.GlobalsQualoscopy;
-import net.djp3.qualoscopy.api.methods.QualoscopyCall_VersionCheck;
+import net.djp3.qualoscopy.api.methods.QAPIM_VersionCheck;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.WebEventHandlerInterface;
 import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandler;
 import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandlerInterface;
 import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandler_Version;
@@ -48,25 +49,41 @@ import edu.uci.ics.luci.utility.webserver.output.channel.Output;
  * @author djp3
  *
  */
-public class QualoscopyCallHandler_VersionCheck extends ServerCallHandler_Version implements ServerCallHandlerInterface{
-	
-	public static final String ERROR_NULL_VERSION = "Version was null";
+public class H_VersionCheck extends ServerCallHandler_Version implements ServerCallHandlerInterface, WebEventHandlerInterface{ 
 	
 	private static transient volatile Logger log = null;
-	
-
 	public static Logger getLog(){
 		if(log == null){
-			log = LogManager.getLogger(QualoscopyCallHandler_VersionCheck.class);
+			log = LogManager.getLogger(H_VersionCheck.class);
 		}
 		return log;
 	}
-
+	
+	public static final String ERROR_NULL_VERSION = "Version was null";
 
 	private String requestedVersion = null;
 	
-	public QualoscopyCallHandler_VersionCheck(String apiVersion) {
+	public H_VersionCheck() {
+		super();
+	}
+	
+	public H_VersionCheck(String apiVersion) {
 		super(apiVersion);
+	}
+	
+	@Override
+	public boolean isInitialized(){
+		return (super.isInitialized());
+	}
+	
+	@Override
+	public ServerCallHandler copy() {
+		return new H_VersionCheck(getAPIVersion());
+	}
+	
+	@Override
+	public Class<? extends ServerCall> getMatchingMethod() {
+		return QAPIM_VersionCheck.class;
 	}
 	
 	public String getRequestedVersion(){
@@ -78,18 +95,13 @@ public class QualoscopyCallHandler_VersionCheck extends ServerCallHandler_Versio
 		return getRequestedVersion();
 	}
 
-	
-	@Override
-	public ServerCallHandler copy() {
-		return new QualoscopyCallHandler_VersionCheck(this.getAPIVersion());
-	}
-	
 
-	private JSONObject buildResponse(Request r) {
+	protected JSONObject buildResponse(Request r) {
 		JSONObject response = buildResponseSkeleton();
 		JSONArray errors = (JSONArray) response.get("errors");
 		if(errors == null){
 			errors = new JSONArray();
+			response.put("errors", errors);
 		}
 		
 		// Make sure globals is not null
@@ -100,6 +112,7 @@ public class QualoscopyCallHandler_VersionCheck extends ServerCallHandler_Versio
 			response.put("errors", errors);
 		}
 
+		//Get the version parameter
 		Set<String> _version = r.getParameters().get("version");
 		if((_version == null) || ((setRequestedVersion(_version.iterator().next()))==null)){
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_VERSION);
@@ -107,8 +120,9 @@ public class QualoscopyCallHandler_VersionCheck extends ServerCallHandler_Versio
 			response.put("errors", errors);
 		}
 		else{
-			if(!getRequestedVersion().equals(this.getAPIVersion())){
-				errors.add("Incorrect API version request"+", providing:"+this.getAPIVersion()+", requested:"+getRequestedVersion());
+			// Check the version parameter
+			if(!getRequestedVersion().equals(getAPIVersion())){
+				errors.add("Incorrect API version request"+", providing:"+getAPIVersion()+", requested:"+getRequestedVersion());
 				response.put("error", "true");
 				response.put("errors", errors);
 			}
@@ -140,21 +154,17 @@ public class QualoscopyCallHandler_VersionCheck extends ServerCallHandler_Versio
 	@Override
 	public ServerCallResult onEvent(WebEventInterface _e) {
 
-		QualoscopyCall_VersionCheck e = null;
+		QAPIM_VersionCheck e = null;
 		
-		if(!(_e instanceof QualoscopyCall_VersionCheck)){
+		if(!(_e instanceof QAPIM_VersionCheck)){
 			getLog().error(ERROR_UNABLE_TO_HANDLE_WEB_EVENT+","+this.getClass().getCanonicalName()+" can't handle event of type "+_e.getClass().getCanonicalName());
 			return null;
 		}
 		else{
-			e = (QualoscopyCall_VersionCheck) _e;
+			e = (QAPIM_VersionCheck) _e;
 			return(onEvent(e));
 		}
 	}
 	
-	@Override
-	public Class<? extends ServerCall> getMatchingEvent() {
-		return QualoscopyCall_VersionCheck.class;
-	}
 }
 

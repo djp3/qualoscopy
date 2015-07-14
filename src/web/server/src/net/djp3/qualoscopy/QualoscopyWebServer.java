@@ -26,10 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import net.djp3.qualoscopy.api.handlers.H_InitiateSession;
-import net.djp3.qualoscopy.api.handlers.H_VersionCheck;
-import net.djp3.qualoscopy.datastore.DatastoreInterface;
-
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -39,9 +35,9 @@ import org.apache.logging.log4j.Logger;
 import edu.uci.ics.luci.utility.Globals;
 import edu.uci.ics.luci.utility.webserver.AccessControl;
 import edu.uci.ics.luci.utility.webserver.WebServer;
-import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandlerInterface;
-import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandler_Shutdown;
-import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandler_Version;
+import edu.uci.ics.luci.utility.webserver.event.api.APIEvent;
+import edu.uci.ics.luci.utility.webserver.event.api.APIEvent_Shutdown;
+import edu.uci.ics.luci.utility.webserver.event.api.APIEvent_Version;
 import edu.uci.ics.luci.utility.webserver.input.channel.socket.HTTPInputOverSocket;
 
 public class QualoscopyWebServer {
@@ -87,7 +83,7 @@ public class QualoscopyWebServer {
 		}
 		
 		WebServer ws = null;
-		HashMap<String, ServerCallHandlerInterface> requestHandlerRegistry;
+		HashMap<String, APIEvent> requestHandlerRegistry;
 
 		try {
 			boolean secure = true;
@@ -95,15 +91,15 @@ public class QualoscopyWebServer {
 			HTTPInputOverSocket inputChannel = new HTTPInputOverSocket(port,secure);
 
 					
-			requestHandlerRegistry = new HashMap<String,ServerCallHandlerInterface>();
+			requestHandlerRegistry = new HashMap<String,APIEvent>();
 			// Null is a default Handler
-			requestHandlerRegistry.put(null, new ServerCallHandler_Version(VERSION));
-			requestHandlerRegistry.put("", new ServerCallHandler_Version(VERSION));
-			requestHandlerRegistry.put("/", new ServerCallHandler_Version(VERSION));
-			requestHandlerRegistry.put("/version", new H_VersionCheck(VERSION));
-			requestHandlerRegistry.put("/initiate_session", new H_InitiateSession(new DatastoreInterface(null)));
+			requestHandlerRegistry.put(null, new APIEvent_Version(VERSION));
+			requestHandlerRegistry.put("", new APIEvent_Version(VERSION));
+			requestHandlerRegistry.put("/", new APIEvent_Version(VERSION));
+			//requestHandlerRegistry.put("/version", new H_VersionCheck(VERSION));
+			//requestHandlerRegistry.put("/initiate_session", new H_InitiateSession(new DatastoreInterface(null)));
 			//requestHandlerRegistry.put("/login", new HandlerLogin(eventPublisher,null));
-			requestHandlerRegistry.put("/shutdown", new ServerCallHandler_Shutdown(Globals.getGlobals()));
+			requestHandlerRegistry.put("/shutdown", new APIEvent_Shutdown(Globals.getGlobals()));
 						
 			AccessControl accessControl = new AccessControl();
 			accessControl.reset();
