@@ -21,6 +21,7 @@
   <!-- Downaloded CSS files -->
   <link rel="stylesheet" href="css/downloaded/bootstrap-datetimepicker.css">
   <link rel="stylesheet" href="css/downloaded/bootstrap-select.css">
+  <link rel="stylesheet" href="css/downloaded/dataTables.bootstrap.css">
 
   <!-- HTML5 shim and Respond.js for IE8 support
   of HTML5 elements and media queries -->
@@ -176,21 +177,33 @@
 
   <div class='row patient-table'>
     <div class='col-md-12'>
-      <table id="paitents" class='table table-hover table-striped'>
-        <tr>
-          <th>MR</th>
-          <th>Last Name</th>
-          <th>First Name</th>
-          <th>Date of Birth</th>
-          <th>Gender</th>
-        </tr>
-        <tr class='clickable-row' data-href='patient.html'>
-          <td>00000</td>
-          <td>Raus</td>
-          <td>Luke</td>
-          <td>6/29/1960</td>
-          <td>Male</td>
-        </tr>
+      <table id="paitents" class='table table-hover table-bordered table-striped'>
+        <thead>
+          <tr>
+            <th>MR</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Date of Birth</th>
+            <th>Gender</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class='clickable-row' data-href='patient.html'>
+            <td>00000</td>
+            <td>Raus</td>
+            <td>Luke</td>
+            <td>6/29/1960</td>
+            <td>Male</td>
+          </tr>
+
+          <tr class='clickable-row' data-href='patient.html'>
+            <td>00001</td>
+            <td>Karnes</td>
+            <td>Doe</td>
+            <td>6/20/1900</td>
+            <td>Male</td>
+          </tr>
+        </tbody>
       </table>
     </div><!-- /.col -->
   </div><!-- /.row -->
@@ -211,6 +224,8 @@
 <script src="js/downloaded/moment.min.js"></script>
 <script src="js/downloaded/bootstrap-datetimepicker.js"></script>
 <script src="js/downloaded/bootstrap-select.js"></script>
+<script src="js/downloaded/jquery.dataTables.min.js"></script>
+<script src="js/downloaded/dataTables.bootstrap.js"></script>
 <!-- My JS -->
 <script src="js/my/admin.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
