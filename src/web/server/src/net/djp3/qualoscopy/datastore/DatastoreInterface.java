@@ -24,10 +24,12 @@ package net.djp3.qualoscopy.datastore;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-
-import net.djp3.qualoscopy.datastore.DatastoreInterface.InitialCredentials;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +54,7 @@ public class DatastoreInterface {
 	/*This is the temporary Datastore substitutions */
 	private List<InitialCredentials> initialCredentials;
 	private List<Session> sessions;
-	private List<Pair<String,String>> unusedSalts;
+	private Map<String,Set<String>> unusedSalts;
 	
 	void setRandom(Random r){
 		DatastoreInterface.r = r;
@@ -72,7 +74,7 @@ public class DatastoreInterface {
 		// TODO: Replace below with equivalent in Datastore
 		initialCredentials = Collections.synchronizedList(new ArrayList<InitialCredentials>());
 		sessions  = Collections.synchronizedList(new ArrayList<Session>());
-		unusedSalts  = Collections.synchronizedList(new ArrayList<Pair<String,String>>());
+		unusedSalts  = Collections.synchronizedMap(new HashMap<String,Set<String>>());
 		this.setRandom(new Random(seed));
 	}
 	
@@ -188,7 +190,12 @@ public class DatastoreInterface {
 	public synchronized String createAndStoreSalt(String userID){
 		//TODO: Store salt in database somewhere
 		String salt = createSalt();
-		unusedSalts.add(new Pair<String,String>(userID,salt));
+		Set<String> salts = unusedSalts.get(userID);
+		if(salts == null){
+			salts = new HashSet<String>();
+		}
+		salts.add(salt);
+		unusedSalts.put(userID,salts);
 		return salt;
 	}
 
@@ -207,6 +214,56 @@ public class DatastoreInterface {
 		String sessionKey = createSessionKey();
 		sessions.add(new Session(user_id, shsid,sessionKey,source));
 		return sessionKey;
+	}
+
+	/**
+	 * 
+	 * @param user_id
+	 * @param shsid
+	 * @param shsk
+	 * @param source
+	 * @return
+	 */
+	public boolean checkSession(String user_id, String shsid, String shsk, String source) {
+		if(user_id == null){
+			return false;
+		}
+		
+		if(shsid == null){
+			return false;
+		}
+		
+		if(shsk == null){
+			return false;
+		}
+		
+		if(source == null){
+			return false;
+		}
+		
+		for(Session session: sessions){
+			if(user_id.equals(session.getUser_id())){
+				synchronized(unusedSalts){
+					Set<String> saltSet = unusedSalts.get(session.getUser_id());
+					String removeMe = null;
+					for(String salt :saltSet){
+						if(removeMe == null){
+							if(shsid.equals(SHA256.sha256(session.getSession_ID()+salt,1))){
+								if(shsk.equals(SHA256.sha256(session.getSession_key()+salt, 1))){
+									removeMe = salt;
+								}
+							}
+						}
+					}
+					if(removeMe != null){
+						saltSet.remove(removeMe);
+						unusedSalts.put(user_id, saltSet);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 
