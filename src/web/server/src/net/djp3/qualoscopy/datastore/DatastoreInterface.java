@@ -251,7 +251,14 @@ public class DatastoreInterface {
 							if(shsid.equals(SHA256.sha256(session.getSession_ID()+salt,1))){
 								if(shsk.equals(SHA256.sha256(session.getSession_key()+salt, 1))){
 									removeMe = salt;
+									getLog().info("Good authentication");
 								}
+								else{
+									getLog().info("shsk did not match the session, sessionID="+session.getSession_key());
+								}
+							}
+							else{
+								getLog().info("shsid did not match the session, sessionID="+session.getSession_ID());
 							}
 						}
 					}
@@ -261,6 +268,9 @@ public class DatastoreInterface {
 						return true;
 					}
 				}
+			}
+			else{
+				getLog().info("User id did not match one salt:"+session.toString());
 			}
 		}
 		return false;
