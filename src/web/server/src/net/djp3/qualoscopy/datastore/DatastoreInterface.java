@@ -249,7 +249,9 @@ public class DatastoreInterface {
 			System.err.println("Got one session:"+session.toString());
 			if(user_id.equals(session.getUser_id())){
 				synchronized(unusedSalts){
+					System.err.println("Unused salts size:"+unusedSalts.size());
 					Set<String> saltSet = unusedSalts.get(session.getUser_id());
+					System.err.println("Salt set size:"+saltSet.size());
 					String removeMe = null;
 					for(String salt :saltSet){
 						if(removeMe == null){
@@ -268,9 +270,13 @@ public class DatastoreInterface {
 						}
 					}
 					if(removeMe != null){
+						System.err.println("Session did match");
 						saltSet.remove(removeMe);
 						unusedSalts.put(user_id, saltSet);
 						return true;
+					}
+					else{
+						System.err.println("Session did not match");
 					}
 				}
 			}
