@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import net.djp3.qualoscopy.api.QAPIEvent_CheckSession;
 import net.djp3.qualoscopy.api.QAPIEvent_InitiateSession;
 import net.djp3.qualoscopy.api.QAPIEvent_Login;
 import net.djp3.qualoscopy.api.QAPIEvent_VersionCheck;
@@ -104,6 +105,7 @@ public class QualoscopyWebServer {
 			requestHandlerRegistry.put("/", new APIEvent_Version(VERSION));
 			requestHandlerRegistry.put("/version", new QAPIEvent_VersionCheck(VERSION));
 			requestHandlerRegistry.put("/initiate_session", new QAPIEvent_InitiateSession(VERSION,db));
+			requestHandlerRegistry.put("/check_session", new QAPIEvent_CheckSession(VERSION,db));
 			requestHandlerRegistry.put("/login", new QAPIEvent_Login(VERSION,db));
 			requestHandlerRegistry.put("/shutdown", new APIEvent_Shutdown(Globals.getGlobals()));
 						
