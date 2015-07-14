@@ -254,6 +254,7 @@ public class DatastoreInterface {
 					System.err.println("Salt set size:"+saltSet.size());
 					String removeMe = null;
 					for(String salt :saltSet){
+						System.err.println("salt :"+salt);
 						if(removeMe == null){
 							if(shsid.equals(SHA256.sha256(session.getSession_ID()+salt,1))){
 								if(shsk.equals(SHA256.sha256(session.getSession_key()+salt, 1))){
