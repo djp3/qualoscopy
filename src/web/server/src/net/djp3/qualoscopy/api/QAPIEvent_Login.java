@@ -126,7 +126,7 @@ public class QAPIEvent_Login extends QAPIEvent_VersionCheck implements Cloneable
 			response.put("errors", errors);
 		}
 		
-		Set<String> _shp = r.getParameters().get("shsid");
+		Set<String> _shp = r.getParameters().get("shp");
 		String shp  = null;
 		if((_shp == null) || ((shp = (_shp.iterator().next())) == null)){
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_SHP);
