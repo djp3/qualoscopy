@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  $('#paitents').dataTable();
 
   $(".clickable-row").click(function() {
     window.document.location = $(this).data("href");

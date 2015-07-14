@@ -22,6 +22,7 @@
   <!-- Downaloded CSS files -->
   <link rel="stylesheet" href="css/downloaded/bootstrap-datetimepicker.css">
   <link rel="stylesheet" href="css/downloaded/bootstrap-select.css">
+  <link rel="stylesheet" href="css/downloaded/dataTables.bootstrap.css">
 
   <!-- HTML5 shim and Respond.js for IE8 support
   of HTML5 elements and media queries -->
@@ -47,9 +48,9 @@
       <a class="navbar-brand" href="javascript:history.back()">Back</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
-        <form class="navbar-form navbar-right">
-          <button id="signout" type="submit" class="btn btn-success">Sign Out</button>
-        </form>
+        <div class="navbar-form navbar-right">
+          <button id="signout" class="btn btn-success">Sign Out</button>
+        </div>
       </div><!--/.navbar-collapse -->
     </div>
   </nav>
@@ -157,25 +158,30 @@
 
   <div class='row'>
     <div class='col-md-12'>
-      <table class='table table-hover table-striped operations-table '>
-        <tr>
-          <th>AC</th>
-          <th>DOS</th>
-          <th>Completed?</th>
-          <th>Faculty</th>
-        </tr>
-        <tr class='clickable-row' data-href='main.html'>
-          <td>00000</td>
-          <td>7/3/2015</td>
-          <td>YES</td>
-          <td>Karnes</td>
-        </tr>
-        <tr class='clickable-row' data-href='main.html'>
-          <td>00000</td>
-          <td>7/20/2015</td>
-          <td>NO</td>
-          <td>Karnes</td>
-        </tr>
+      <table id="procedure-table" class='table table-hover table-striped table-bordered operations-table'>
+        <thead>
+          <tr>
+            <th>AC</th>
+            <th>DOS</th>
+            <th>Completed?</th>
+            <th>Faculty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class='clickable-row' data-href='main.html'>
+            <td>00000</td>
+            <td>7/3/2015</td>
+            <td>YES</td>
+            <td>Karnes</td>
+          </tr>
+
+          <tr class='clickable-row' data-href='main.html'>
+            <td>00000</td>
+            <td>7/20/2015</td>
+            <td>NO</td>
+            <td>Karnes</td>
+          </tr>
+        </tbody>
       </table>
     </div><!-- /.col -->
   </div>
@@ -196,6 +202,8 @@
 <script src="js/downloaded/moment.min.js"></script>
 <script src="js/downloaded/bootstrap-datetimepicker.js"></script>
 <script src="js/downloaded/bootstrap-select.js"></script>
+<script src="js/downloaded/jquery.dataTables.min.js"></script>
+<script src="js/downloaded/dataTables.bootstrap.js"></script>
 <!-- My JS -->
 <script src="js/my/patient.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
