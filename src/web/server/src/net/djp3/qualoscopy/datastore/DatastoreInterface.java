@@ -22,8 +22,12 @@
 
 package net.djp3.qualoscopy.datastore;
 
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
+
+import net.djp3.qualoscopy.datastore.DatastoreInterface.InitialCredentials;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +49,10 @@ public class DatastoreInterface {
 	}
 
 	private Datastore db = null;
+	/*This is the temporary Datastore substitutions */
+	private List<InitialCredentials> initialCredentials;
+	private List<Session> sessions;
+	private List<Pair<String,String>> unusedSalts;
 	
 	void setRandom(Random r){
 		DatastoreInterface.r = r;
@@ -61,6 +69,10 @@ public class DatastoreInterface {
 	 */
 	private DatastoreInterface(Datastore db,long seed){
 		this.db = db;
+		// TODO: Replace below with equivalent in Datastore
+		initialCredentials = Collections.synchronizedList(new ArrayList<InitialCredentials>());
+		sessions  = Collections.synchronizedList(new ArrayList<Session>());
+		unusedSalts  = Collections.synchronizedList(new ArrayList<Pair<String,String>>());
 		this.setRandom(new Random(seed));
 	}
 	
@@ -70,32 +82,132 @@ public class DatastoreInterface {
 			return SHA256.sha256(r.nextLong()+"",ITERATIONS);
 		} catch (IllegalArgumentException e) {
 			getLog().fatal(e.toString());
-		} catch (NoSuchAlgorithmException e) {
-			getLog().fatal(e.toString());
 		}
 		return null;
 	}
 	
+	protected String createSessionKey(){
+		return SHA256.sha256(r.nextLong()+"",ITERATIONS);
+	}
+	
 	protected synchronized String createSalt(){
-		try {
-			return SHA256.sha256(r.nextLong()+"",ITERATIONS);
-		} catch (IllegalArgumentException e) {
-			getLog().fatal(e.toString());
-		} catch (NoSuchAlgorithmException e) {
-			getLog().fatal(e.toString());
+		return SHA256.sha256(r.nextLong()+"",ITERATIONS);
+	}
+	
+	public class InitialCredentials{
+		String sessionID;
+		String salt;
+		String source;
+		
+		public InitialCredentials(String sessionID, String salt, String source) {
+			super();
+			this.sessionID = sessionID;
+			this.salt = salt;
+			this.source = source;
 		}
-		return null;
+		
+		public String getSessionID() {
+			return sessionID;
+		}
+		public void setSessionID(String sessionID) {
+			this.sessionID = sessionID;
+		}
+		public String getSalt() {
+			return salt;
+		}
+		public void setSalt(String salt) {
+			this.salt = salt;
+		}
+		public String getSource() {
+			return source;
+		}
+		public void setSource(String source) {
+			this.source = source;
+		}
+	}
+	
+	public class Session{
+		
+		String user_id;
+		String session_id;
+		String session_key;
+		String source;
+		
+		public Session(String user_id, String session_id, String session_key, String source) {
+			super();
+			this.setUser_id(user_id);
+			this.setSession_ID(session_key);
+			this.setSession_key(session_key);
+			this.setSource(source);
+		}
+		
+		public String getUser_id() {
+			return user_id;
+		}
+		public void setUser_id(String user_id) {
+			this.user_id = user_id;
+		}
+		public String getSession_ID() {
+			return session_id;
+		}
+		public void setSession_ID(String session_id) {
+			this.session_id = session_id;
+		}
+		public String getSession_key() {
+			return session_key;
+		}
+		public void setSession_key(String session_key) {
+			this.session_key = session_key;
+		}
+		public String getSource() {
+			return source;
+		}
+		public void setSource(String source) {
+			this.source = source;
+		}
+		
 	}
 	
 	public synchronized Pair<String,String> createAndStoreInitialSessionIDAndSalt(String source){
 		//TODO: Store in database somewhere
 		String sessionID = createSessionID();
 		String salt = createSalt();
-		return new Pair<String,String>(sessionID,salt);
+		initialCredentials.add(new InitialCredentials(sessionID,salt,source));
+		Pair<String, String> pair = new Pair<String,String>(sessionID,salt);
+		return pair;
+	}
+	
+	public List<InitialCredentials> getInitialCredentials() {
+		return initialCredentials;
+	}
+
+	public boolean removeInitialCredentials(InitialCredentials passing) {
+		return(getInitialCredentials().remove(passing));
 	}
 	
 	public synchronized String createAndStoreSalt(String userID){
 		//TODO: Store salt in database somewhere
-		return createSalt();
+		String salt = createSalt();
+		unusedSalts.add(new Pair<String,String>(userID,salt));
+		return salt;
 	}
+
+	public String getHashedPassword(String user_id) {
+		//TODO: Make this use a database 
+		if(user_id.equals("Luke")){
+			return SHA256.sha256("Raus",1);
+		}
+		else{
+			return SHA256.makeSomethingUp();
+		}
+		
+	}
+
+	public String createAndStoreSession(String user_id, String shsid,String source) {
+		String sessionKey = createSessionKey();
+		sessions.add(new Session(user_id, shsid,sessionKey,source));
+		return sessionKey;
+	}
+
+
 }

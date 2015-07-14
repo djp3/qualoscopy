@@ -22,8 +22,8 @@
 
 package net.djp3.qualoscopy.events;
 
-import net.djp3.qualoscopy.webhandlers.HandlerCheckSession;
-import net.djp3.qualoscopy.webhandlers.HandlerLogin;
+import net.djp3.qualoscopy.api.HandlerCheckSession;
+import net.djp3.qualoscopy.api.HandlerLogin;
 import net.minidev.json.JSONObject;
 
 public class QEventLogin extends QEventCheckSession {

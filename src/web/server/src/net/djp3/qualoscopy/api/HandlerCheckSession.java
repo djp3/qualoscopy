@@ -20,7 +20,7 @@
 */
 
 
-package net.djp3.qualoscopy.webhandlers;
+package net.djp3.qualoscopy.api;
 
 import java.util.Map;
 import java.util.Set;

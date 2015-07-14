@@ -22,12 +22,12 @@
 
 package net.djp3.qualoscopy.events.handlers;
 
+import net.djp3.qualoscopy.api.HandlerCheckSession;
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 import net.djp3.qualoscopy.events.QEvent;
 import net.djp3.qualoscopy.events.QEventCheckSession;
 import net.djp3.qualoscopy.events.QEventCheckVersion;
 import net.djp3.qualoscopy.events.QEventInitiateSession;
-import net.djp3.qualoscopy.webhandlers.HandlerCheckSession;
 import net.djp3.qualoscopy.webhandlers.HandlerCheckVersion;
 import net.minidev.json.JSONObject;
 

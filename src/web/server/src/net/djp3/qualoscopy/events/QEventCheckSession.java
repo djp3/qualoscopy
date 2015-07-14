@@ -22,7 +22,7 @@
 
 package net.djp3.qualoscopy.events;
 
-import net.djp3.qualoscopy.webhandlers.HandlerCheckSession;
+import net.djp3.qualoscopy.api.HandlerCheckSession;
 import net.djp3.qualoscopy.webhandlers.HandlerCheckVersion;
 import net.minidev.json.JSONObject;
 
