@@ -59,6 +59,7 @@ public class DatastoreInterface {
 	void setRandom(Random r){
 		DatastoreInterface.r = r;
 	}
+	//TODO: Make sure you clean up old salts
 	
 	public DatastoreInterface(Datastore db){
 		this(db,System.currentTimeMillis());
@@ -138,7 +139,7 @@ public class DatastoreInterface {
 		public Session(String user_id, String session_id, String session_key, String source) {
 			super();
 			this.setUser_id(user_id);
-			this.setSession_ID(session_key);
+			this.setSession_ID(session_id);
 			this.setSession_key(session_key);
 			this.setSource(source);
 		}
