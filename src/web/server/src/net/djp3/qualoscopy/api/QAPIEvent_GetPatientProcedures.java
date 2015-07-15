@@ -140,7 +140,7 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 			}
 			else{
 				response.remove("valid");
-				String user_id = (String) response.get("user_id");
+				String user_id = r.getParameters().get("user_id").iterator().next();
 				Set<Procedure> data = getDB().getPatientProcedures(user_id,mr_id);
 				JSONArray procedures = new JSONArray();
 				for(Procedure p:data){

@@ -23,6 +23,7 @@
 package net.djp3.qualoscopy.api;
 
 import java.security.InvalidParameterException;
+import java.util.Set;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 import net.minidev.json.JSONArray;
@@ -102,7 +103,7 @@ public class QAPIEvent_KillSession extends QAPIEvent_CheckSession implements Clo
 			else{
 				System.err.println("Kill session super.buildResponse.valid was true");
 				response.remove("valid");
-				String user_id = (String) response.get("user_id");
+				String user_id = r.getParameters().get("user_id").iterator().next();
 				System.err.println("Killing user_id:"+user_id);
 				getDB().wipeSessions(user_id);
 			}

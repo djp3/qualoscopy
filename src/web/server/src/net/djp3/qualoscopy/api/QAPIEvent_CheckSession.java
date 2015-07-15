@@ -150,6 +150,7 @@ public class QAPIEvent_CheckSession extends QAPIEvent_VersionCheck implements Cl
 		return response;
 	}
 	
+
 	@Override
 	public APIEventResult onEvent() {
 		
