@@ -31,7 +31,8 @@
 			<AppenderRef ref="STDERR" />
 			<AppenderRef ref="RollingRandomAccessFile" />
 		</AsyncLogger>
-		<AsyncLogger name="net.djp3" level="trace" includeLocation="true" additivity="false">
+		<AsyncLogger name="net.djp3.qualoscopy" level="trace" includeLocation="true" additivity="false">
+		
 			<AppenderRef ref="STDERR" />
 			<AppenderRef ref="RollingRandomAccessFile" />
 		</AsyncLogger>

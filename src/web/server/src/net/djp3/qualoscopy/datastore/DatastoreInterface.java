@@ -382,13 +382,17 @@ public class DatastoreInterface {
 
 	public void wipeSessions(String user_id) {
 		if(user_id == null){
+			System.err.println("Kill session wipeSessions user_id is null");
 			getLog().error("Can't wipe session for null user_id");
 		}
 		else{
+			System.err.println("Kill session wipeSessions user_id is not null");
 			synchronized(sessions){
 				Set<Session> removeUs = new HashSet<Session>();
 				for(Session session: sessions){
+					System.err.println("Kill session wipeSessions session"+session.toString());
 					if(session == null){
+						System.err.println("Kill session wipeSessions null session");
 						getLog().error("Why do I have a null session in the data set?");
 						removeUs.add(session);
 					}
