@@ -1,16 +1,9 @@
 $(document).ready(function() {
-
-  // https://104.237.152.218:9021/version
-  var ipAddress = "104.237.152.218";
-  var port = 9021;
-  var versionNumber = 0.1;
-  var debug = true;
-
   var initiateSession = function () {
     $.ajax({
       dataType: 'jsonp',
       url: "https://" + ipAddress + ":" + port
-      + "/initiate_session",
+      + "/session/initiate",
       data: {"version": versionNumber},
       context: document.body
     }).done(function(data) {
@@ -31,7 +24,7 @@ $(document).ready(function() {
     $.ajax({
       dataType: 'jsonp',
       url: "https://" + ipAddress + ":" + port
-      + "/check_session",
+      + "/session/check",
       data: {"user_id": user_id, "shsid": Sha256.hash(session_id + "" + usedSalt),
       "shsk": Sha256.hash(session_key + "" + usedSalt), "version": versionNumber},
       context: document.body
@@ -91,13 +84,12 @@ $(document).ready(function() {
     login();
   });
 
-
-
   // On start up read these fields
   var salts = JSON.parse(Cookies.getCookie("salts"));
   var session_id = Cookies.getCookie("session_id");
   var session_key = Cookies.getCookie("session_key");
   var user_id = Cookies.getCookie("user_id");
+
   if (debug){
     console.log(salts);
     console.log("session_id=" + session_id
@@ -110,6 +102,5 @@ $(document).ready(function() {
     } else {
       checkSession(salts, session_id, session_key, user_id);
     }
-
 
   });
