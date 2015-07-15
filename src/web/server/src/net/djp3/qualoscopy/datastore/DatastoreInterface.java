@@ -305,9 +305,9 @@ public class DatastoreInterface {
 		final int numPatients = 25;
 		Set<Patient> patients= new HashSet<Patient>(numPatients);
 		while(patients.size() < numPatients){
-			String medicalRecordID = String.format("MR_%05d",r.nextInt(99999));
+			String medicalRecordID = String.format("MR_%05d",Math.abs(r.nextInt(99999)));
 			String firstName;
-			switch(r.nextInt(10)){
+			switch(Math.abs(r.nextInt(10))){
 				case 0: firstName = "Tao";break;
 				case 1: firstName = "Don";break;
 				case 2: firstName = "Luke";break;
@@ -321,7 +321,7 @@ public class DatastoreInterface {
 				default: firstName = "Marie";break;
 			}
 			String lastName;
-			switch(r.nextInt(10)){
+			switch(Math.abs(r.nextInt(10))){
 				case 0: lastName = "Wang";break;
 				case 1: lastName = "Patterson";break;
 				case 2: lastName = "Raus";break;
@@ -339,10 +339,10 @@ public class DatastoreInterface {
 				SimpleDateFormat sdf  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss.SSS");
 				Date date;
 				date = sdf.parse("1960-01-01 00:00:00.000");
-				long dateOfBirth = date.getTime() + r.nextInt(40*365*24*60*60*1000); //40 years from 1960
+				long dateOfBirth = date.getTime() + Math.abs(r.nextInt(40*365*24*60*60))*1000; //40 years from 1960
 			
 				date = sdf.parse("2015-07-01 00:00:00.000");
-				long nextProcedure = date.getTime() + r.nextInt(90*24*60*60*1000); //90 days from 7/1/25
+				long nextProcedure = date.getTime() + Math.abs(r.nextInt(90*24*60*60))*1000; //90 days from 7/1/25
 				patients.add(new Patient(medicalRecordID, firstName, lastName, gender, dateOfBirth, nextProcedure));
 			} catch (ParseException e) {
 				getLog().error("Problem making fake patients:"+e);
