@@ -384,23 +384,31 @@ public class DatastoreInterface {
 		if(user_id == null){
 			getLog().error("Can't wipe session for null user_id");
 		}
-		synchronized(sessions){
-			Set<Session> removeUs = new HashSet<Session>();
-			for(Session session: sessions){
-				if(session.getUser_id() == null){
-					getLog().error("Why do I have a session with a null user_id?");
-					removeUs.add(session);
-				}
-				else{
-					if(user_id.equals(session.getUser_id())){
+		else{
+			synchronized(sessions){
+				Set<Session> removeUs = new HashSet<Session>();
+				for(Session session: sessions){
+					if(session == null){
+						getLog().error("Why do I have a null session in the data set?");
 						removeUs.add(session);
 					}
+					else{
+						if(session.getUser_id() == null){
+							getLog().error("Why do I have a session with a null user_id?");
+							removeUs.add(session);
+						}
+						else{
+							if(user_id.equals(session.getUser_id())){
+								removeUs.add(session);
+							}
+						}
+					}
 				}
+				sessions.removeAll(removeUs);
 			}
-			sessions.removeAll(removeUs);
-		}
-		synchronized(unusedSalts){
-			unusedSalts.remove(user_id);
+			synchronized(unusedSalts){
+				unusedSalts.remove(user_id);
+			}
 		}
 	}
 
