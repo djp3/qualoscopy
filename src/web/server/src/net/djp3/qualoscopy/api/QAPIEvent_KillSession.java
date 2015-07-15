@@ -72,7 +72,6 @@ public class QAPIEvent_KillSession extends QAPIEvent_CheckSession implements Clo
 
 	@Override
 	protected JSONObject buildResponse(Request r) {
-		System.err.println("Kill session buildResponse");
 		JSONObject response = super.buildResponse(r);
 		JSONArray errors = (JSONArray) response.get("errors");
 		if(errors == null){
@@ -89,11 +88,9 @@ public class QAPIEvent_KillSession extends QAPIEvent_CheckSession implements Clo
 		}
 		
 		if(error.equals("false")){
-			System.err.println("Kill session super.buildResponse was false");
 			/* Clean up from session checking */
 			String valid = (String) response.get("valid");
 			if(valid.equals("false")){
-				System.err.println("Kill session super.buildResponse.valid was false");
 				response.remove("valid");
 				error = "true";
 				response.put("error",error);
@@ -101,10 +98,8 @@ public class QAPIEvent_KillSession extends QAPIEvent_CheckSession implements Clo
 				response.put("errors", errors);
 			}
 			else{
-				System.err.println("Kill session super.buildResponse.valid was true");
 				response.remove("valid");
 				String user_id = r.getParameters().get("user_id").iterator().next();
-				System.err.println("Killing user_id:"+user_id);
 				getDB().wipeSessions(user_id);
 			}
 		}

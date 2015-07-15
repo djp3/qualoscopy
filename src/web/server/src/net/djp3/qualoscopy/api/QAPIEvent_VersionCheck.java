@@ -125,6 +125,9 @@ public class QAPIEvent_VersionCheck extends APIEvent_Version implements Cloneabl
 				response.put("error", "true");
 				response.put("errors", errors);
 			}
+			else{
+				response.put("version", getAPIVersion());
+			}
 		}
 		
 		return response;
