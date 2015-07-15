@@ -22,8 +22,11 @@
 
 package net.djp3.qualoscopy.datastore;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +58,7 @@ public class DatastoreInterface {
 	private List<InitialCredentials> initialCredentials;
 	private List<Session> sessions;
 	private Map<String,Set<String>> unusedSalts;
+	private Set<Patient> patients;
 	
 	void setRandom(Random r){
 		DatastoreInterface.r = r;
@@ -289,5 +293,61 @@ public class DatastoreInterface {
 		return false;
 	}
 
+	public Set<Patient> getPatients(String user_id) {
+		if(patients == null){
+			patients = generateFakePatients();
+		}
+		return patients;
+	}
 
+	private Set<Patient> generateFakePatients() {
+		Random r = new Random(System.currentTimeMillis()-45060);
+		final int numPatients = 25;
+		Set<Patient> patients= new HashSet<Patient>(numPatients);
+		while(patients.size() < numPatients){
+			String medicalRecordID = String.format("MR_%05d",r.nextInt(99999));
+			String firstName;
+			switch(r.nextInt(10)){
+				case 0: firstName = "Tao";break;
+				case 1: firstName = "Don";break;
+				case 2: firstName = "Luke";break;
+				case 3: firstName = "Hannah";break;
+				case 4: firstName = "William";break;
+				case 5: firstName = "Hoda";break;
+				case 6: firstName = "Al";break;
+				case 7: firstName = "Julie";break;
+				case 8: firstName = "Julia";break;
+				case 9: firstName = "John";break;
+				default: firstName = "Marie";break;
+			}
+			String lastName;
+			switch(r.nextInt(10)){
+				case 0: lastName = "Wang";break;
+				case 1: lastName = "Patterson";break;
+				case 2: lastName = "Raus";break;
+				case 3: lastName = "Park";break;
+				case 4: lastName = "Karnes";break;
+				case 5: lastName = "Anton-Culver";break;
+				case 6: lastName = "Shapiro";break;
+				case 7: lastName = "Smith";break;
+				case 8: lastName = "Lupton";break;
+				case 9: lastName = "Brock";break;
+				default: lastName = "St. Claire";break;
+			}
+			String gender = (r.nextBoolean() ?"M":"F");
+			try {
+				SimpleDateFormat sdf  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss.SSS");
+				Date date;
+				date = sdf.parse("1960-01-01 00:00:00.000");
+				long dateOfBirth = date.getTime() + r.nextInt(40*365*24*60*60*1000); //40 years from 1960
+			
+				date = sdf.parse("2015-07-01 00:00:00.000");
+				long nextProcedure = date.getTime() + r.nextInt(90*24*60*60*1000); //90 days from 7/1/25
+				patients.add(new Patient(medicalRecordID, firstName, lastName, gender, dateOfBirth, nextProcedure));
+			} catch (ParseException e) {
+				getLog().error("Problem making fake patients:"+e);
+			}
+		}
+		return patients;
+	}
 }

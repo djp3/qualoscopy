@@ -22,6 +22,7 @@
 
 package net.djp3.qualoscopy.api;
 
+import java.security.InvalidParameterException;
 import java.util.Set;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
@@ -31,6 +32,7 @@ import net.minidev.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.uci.ics.luci.utility.webserver.event.Event;
 import edu.uci.ics.luci.utility.webserver.event.result.api.APIEventResult;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
@@ -50,20 +52,34 @@ public class QAPIEvent_CheckSession extends QAPIEvent_VersionCheck implements Cl
 		return log;
 	}
 
-	private static DatastoreInterface db = null;
+	private DatastoreInterface db = null;
 	
-	public static DatastoreInterface getDB() {
+	public DatastoreInterface getDB() {
 		return db;
 	}
 
-	public static void setDB(DatastoreInterface db) {
-		QAPIEvent_CheckSession.db = db;
+	public void setDB(DatastoreInterface db) {
+		this.db = db;
 	}
 
 	
 	public QAPIEvent_CheckSession(String version, DatastoreInterface db) {
 		super(version);
 		setDB(db);
+	}
+	
+	@Override
+	public void set(Event _incoming) {
+		QAPIEvent_CheckSession incoming = null;
+		if(_incoming instanceof QAPIEvent_CheckSession){
+			incoming = (QAPIEvent_CheckSession) _incoming;
+			super.set(incoming);
+			this.setDB(incoming.getDB());
+		}
+		else{
+			getLog().error(ERROR_SET_ENCOUNTERED_TYPE_MISMATCH+", incoming:"+_incoming.getClass().getName()+", this:"+this.getClass().getName());
+			throw new InvalidParameterException(ERROR_SET_ENCOUNTERED_TYPE_MISMATCH+", incoming:"+_incoming.getClass().getName()+", this:"+this.getClass().getName());
+		}
 	}
 	
 	

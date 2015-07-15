@@ -22,6 +22,7 @@
 
 package net.djp3.qualoscopy.api;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ import net.minidev.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.uci.ics.luci.utility.webserver.event.Event;
 import edu.uci.ics.luci.utility.webserver.event.result.api.APIEventResult;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
@@ -57,14 +59,6 @@ public class QAPIEvent_Login extends QAPIEvent_VersionCheck implements Cloneable
 	}
 	
 	private DatastoreInterface db = null;
-	private String shp;
-	
-
-
-	public String getSaltedHashedPassword(){
-		return shp;
-	}
-	
 	
 	public DatastoreInterface getDB() {
 		return db;
@@ -83,6 +77,20 @@ public class QAPIEvent_Login extends QAPIEvent_VersionCheck implements Cloneable
 	public QAPIEvent_Login(String version,DatastoreInterface db) {
 		super(version);
 		setDB(db);
+	}
+	
+	@Override
+	public void set(Event _incoming) {
+		QAPIEvent_Login incoming = null;
+		if(_incoming instanceof QAPIEvent_Login){
+			incoming = (QAPIEvent_Login) _incoming;
+			super.set(incoming);
+			this.setDB(incoming.getDB());
+		}
+		else{
+			getLog().error(ERROR_SET_ENCOUNTERED_TYPE_MISMATCH+", incoming:"+_incoming.getClass().getName()+", this:"+this.getClass().getName());
+			throw new InvalidParameterException(ERROR_SET_ENCOUNTERED_TYPE_MISMATCH+", incoming:"+_incoming.getClass().getName()+", this:"+this.getClass().getName());
+		}
 	}
 	
 	@Override

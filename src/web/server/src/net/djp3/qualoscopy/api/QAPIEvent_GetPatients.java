@@ -18,63 +18,83 @@
  You should have received a copy of the GNU General Public License
  along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+/*
+/get_patients:
+        {
+                "version", <version>
+                "user_id" <user_id>
+                "shsid", <hash(session_id+salt_x),
+                "shsk", <hash(session_key+salt_x)
+        }
+        {
+                "version", <version>,
+                "patients",[
+                                        {
+                                                "MR": <MR>,
+                                                "Last": <Last Name>,
+                                                "First": <First Name>,
+                                                "DOB": <Month/Day/Year>, 01/11/1980
+                                                "Gender": <M/F/O>,
+                                                "NextProcedure:<Month/Day/Year> 01/11/2016
+                                        },...
+                                        ],
+                "salt", <salt>
+                "error", <true/false>,
+                "errors", [<errors>]
+        }
+*/
 
 package net.djp3.qualoscopy.api;
 
 import java.security.InvalidParameterException;
+import java.util.Set;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
+import net.djp3.qualoscopy.datastore.Patient;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.uci.ics.luci.utility.datastructure.Pair;
 import edu.uci.ics.luci.utility.webserver.event.Event;
 import edu.uci.ics.luci.utility.webserver.event.result.api.APIEventResult;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
-public class QAPIEvent_InitiateSession extends QAPIEvent_VersionCheck implements Cloneable{ 
+public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Cloneable{ 
+	
+	public static final String ERROR_NULL_USER_ID = "\"user_id\" was null";
+	public static final String ERROR_NULL_SHSID = "\"shsi\" (Salted Hashed Session ID) was null";
+	public static final String ERROR_NULL_SHSK = "\"shsk\" (Salted Hashed Session Key) was null";
+	public static final String ERROR_NULL_SOURCE = "Internal Error - source was null- not a parameter";
+	
 	
 	private static transient volatile Logger log = null;
 	public static Logger getLog(){
 		if(log == null){
-			log = LogManager.getLogger(QAPIEvent_InitiateSession.class);
+			log = LogManager.getLogger(QAPIEvent_GetPatients.class);
 		}
 		return log;
 	}
 
-	private DatastoreInterface db = null;
 	
-	public DatastoreInterface getDB() {
-		return db;
-	}
-
-	public void setDB(DatastoreInterface db) {
-		this.db = db;
-	}
-
-	
-	public QAPIEvent_InitiateSession(String version, DatastoreInterface db) {
-		super(version);
-		setDB(db);
+	public QAPIEvent_GetPatients(String version, DatastoreInterface db) {
+		super(version,db);
 	}
 	
 	@Override
 	public void set(Event _incoming) {
-		QAPIEvent_InitiateSession incoming = null;
-		if(_incoming instanceof QAPIEvent_InitiateSession){
-			incoming = (QAPIEvent_InitiateSession) _incoming;
+		QAPIEvent_GetPatients incoming = null;
+		if(_incoming instanceof QAPIEvent_GetPatients){
+			incoming = (QAPIEvent_GetPatients) _incoming;
 			super.set(incoming);
-			this.setDB(incoming.getDB());
 		}
 		else{
 			getLog().error(ERROR_SET_ENCOUNTERED_TYPE_MISMATCH+", incoming:"+_incoming.getClass().getName()+", this:"+this.getClass().getName());
 			throw new InvalidParameterException(ERROR_SET_ENCOUNTERED_TYPE_MISMATCH+", incoming:"+_incoming.getClass().getName()+", this:"+this.getClass().getName());
 		}
 	}
+	
 	
 	@Override
 	public Object clone(){
@@ -99,12 +119,26 @@ public class QAPIEvent_InitiateSession extends QAPIEvent_VersionCheck implements
 		}
 		
 		if(error.equals("false")){
-			String source = r.getSource();
-		
-			Pair<String, String> pair = getDB().createAndStoreInitialSessionIDAndSalt(source);
-			response.put("session_id",pair.getFirst());
-			response.put("session_salt",pair.getSecond());
+			/* Clean up from session checking */
+			String valid = (String) response.get("valid");
+			if(valid.equals("false")){
+				response.remove("valid");
+				error = "true";
+				response.put("error",error);
+				errors.add("Session did not validate");
+				response.put("errors", errors);
+			}
+			else{
+				String user_id = (String) response.get("user_id");
+				Set<Patient> data = getDB().getPatients(user_id);
+				JSONArray patients = new JSONArray();
+				for(Patient p:data){
+					patients.add(p.toJSON());
+				}
+				response.put("patients", patients);
+			}
 		}
+			
 		return response;
 	}
 	
