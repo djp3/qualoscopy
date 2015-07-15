@@ -250,45 +250,28 @@ public class DatastoreInterface {
 			return false;
 		}
 		
-		System.err.println("Session size:"+sessions.size());
-		for(Session session: sessions){
-			System.err.println("Got one session:"+session.toString());
-			if(user_id.equals(session.getUser_id())){
-				synchronized(unusedSalts){
-					System.err.println("Unused salts size:"+unusedSalts.size());
-					Set<String> saltSet = unusedSalts.get(session.getUser_id());
-					System.err.println("Salt set size:"+saltSet.size());
-					String removeMe = null;
-					for(String salt :saltSet){
-						System.err.println("salt :"+salt);
-						if(removeMe == null){
-							if(shsid.equals(SHA256.sha256(session.getSession_ID()+salt,1))){
-								if(shsk.equals(SHA256.sha256(session.getSession_key()+salt, 1))){
-									removeMe = salt;
-									System.err.println("Good authentication");
+		synchronized(sessions){
+			for(Session session: sessions){
+				if(user_id.equals(session.getUser_id())){
+					synchronized(unusedSalts){
+						Set<String> saltSet = unusedSalts.get(session.getUser_id());
+						String removeMe = null;
+						for(String salt :saltSet){
+							if(removeMe == null){
+								if(shsid.equals(SHA256.sha256(session.getSession_ID()+salt,1))){
+									if(shsk.equals(SHA256.sha256(session.getSession_key()+salt, 1))){
+										removeMe = salt;
+									}
 								}
-								else{
-									System.err.println("shsk did not match the session, sessionID="+session.getSession_key());
-								}
-							}
-							else{
-								System.err.println("shsid did not match the session, sessionID="+session.getSession_ID());
 							}
 						}
-					}
-					if(removeMe != null){
-						System.err.println("Session did match");
-						saltSet.remove(removeMe);
-						unusedSalts.put(user_id, saltSet);
-						return true;
-					}
-					else{
-						System.err.println("Session did not match");
+						if(removeMe != null){
+							saltSet.remove(removeMe);
+							unusedSalts.put(user_id, saltSet);
+							return true;
+						}
 					}
 				}
-			}
-			else{
-				System.err.println("User id did not match one salt:"+session.toString());
 			}
 		}
 		return false;
@@ -396,6 +379,21 @@ public class DatastoreInterface {
 			}
 		}
 		return procedures;
+	}
+
+	public void wipeSessions(String user_id) {
+		synchronized(sessions){
+			Set<Session> removeUs = new HashSet<Session>();
+			for(Session session: sessions){
+				if(user_id.equals(session.getUser_id())){
+					removeUs.add(session);
+				}
+			}
+			sessions.removeAll(removeUs);
+		}
+		synchronized(unusedSalts){
+			unusedSalts.remove(user_id);
+		}
 	}
 
 }

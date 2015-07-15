@@ -18,31 +18,7 @@
  You should have received a copy of the GNU General Public License
  along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*
-/get_patients:
-        {
-                "version", <version>
-                "user_id" <user_id>
-                "shsid", <hash(session_id+salt_x),
-                "shsk", <hash(session_key+salt_x)
-        }
-        {
-                "version", <version>,
-                "patients",[
-                                        {
-                                                "MR": <MR>,
-                                                "Last": <Last Name>,
-                                                "First": <First Name>,
-                                                "DOB": <Month/Day/Year>, 01/11/1980
-                                                "Gender": <M/F/O>,
-                                                "NextProcedure:<Month/Day/Year> 01/11/2016
-                                        },...
-                                        ],
-                "salt", <salt>
-                "error", <true/false>,
-                "errors", [<errors>]
-        }
-*/
+
 
 package net.djp3.qualoscopy.api;
 
@@ -50,44 +26,39 @@ import java.security.InvalidParameterException;
 import java.util.Set;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
-import net.djp3.qualoscopy.datastore.Procedure;
+import net.djp3.qualoscopy.datastore.Patient;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.uci.ics.luci.utility.datastructure.Pair;
 import edu.uci.ics.luci.utility.webserver.event.Event;
 import edu.uci.ics.luci.utility.webserver.event.result.api.APIEventResult;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
-
-public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession implements Cloneable{ 
-	
-	public static final String ERROR_NULL_USER_ID = "\"user_id\" was null";
-	public static final String ERROR_NULL_SHSID = "\"shsi\" (Salted Hashed Session ID) was null";
-	public static final String ERROR_NULL_SHSK = "\"shsk\" (Salted Hashed Session Key) was null";
-	public static final String ERROR_NULL_SOURCE = "Internal Error - source was null- not a parameter";
-	
+public class QAPIEvent_KillSession extends QAPIEvent_CheckSession implements Cloneable{ 
 	
 	private static transient volatile Logger log = null;
 	public static Logger getLog(){
 		if(log == null){
-			log = LogManager.getLogger(QAPIEvent_GetPatientProcedures.class);
+			log = LogManager.getLogger(QAPIEvent_KillSession.class);
 		}
 		return log;
 	}
 
 	
-	public QAPIEvent_GetPatientProcedures(String version, DatastoreInterface db) {
+	public QAPIEvent_KillSession(String version, DatastoreInterface db) {
 		super(version,db);
+		setDB(db);
 	}
 	
 	@Override
 	public void set(Event _incoming) {
-		QAPIEvent_GetPatientProcedures incoming = null;
-		if(_incoming instanceof QAPIEvent_GetPatientProcedures){
-			incoming = (QAPIEvent_GetPatientProcedures) _incoming;
+		QAPIEvent_KillSession incoming = null;
+		if(_incoming instanceof QAPIEvent_KillSession){
+			incoming = (QAPIEvent_KillSession) _incoming;
 			super.set(incoming);
 		}
 		else{
@@ -95,7 +66,6 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 			throw new InvalidParameterException(ERROR_SET_ENCOUNTERED_TYPE_MISMATCH+", incoming:"+_incoming.getClass().getName()+", this:"+this.getClass().getName());
 		}
 	}
-	
 	
 	@Override
 	public Object clone(){
@@ -119,15 +89,6 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 			response.put("errors", errors);
 		}
 		
-		//Get parameters 
-		Set<String> _mr_id = r.getParameters().get("mr_id");
-		String mr_id = null;
-		if((_mr_id == null) || ((mr_id = (_mr_id.iterator().next())) == null)){
-			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_USER_ID);
-			response.put("error", "true");
-			response.put("errors", errors);
-		}
-		
 		if(error.equals("false")){
 			/* Clean up from session checking */
 			String valid = (String) response.get("valid");
@@ -141,12 +102,7 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 			else{
 				response.remove("valid");
 				String user_id = (String) response.get("user_id");
-				Set<Procedure> data = getDB().getPatientProcedures(user_id,mr_id);
-				JSONArray procedures = new JSONArray();
-				for(Procedure p:data){
-					procedures.add(p.toJSON());
-				}
-				response.put("procedures", procedures);
+				Set<Patient> data = getDB().killSessions(user_id);
 			}
 		}
 			
