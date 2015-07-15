@@ -233,7 +233,6 @@ public class DatastoreInterface {
 	 * @return
 	 */
 	public boolean checkSession(String user_id, String shsid, String shsk, String source) {
-		System.err.println("in checkSession "+user_id+" "+shsid+" "+shsk+" "+source);
 		if(user_id == null){
 			return false;
 		}
@@ -382,11 +381,20 @@ public class DatastoreInterface {
 	}
 
 	public void wipeSessions(String user_id) {
+		if(user_id == null){
+			getLog().error("Can't wipe session for null user_id");
+		}
 		synchronized(sessions){
 			Set<Session> removeUs = new HashSet<Session>();
 			for(Session session: sessions){
-				if(user_id.equals(session.getUser_id())){
+				if(session.getUser_id() == null){
+					getLog().error("Why do I have a session with a null user_id?");
 					removeUs.add(session);
+				}
+				else{
+					if(user_id.equals(session.getUser_id())){
+						removeUs.add(session);
+					}
 				}
 			}
 			sessions.removeAll(removeUs);
