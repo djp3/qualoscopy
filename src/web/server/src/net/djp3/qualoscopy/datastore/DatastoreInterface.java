@@ -404,10 +404,17 @@ public class DatastoreInterface {
 						}
 					}
 				}
+				getLog().debug("Wiped "+removeUs.size()+" sessions");
+				System.err.println("Wiped "+removeUs.size()+" sessions");
 				sessions.removeAll(removeUs);
 			}
 			synchronized(unusedSalts){
-				unusedSalts.remove(user_id);
+				Set<String> removed = unusedSalts.remove(user_id);
+				if(removed == null){
+					removed = new HashSet<String>();
+				}
+				getLog().debug("Wiped "+removed.size()+" unused salts");
+				System.err.println("Wiped "+removed.size()+" unused salts");
 			}
 		}
 	}
