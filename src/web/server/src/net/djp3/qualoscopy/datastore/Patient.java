@@ -76,12 +76,14 @@ public class Patient {
 	public JSONObject toJSON() {
 		JSONObject ret = new JSONObject();
 		
-		ret.put("mrid",this.getMedicalRecordID());
+		ret.put("mr_id",this.getMedicalRecordID());
+		
+		ret.put("first",this.getFirstName());
 		
 		ret.put("last",this.getLastName());
 		
 		Date date = new Date(this.getDateOfBirth());
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
         String formatted = format.format(date);
 		ret.put("dob",formatted);

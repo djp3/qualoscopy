@@ -18,6 +18,31 @@
  You should have received a copy of the GNU General Public License
  along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*
+/get_patients:
+        {
+                "version", <version>
+                "user_id" <user_id>
+                "shsid", <hash(session_id+salt_x),
+                "shsk", <hash(session_key+salt_x)
+        }
+        {
+                "version", <version>,
+                "patients",[
+                                        {
+                                                "MR": <MR>,
+                                                "Last": <Last Name>,
+                                                "First": <First Name>,
+                                                "DOB": <Month/Day/Year>, 01/11/1980
+                                                "Gender": <M/F/O>,
+                                                "NextProcedure:<Month/Day/Year> 01/11/2016
+                                        },...
+                                        ],
+                "salt", <salt>
+                "error", <true/false>,
+                "errors", [<errors>]
+        }
+*/
 
 package net.djp3.qualoscopy.api;
 
@@ -26,6 +51,7 @@ import java.util.Set;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 import net.djp3.qualoscopy.datastore.Patient;
+import net.djp3.qualoscopy.datastore.Procedure;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -36,7 +62,8 @@ import edu.uci.ics.luci.utility.webserver.event.Event;
 import edu.uci.ics.luci.utility.webserver.event.result.api.APIEventResult;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
-public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Cloneable{ 
+
+public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession implements Cloneable{ 
 	
 	public static final String ERROR_NULL_USER_ID = "\"user_id\" was null";
 	public static final String ERROR_NULL_SHSID = "\"shsi\" (Salted Hashed Session ID) was null";
@@ -47,21 +74,21 @@ public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Clo
 	private static transient volatile Logger log = null;
 	public static Logger getLog(){
 		if(log == null){
-			log = LogManager.getLogger(QAPIEvent_GetPatients.class);
+			log = LogManager.getLogger(QAPIEvent_GetPatientProcedures.class);
 		}
 		return log;
 	}
 
 	
-	public QAPIEvent_GetPatients(String version, DatastoreInterface db) {
+	public QAPIEvent_GetPatientProcedures(String version, DatastoreInterface db) {
 		super(version,db);
 	}
 	
 	@Override
 	public void set(Event _incoming) {
-		QAPIEvent_GetPatients incoming = null;
-		if(_incoming instanceof QAPIEvent_GetPatients){
-			incoming = (QAPIEvent_GetPatients) _incoming;
+		QAPIEvent_GetPatientProcedures incoming = null;
+		if(_incoming instanceof QAPIEvent_GetPatientProcedures){
+			incoming = (QAPIEvent_GetPatientProcedures) _incoming;
 			super.set(incoming);
 		}
 		else{
@@ -93,6 +120,15 @@ public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Clo
 			response.put("errors", errors);
 		}
 		
+		//Get parameters 
+		Set<String> _mr_id = r.getParameters().get("mr_id");
+		String mr_id = null;
+		if((_mr_id == null) || ((mr_id = (_mr_id.iterator().next())) == null)){
+			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_USER_ID);
+			response.put("error", "true");
+			response.put("errors", errors);
+		}
+		
 		if(error.equals("false")){
 			/* Clean up from session checking */
 			String valid = (String) response.get("valid");
@@ -106,12 +142,12 @@ public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Clo
 			else{
 				response.remove("valid");
 				String user_id = (String) response.get("user_id");
-				Set<Patient> data = getDB().getPatients(user_id);
-				JSONArray patients = new JSONArray();
-				for(Patient p:data){
-					patients.add(p.toJSON());
+				Set<Procedure> data = getDB().getPatientProcedures(user_id,mr_id);
+				JSONArray procedures = new JSONArray();
+				for(Procedure p:data){
+					procedures.add(p.toJSON());
 				}
-				response.put("patients", patients);
+				response.put("procedures", procedures);
 			}
 		}
 			

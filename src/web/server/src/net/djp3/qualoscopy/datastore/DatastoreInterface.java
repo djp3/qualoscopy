@@ -43,7 +43,7 @@ import edu.uci.ics.luci.utility.webserver.event.api.login.Datastore;
 public class DatastoreInterface {
 	
 	private static final Integer ITERATIONS = 200;
-	private static Random r = new Random(System.currentTimeMillis());
+	private static Random r = new Random(System.currentTimeMillis()-45060);
 
 	private static transient volatile Logger log = null;
 	public static Logger getLog(){
@@ -59,6 +59,7 @@ public class DatastoreInterface {
 	private List<Session> sessions;
 	private Map<String,Set<String>> unusedSalts;
 	private Set<Patient> patients;
+	private Map<String, Set<Procedure>> procedures;
 	
 	void setRandom(Random r){
 		DatastoreInterface.r = r;
@@ -299,9 +300,21 @@ public class DatastoreInterface {
 		}
 		return patients;
 	}
+	
+
+	public Set<Procedure> getPatientProcedures(String user_id, String mr_id) {
+		if(procedures == null){
+			procedures = new HashMap<String,Set<Procedure>>();
+		}
+		if(procedures.get(user_id) == null){
+			procedures.put(user_id,generateFakeProcedures());
+		}
+		return procedures.get(user_id);
+	}
+	
+
 
 	private Set<Patient> generateFakePatients() {
-		Random r = new Random(System.currentTimeMillis()-45060);
 		final int numPatients = 25;
 		Set<Patient> patients= new HashSet<Patient>(numPatients);
 		while(patients.size() < numPatients){
@@ -350,4 +363,39 @@ public class DatastoreInterface {
 		}
 		return patients;
 	}
+
+	private Set<Procedure> generateFakeProcedures() {
+
+		final int numProcedures = r.nextInt(4);
+		Set<Procedure> procedures= new HashSet<Procedure>(numProcedures);
+		while(procedures.size() < numProcedures){
+			String ac_id = String.format("AC_%06d",r.nextInt(999999));
+			String faculty;
+			switch(r.nextInt(10)){
+				case 0: faculty = "Dr. Wang";break;
+				case 1: faculty = "Dr. Patterson";break;
+				case 2: faculty = "Dr. Raus";break;
+				case 3: faculty = "Dr. Park";break;
+				case 4: faculty = "Dr. Karnes";break;
+				case 5: faculty = "Dr. Anton-Culver";break;
+				case 6: faculty = "Dr. Shapiro";break;
+				case 7: faculty = "Dr. Smith";break;
+				case 8: faculty = "Dr. Lupton";break;
+				case 9: faculty = "Dr. Brock";break;
+				default: faculty = "Dr. St. Claire";break;
+			}
+			boolean completed = r.nextBoolean();
+			try {
+				SimpleDateFormat sdf  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss.SSS");
+				Date date;
+				date = sdf.parse("2014-07-01 00:00:00.000");
+				long dateOfService = date.getTime() + Math.abs(r.nextInt(365*24*60*60))*1000; //365 days from 7/1/14
+				procedures.add(new Procedure(ac_id, dateOfService,faculty, completed));
+			} catch (ParseException e) {
+				getLog().error("Problem making fake patients:"+e);
+			}
+		}
+		return procedures;
+	}
+
 }
