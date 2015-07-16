@@ -32,7 +32,6 @@ $(document).ready(function() {
           $("#paitent-rows").append(rowMaker(patient.mr_id, patient.last,
             patient.first, patient.dob, patient.gender, patient.next_procedure));
           }
-          $('#paitents').dataTable();
           $(".clickable-row").click(function() {
             var mr_id = $(this).find('.mr-id').text();
             var last_name = $(this).find('.last-name').text();
@@ -48,6 +47,7 @@ $(document).ready(function() {
             Cookies.setCookie("next_procedure", next_procedure, 1);
             window.document.location = $(this).data("href");
           });
+          $('#paitents').dataTable();
       } else {
         // TODO: Do something
       }

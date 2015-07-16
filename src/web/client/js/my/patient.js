@@ -50,13 +50,13 @@ $(document).ready(function() {
         $("#procedure-rows").append(procedureRowMaker(procedure.ac_id, procedure.dos,
           procedure.completed, procedure.faculty));
         }
-        $('#procedure-table').dataTable();
         $(".clickable-row").click(function() {
           var ac_id = $(this).find('.ac-id').text();
           if (debug) console.log(ac_id);
           Cookies.setCookie("ac_id", ac_id, 1);
           window.document.location = $(this).data("href");
         });
+        $('#procedure-table').dataTable();
       } else {
         // window.location.href = "admin.html";
       }
