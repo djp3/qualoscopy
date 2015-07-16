@@ -14,14 +14,6 @@ Cookies.setCookie = function (name, value, days) {
   document.cookie = name + "=" + value + expires + "; path=/";
 };
 
-Cookies.addToCookieArray = function (name, data, days) {
-  if(getCookie(name) != null){
-    var cookieArray = JSON.parse(getCookie(name));
-    cookieArray.push(data);
-    setCookie(name, JSON.stringify(cookieArray), days);
-  }
-};
-
 Cookies.getCookie = function (name) {
   var nameEQ = name + "=";
   var ca = document.cookie.split(';');
@@ -33,6 +25,31 @@ Cookies.getCookie = function (name) {
   return null;
 };
 
+Cookies.addToCookieArray = function (name, data, days) {
+  if(this.getCookie(name) != null){
+    var cookieArray = JSON.parse(this.getCookie(name));
+    cookieArray.push(data);
+    this.setCookie(name, JSON.stringify(cookieArray), days);
+  }
+};
+
+Cookies.popFromCookieArray = function (name, data, days) {
+  if(this.getCookie(name) != null){
+    var popedCookie = data[0];
+    data.splice(0,1);
+    this.setCookie(name, JSON.stringify(data), days);
+    return popedCookie;
+  }
+};
+
 Cookies.clearCookies = function (name) {
-  setCookie(name,"",-1);
+  this.setCookie(name,"",-1);
+};
+
+Cookies.clearAllCookies = function() {
+  var cookies = document.cookie.split(";");
+
+  for (var i = 0; i < cookies.length; i++) {
+    this.clearCookies(cookies[i]);
+  }
 };
