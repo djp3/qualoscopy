@@ -38,11 +38,6 @@ import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
 public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Cloneable{ 
 	
-	public static final String ERROR_NULL_USER_ID = "\"user_id\" was null";
-	public static final String ERROR_NULL_SHSID = "\"shsi\" (Salted Hashed Session ID) was null";
-	public static final String ERROR_NULL_SHSK = "\"shsk\" (Salted Hashed Session Key) was null";
-	public static final String ERROR_NULL_SOURCE = "Internal Error - source was null- not a parameter";
-	
 	
 	private static transient volatile Logger log = null;
 	public static Logger getLog(){

@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import net.djp3.qualoscopy.api.QAPIEvent_AddPatient;
 import net.djp3.qualoscopy.api.QAPIEvent_CheckSession;
 import net.djp3.qualoscopy.api.QAPIEvent_GetPatientProcedures;
 import net.djp3.qualoscopy.api.QAPIEvent_GetPatients;
@@ -112,6 +113,9 @@ public class QualoscopyWebServer {
 			requestHandlerRegistry.put("/session/kill", new QAPIEvent_KillSession(VERSION,db));
 			requestHandlerRegistry.put("/get/patients", new QAPIEvent_GetPatients(VERSION,db));
 			requestHandlerRegistry.put("/get/patient/procedures", new QAPIEvent_GetPatientProcedures(VERSION,db));
+			requestHandlerRegistry.put("/add/patient", new QAPIEvent_AddPatient(VERSION,db));
+			//requestHandlerRegistry.put("/update/patient", new QAPIEvent_UpdatePatient(VERSION,db));
+			//requestHandlerRegistry.put("/add/procedure", new QAPIEvent_AddProcedure(VERSION,db));
 			requestHandlerRegistry.put("/login", new QAPIEvent_Login(VERSION,db));
 			requestHandlerRegistry.put("/shutdown", new APIEvent_Shutdown(Globals.getGlobals()));
 						

@@ -99,6 +99,7 @@ public class QAPIEvent_KillSession extends QAPIEvent_CheckSession implements Clo
 			}
 			else{
 				response.remove("valid");
+				response.remove("salt");
 				String user_id = r.getParameters().get("user_id").iterator().next();
 				getDB().wipeSessions(user_id);
 			}

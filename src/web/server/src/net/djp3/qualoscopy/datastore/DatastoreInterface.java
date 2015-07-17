@@ -22,11 +22,8 @@
 
 package net.djp3.qualoscopy.datastore;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -58,8 +55,8 @@ public class DatastoreInterface {
 	private List<InitialCredentials> initialCredentials;
 	private List<Session> sessions;
 	private Map<String,Set<String>> unusedSalts;
-	private Set<Patient> patients;
-	private Map<String, Set<Procedure>> procedures;
+	private Map<Long,Patient> patients; // <patient_id,Patient>
+	private Map<Long, Map<Long,Procedure>> procedures; //<patient_id,<procedure_id, Procedure>>
 	
 	void setRandom(Random r){
 		DatastoreInterface.r = r;
@@ -276,7 +273,7 @@ public class DatastoreInterface {
 		return false;
 	}
 
-	public Set<Patient> getPatients(String user_id) {
+	public Map<Long,Patient> getPatients(String user_id) {
 		if(patients == null){
 			patients = generateFakePatients();
 		}
@@ -284,101 +281,52 @@ public class DatastoreInterface {
 	}
 	
 
-	public Set<Procedure> getPatientProcedures(String user_id, String mr_id) {
+	public Map<Long, Procedure> getPatientProcedures(String userID, Long patientID) {
 		if(procedures == null){
-			procedures = new HashMap<String,Set<Procedure>>();
+			procedures = Collections.synchronizedMap(new HashMap<Long,Map<Long,Procedure>>());
 		}
-		if(procedures.get(user_id) == null){
-			procedures.put(user_id,generateFakeProcedures());
+		if(procedures.get(patientID) == null){
+			procedures.put(patientID,generateFakeProcedures());
 		}
-		return procedures.get(user_id);
+		return procedures.get(patientID);
 	}
 	
 
 
-	private Set<Patient> generateFakePatients() {
+	private Map<Long,Patient> generateFakePatients() {
 		final int numPatients = 25;
-		Set<Patient> patients= new HashSet<Patient>(numPatients);
+		Map<Long,Patient> patients= new HashMap<Long,Patient>(numPatients);
 		while(patients.size() < numPatients){
-			String medicalRecordID = String.format("MR_%05d",Math.abs(r.nextInt(99999)));
-			String firstName;
-			switch(Math.abs(r.nextInt(10))){
-				case 0: firstName = "Tao";break;
-				case 1: firstName = "Don";break;
-				case 2: firstName = "Luke";break;
-				case 3: firstName = "Hannah";break;
-				case 4: firstName = "William";break;
-				case 5: firstName = "Hoda";break;
-				case 6: firstName = "Al";break;
-				case 7: firstName = "Julie";break;
-				case 8: firstName = "Julia";break;
-				case 9: firstName = "John";break;
-				default: firstName = "Marie";break;
+			Patient patient = Patient.generateFakePatient();
+			if(patient != null){
+				patients.put(patient.getPatientID(),patient);
 			}
-			String lastName;
-			switch(Math.abs(r.nextInt(10))){
-				case 0: lastName = "Wang";break;
-				case 1: lastName = "Patterson";break;
-				case 2: lastName = "Raus";break;
-				case 3: lastName = "Park";break;
-				case 4: lastName = "Karnes";break;
-				case 5: lastName = "Anton-Culver";break;
-				case 6: lastName = "Shapiro";break;
-				case 7: lastName = "Smith";break;
-				case 8: lastName = "Lupton";break;
-				case 9: lastName = "Brock";break;
-				default: lastName = "St. Claire";break;
-			}
-			String gender = (r.nextBoolean() ?"M":"F");
-			try {
-				SimpleDateFormat sdf  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss.SSS");
-				Date date;
-				date = sdf.parse("1960-01-01 00:00:00.000");
-				long dateOfBirth = date.getTime() + Math.abs(r.nextInt(40*365*24*60*60))*1000; //40 years from 1960
-			
-				date = sdf.parse("2015-07-01 00:00:00.000");
-				long nextProcedure = date.getTime() + Math.abs(r.nextInt(90*24*60*60))*1000; //90 days from 7/1/25
-				patients.add(new Patient(medicalRecordID, firstName, lastName, gender, dateOfBirth, nextProcedure));
-			} catch (ParseException e) {
-				getLog().error("Problem making fake patients:"+e);
+			else{
+				getLog().error("Null patient created ??!?!!?");
 			}
 		}
 		return patients;
 	}
 
-	private Set<Procedure> generateFakeProcedures() {
+	
+
+	private Map<Long,Procedure> generateFakeProcedures() {
 
 		final int numProcedures = r.nextInt(4);
-		Set<Procedure> procedures= new HashSet<Procedure>(numProcedures);
+		Map<Long,Procedure> procedures= new HashMap<Long,Procedure>(numProcedures);
 		while(procedures.size() < numProcedures){
-			String ac_id = String.format("AC_%06d",r.nextInt(999999));
-			String faculty;
-			switch(r.nextInt(10)){
-				case 0: faculty = "Dr. Wang";break;
-				case 1: faculty = "Dr. Patterson";break;
-				case 2: faculty = "Dr. Raus";break;
-				case 3: faculty = "Dr. Park";break;
-				case 4: faculty = "Dr. Karnes";break;
-				case 5: faculty = "Dr. Anton-Culver";break;
-				case 6: faculty = "Dr. Shapiro";break;
-				case 7: faculty = "Dr. Smith";break;
-				case 8: faculty = "Dr. Lupton";break;
-				case 9: faculty = "Dr. Brock";break;
-				default: faculty = "Dr. St. Claire";break;
+			Procedure procedure = Procedure.generateFakeProcedure();
+			if(procedure != null){
+				procedures.put(procedure.getProcedureID(),procedure);
 			}
-			boolean completed = r.nextBoolean();
-			try {
-				SimpleDateFormat sdf  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss.SSS");
-				Date date;
-				date = sdf.parse("2014-07-01 00:00:00.000");
-				long dateOfService = date.getTime() + Math.abs(r.nextInt(365*24*60*60))*1000; //365 days from 7/1/14
-				procedures.add(new Procedure(ac_id, dateOfService,faculty, completed));
-			} catch (ParseException e) {
-				getLog().error("Problem making fake patients:"+e);
+			else{
+				getLog().error("Null procedure created ??!?!!?");
 			}
 		}
 		return procedures;
 	}
+
+	
 
 	public void wipeSessions(String user_id) {
 		if(user_id == null){
@@ -415,6 +363,50 @@ public class DatastoreInterface {
 				getLog().debug("Wiped "+removed.size()+" unused salts");
 			}
 		}
+	}
+
+	public Long addPatient(String user_id) {
+		if(user_id == null){
+			return null;
+		}
+		else{
+			Patient patient = Patient.generateFakePatient();
+			patient.clearData();
+			return patient.getPatientID();
+		}
+	}
+
+	public Long addProcedure(String userID, Long patientID) {
+		if(userID != null){
+			if(patientID != null){
+				Procedure procedure = Procedure.generateFakeProcedure();
+				
+				procedure.clearData();
+				
+				Map<Long, Procedure> p = procedures.get(patientID);
+				if(p == null){
+					p = new HashMap<Long,Procedure>();
+				}
+				p.put(procedure.getProcedureID(), procedure);
+				procedures.put(patientID, p);
+				
+				return procedure.getProcedureID();
+			}
+		}
+		return null;
+	}
+
+	public String updatePatient(String userID, Long patientID, String mrID, String first, 
+			String last, String gender, String dob, String nextProcedure) {
+		
+		if(!patients.containsKey(patientID)){
+			return "Patient with patient ID:"+patientID+" does not exist";
+		}
+		else{
+			Patient newPatient = new Patient(patientID,mrID,first,last,gender,dob,nextProcedure);
+			patients.put(patientID, newPatient);
+		}
+		return null;
 	}
 
 }
