@@ -158,11 +158,11 @@
     <div class="col-md-2">
       <button class="btn btn-primary btn-lg center-block">View All Patients</button>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
       <button class="btn btn-primary btn-lg center-block">View Today's Patients</button>
     </div>
-    <div class="col-md-3">
-      <button class="btn btn-primary btn-lg center-block" data-toggle='modal'
+    <div class="col-md-2">
+      <button class="btn btn-primary btn-lg pull-left" data-toggle='modal'
         data-target='#addPatient'>Add New Patient
       </button>
     </div>
@@ -185,32 +185,7 @@
             <th>Next Procedure</th>
           </tr>
         </thead>
-        <tbody>
-          <tr class='clickable-row' data-href='patient.html'>
-            <td>00000</td>
-            <td>Raus</td>
-            <td>Luke</td>
-            <td>6/29/1960</td>
-            <td>Male</td>
-            <td>7/15/2015</td>
-          </tr>
-
-          <tr class='clickable-row' data-href='patient.html'>
-            <td>00001</td>
-            <td>Karnes</td>
-            <td>Doe</td>
-            <td>6/20/1900</td>
-            <td>Male</td>
-            <td>7/14/2015</td>
-          </tr>
-          <tr class='clickable-row' data-href='patient.html'>  
-            <td>00001</td>
-            <td>Karnes</td>
-            <td>Doe</td>
-            <td>6/20/1900</td>
-            <td>Male</td>
-            <td>None Scheduled</td>
-          </tr>
+        <tbody id="paitent-rows">
         </tbody>
       </table>
     </div><!-- /.col -->
@@ -235,6 +210,10 @@
 <script src="js/downloaded/jquery.dataTables.min.js"></script>
 <script src="js/downloaded/dataTables.bootstrap.js"></script>
 <!-- My JS -->
+<script src="js/my/cookies.js"></script>
+<script src="js/my/global.js"></script>
+<script src="js/my/hash.js"></script>
+<script src="js/my/qualoscopy.js"></script>
 <script src="js/my/admin.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
