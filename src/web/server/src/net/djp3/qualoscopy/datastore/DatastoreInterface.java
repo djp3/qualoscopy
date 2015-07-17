@@ -396,14 +396,13 @@ public class DatastoreInterface {
 		return null;
 	}
 
-	public String updatePatient(String userID, Long patientID, String mrID, String first, 
-			String last, String gender, String dob, String nextProcedure) {
+	public String updatePatient(String userID, Long patientID, String mrID, String first, String last, String gender, Long dob) {
 		
 		if(!patients.containsKey(patientID)){
 			return "Patient with patient ID:"+patientID+" does not exist";
 		}
 		else{
-			Patient newPatient = new Patient(patientID,mrID,first,last,gender,dob,nextProcedure);
+			Patient newPatient = new Patient(patientID,mrID,first,last,gender,dob);
 			patients.put(patientID, newPatient);
 		}
 		return null;

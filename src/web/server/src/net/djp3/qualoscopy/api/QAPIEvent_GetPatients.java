@@ -22,7 +22,7 @@
 package net.djp3.qualoscopy.api;
 
 import java.security.InvalidParameterException;
-import java.util.Set;
+import java.util.Map;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 import net.djp3.qualoscopy.datastore.Patient;
@@ -101,9 +101,9 @@ public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Clo
 			else{
 				response.remove("valid");
 				String user_id = r.getParameters().get("user_id").iterator().next();
-				Set<Patient> data = getDB().getPatients(user_id);
+				Map<Long, Patient> data = getDB().getPatients(user_id);
 				JSONArray patients = new JSONArray();
-				for(Patient p:data){
+				for(Patient p:data.values()){
 					patients.add(p.toJSON());
 				}
 				response.put("patients", patients);

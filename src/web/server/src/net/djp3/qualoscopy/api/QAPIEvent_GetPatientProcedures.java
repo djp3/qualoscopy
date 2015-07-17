@@ -18,35 +18,11 @@
  You should have received a copy of the GNU General Public License
  along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*
-/get_patients:
-        {
-                "version", <version>
-                "user_id" <user_id>
-                "shsid", <hash(session_id+salt_x),
-                "shsk", <hash(session_key+salt_x)
-        }
-        {
-                "version", <version>,
-                "patients",[
-                                        {
-                                                "MR": <MR>,
-                                                "Last": <Last Name>,
-                                                "First": <First Name>,
-                                                "DOB": <Month/Day/Year>, 01/11/1980
-                                                "Gender": <M/F/O>,
-                                                "NextProcedure:<Month/Day/Year> 01/11/2016
-                                        },...
-                                        ],
-                "salt", <salt>
-                "error", <true/false>,
-                "errors", [<errors>]
-        }
-*/
 
 package net.djp3.qualoscopy.api;
 
 import java.security.InvalidParameterException;
+import java.util.Map;
 import java.util.Set;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
@@ -64,6 +40,8 @@ import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
 public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession implements Cloneable{ 
 	
+	public static final String ERROR_NULL_PATIENT_ID = "\"patient_id\" was null";
+	public static final String ERROR_PATIENT_ID_PATTERN_FAIL = "\"patient_id\" did not conform to the expected syntax of a long";
 	
 	private static transient volatile Logger log = null;
 	public static Logger getLog(){
@@ -115,12 +93,24 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 		}
 		
 		//Get parameters 
-		Set<String> _mr_id = r.getParameters().get("mr_id");
-		String mr_id = null;
-		if((_mr_id == null) || ((mr_id = (_mr_id.iterator().next())) == null)){
-			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_USER_ID);
-			response.put("error", "true");
+		Set<String> _patient_id = r.getParameters().get("patient_id");
+		Long patient_id = null;
+		if(_patient_id == null){
+			error ="true";
+			response.put("error", error);
+			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_PATIENT_ID);
 			response.put("errors", errors);
+		}
+		else{
+			try{
+				patient_id = Long.valueOf(_patient_id.iterator().next());
+			}
+			catch(NumberFormatException e){
+				error ="true";
+				response.put("error", error);
+				errors.add("Problem handling "+r.getCommand()+":"+ERROR_PATIENT_ID_PATTERN_FAIL);
+				response.put("errors", errors);
+			}
 		}
 		
 		if(error.equals("false")){
@@ -136,9 +126,9 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 			else{
 				response.remove("valid");
 				String user_id = r.getParameters().get("user_id").iterator().next();
-				Set<Procedure> data = getDB().getPatientProcedures(user_id,mr_id);
+				Map<Long, Procedure> data = getDB().getPatientProcedures(user_id,patient_id);
 				JSONArray procedures = new JSONArray();
-				for(Procedure p:data){
+				for(Procedure p:data.values()){
 					procedures.add(p.toJSON());
 				}
 				response.put("procedures", procedures);

@@ -22,6 +22,10 @@
 package net.djp3.qualoscopy.api;
 
 import java.security.InvalidParameterException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -61,6 +65,8 @@ import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
 */
 public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements Cloneable{ 
+	
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
 	
 	public static final String genderSyntax = "[MFO]";
 	public static final Pattern patternGender = Pattern.compile(genderSyntax);
@@ -204,37 +210,33 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 			}
 		}
 		
-		Set<String> _dob = r.getParameters().get("dob");
-		String dob = null;
-		if((_dob == null) || ((dob = (_dob.iterator().next())) == null)){
+		Set<String> __dob = r.getParameters().get("dob");
+		String _dob = null;
+		Long dob = null;
+		if((__dob == null) || ((_dob = (__dob.iterator().next())) == null)){
 			error ="true";
 			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_DOB);
 			response.put("errors", errors);
 		}
 		else{
-			if(!patternDOB.matcher(dob).matches()){
+			if(!patternDOB.matcher(_dob).matches()){
 				error ="true";
 				response.put("error", error);
 				errors.add("Problem handling "+r.getCommand()+":"+ERROR_DOB_PATTERN_FAIL);
 				response.put("errors", errors);
 			}
-		}
-		
-		Set<String> _next_procedure = r.getParameters().get("next_procedure");
-		String next_procedure = null;
-		if((_next_procedure == null) || ((next_procedure = (_next_procedure.iterator().next())) == null)){
-			error ="true";
-			response.put("error", error);
-			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_NEXT_PROCEDURE);
-			response.put("errors", errors);
-		}
-		else{
-			if(!patternNextProcedure.matcher(next_procedure).matches()){
-				error ="true";
-				response.put("error", error);
-				errors.add("Problem handling "+r.getCommand()+":"+ERROR_NEXT_PROCEDURE_PATTERN_FAIL);
-				response.put("errors", errors);
+			else{
+				try{
+					dob = sdf.parse(_dob).getTime();
+				}
+				catch(ParseException e){
+					error ="true";
+					response.put("error", error);
+					errors.add("Problem handling "+r.getCommand()+":"+ERROR_DOB_PATTERN_FAIL);
+					response.put("errors", errors);
+				}
+
 			}
 		}
 		
@@ -252,7 +254,7 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 				response.remove("valid");
 				String user_id = r.getParameters().get("user_id").iterator().next();
 				
-				error = getDB().updatePatient(user_id,patient_id,mr_id,first,last,gender,dob,next_procedure);
+				error = getDB().updatePatient(user_id,patient_id,mr_id,first,last,gender,dob);
 				if(ac_id != null){
 					response.put("ac_id", ac_id);
 				}

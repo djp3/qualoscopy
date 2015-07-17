@@ -33,6 +33,7 @@ import net.djp3.qualoscopy.api.QAPIEvent_GetPatients;
 import net.djp3.qualoscopy.api.QAPIEvent_InitiateSession;
 import net.djp3.qualoscopy.api.QAPIEvent_KillSession;
 import net.djp3.qualoscopy.api.QAPIEvent_Login;
+import net.djp3.qualoscopy.api.QAPIEvent_UpdatePatient;
 import net.djp3.qualoscopy.api.QAPIEvent_VersionCheck;
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 
