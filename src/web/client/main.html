@@ -19,9 +19,11 @@
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="css/jumbotron.css">
-    <link rel="stylesheet" href="css/main.css">
-
+    <link rel="stylesheet" href="css/my/jumbotron.css">
+    <link rel="stylesheet" href="css/my/main.css">
+    <!-- Downaloded CSS files -->
+    <link rel="stylesheet" href="css/downloaded/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" href="css/downloaded/bootstrap-select.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support
          of HTML5 elements and media queries -->
@@ -33,7 +35,6 @@
 
 
   <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -45,88 +46,194 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="index.html">Home</a>
-          <a class="navbar-brand" href="index.html">Create a New Account</a>
+          <a class="navbar-brand" href="javascript:history.back()">Back</a>
+          <a class="navbar-brand">Complications</a>
+          <a class="navbar-brand">Fellow Eval</a>
+          <a class="navbar-brand">Delete</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right">
-            <button id="signout" type="submit" class="btn btn-success">Sign Out</button>
-          </form>
+          <div class="navbar-form navbar-right">
+            <button id="signout" class="btn btn-success">Sign Out</button>
+          </div>
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
 
-    <!-- Modal or Pop up  that we can do anything in-->
-    <div class="modal fade" id="myModal" role="dialog">
+    <!-- Identifiers popup  -->
+    <div class="modal fade" id="identifiers" role="dialog">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Preparation Details</h4>
+            <h3 class="modal-title">PreProcedure</h3>
           </div>
-          <div class="modal-body">
 
-            <!-- Dropdown -->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label for="sel1"><h3>Drug:</h3></label>
-                  <select class="form-control" id="sel1">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
+          <div class="modal-body">
+            <div class="form-group">
+
+              <!-- Text input -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>AC</h4>
+                  <label><input class="form-control" type="text" name="AC"></label>
+                </div>
+              </div>
+
+              <!-- Dropdown -->
+              <div class="row">
+                <div class="col-md-12">
+                  <label for="Location" name="location"><h4>Location</h4></label>
+                  <select class="form-control" id="Location">
+                    <option>Bldg200</option>
+                    <option>CathLab</option>
+                    <option>OSS</option>
+                    <option>OR</option>
+                    <option>CDDC</option>
                   </select>
                 </div>
               </div>
             </div>
 
+
+            <div class="row">
+              <div class='col-md-6'>
+                <h4>Date of Service</h4>
+                <div class='input-group date'>
+                  <input id='datepicker1' type='text' class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class='col-md-12'>
+                <h4>Faculty</h4>
+                <select class="selectpicker show-tick" data-live-search="true">
+                  <option>None</option>
+                  <option>Karnes, Willam</option>
+                  <option>Saget, Bob</option>
+                  <option>Doctor, 3</option>
+                  <option>Doctor, 4</option>
+                  <option>Doctor, 5</option>
+                  <option>Doctor, 6</option>
+                  <option>Doctor, 7</option>
+                  <option>Doctor, 8</option>
+                  <option>Doctor, 9</option>
+                </select>
+                </div>
+              </div>
+
+
+            <div class="row">
+              <div class='col-md-12'>
+                <h4>Fellow</h4>
+                <select class="selectpicker show-tick" title="" data-live-search="true">
+                  <option>None</option>
+                  <option>Skywalker, Luke</option>
+                  <option>Solo, Hans</option>
+                  <option>Fellow, 3</option>
+                  <option>Fellow, 4</option>
+                  <option>Fellow, 5</option>
+                  <option>Fellow, 6</option>
+                  <option>Fellow, 7</option>
+                  <option>Fellow, 8</option>
+                  <option>Fellow, 9</option>
+                </select>
+                </div>
+              </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preparation popup -->
+    <div class="modal fade" id="preparation" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Preparation Details</h3>
+          </div>
+          <div class="modal-body">
+
+            <!-- Dropdown -->
+            <div class="row">
+              <div class='col-md-12'>
+                <h4>Prep</h4>
+                <select class="selectpicker show-tick" data-live-search="true">
+                  <option>None</option>
+                  <option>Drug 1</option>
+                  <option>Drug 2</option>
+                  <option>Drug 3</option>
+                  <option>Drug 4</option>
+                  <option>Drug 5</option>
+                  <option>Drug 6</option>
+                  <option>Drug 7</option>
+                  <option>Drug 8</option>
+                  <option>Drug 9</option>
+                </select>
+                </div>
+              </div>
+
             <!-- Radio Group -->
             <div class="row">
               <div class="col-md-4">
-                <h3>Prep Liters</h3>
+                <h4>Prep Liters</h4>
                 <form role="form">
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">None</label>
-                  </div>
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">1</label>
-                  </div>
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">2</label>
-                  </div>
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">3</label>
-                  </div>
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">4</label>
-                  </div>
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">5</label>
-                  </div>
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">6 or more</label>
+                  <div class="radio btn-group-vertical btn-block">
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">None
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">1
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">2
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">3
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">4
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">5
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">6 or more
+                    </label>
                   </div>
                 </form>
               </div>
               <div class="col-md-4">
-                <h3>Split Prep</h3>
+                <h4>Split Prep?</h4>
                 <form role="form">
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">Yes</label>
-                  </div>
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">No</label>
+                  <div class="radio btn-group-vertical btn-block">
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">Yes
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">No
+                    </label>
                   </div>
                 </form>
               </div>
               <div class="col-md-4">
-                <h3>Bisacodyl</h3>
+                <h4>Bisacodyl?</h4>
                 <form role="form">
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">Yes</label>
-                  </div>
-                  <div class="radio">
-                    <label><input type="radio" name="optradio">No</label>
+                  <div class="radio btn-group-vertical btn-block">
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">Yes
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">No
+                    </label>
                   </div>
                 </form>
               </div>
@@ -138,39 +245,738 @@
           </div>
         </div>
       </div>
-
     </div>
 
+    <!-- Indications popup -->
+    <div class="modal fade" id="indications" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Current Indications</h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+
+            <!-- Dropdown -->
+            <div class="row">
+              <div class='col-md-6'>
+                <h4>Last Colon</h4>
+                <select class="selectpicker show-tick" data-live-search="true">
+                  <option>None</option>
+                  <option>Drug 1</option>
+                  <option>Drug 2</option>
+                  <option>Drug 3</option>
+                  <option>Drug 4</option>
+                  <option>Drug 5</option>
+                  <option>Drug 6</option>
+                  <option>Drug 7</option>
+                  <option>Drug 8</option>
+                  <option>Drug 9</option>
+                </select>
+              </div>
+
+              <!-- Radio Group -->
+              <div class="col-md-6">
+                <h4>Prep Liters</h4>
+                <form role="form">
+                  <div class="radio btn-group-vertical btn-block">
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">Screening
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">Surveillance
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">Diagnostic
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">T
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">Therapeutic
+                    </label>
+                    <label class="btn btn-primary">
+                      <input type="radio" name="optradio">Preoperatice
+                    </label>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class='col-md-6'>
+                <h4>Primary Indication</h4>
+                <select class="selectpicker show-tick" data-live-search="true">
+                  <option>None</option>
+                  <option>Indication 1</option>
+                  <option>Indication 2</option>
+                  <option>Indication 3</option>
+                  <option>Indication 4</option>
+                  <option>Indication 5</option>
+                  <option>Indication 6</option>
+                  <option>Indication 7</option>
+                  <option>Indication 8</option>
+                  <option>Indication 9</option>
+                </select>
+              </div>
+              <div class='col-md-6'>
+                <h4>Add Indications</h4>
+                <select class="selectpicker show-tick" multiple data-live-search="true">
+                  <optgroup label="Screening">
+                    <option>Avg Risk</option>
+                    <option>FHx CRC</option>
+                    <option>FHx Polyps</option>
+                    <option>+FIT</option>
+                    <option>+Hemoccult</option>
+                    <option>+Stool DNA</option>
+                  </optgroup>
+                  <optgroup label="Surveilance">
+                    <option>Hx Polyps</option>
+                    <option>Hx CRC</option>
+                    <option>Hc IBD</option>
+                  </optgroup>
+                  <optgroup label="Diagnostic">
+                    <option>Anemia</option>
+                    <option>Bleeding</option>
+                    <option>Abd Pain</option>
+                    <option>Diarrhea</option>
+                    <option>Constipation</option>
+                    <option>Alt Stool</option>
+                    <option>Abn X-ray</option>
+                  </optgroup>
+                  <optgroup label="Therapeutic">
+                    <option>Knwn Polyp</option>
+                    <option>Knwn Structure</option>
+                    <option>Bleeding Source</option>
+                    <option>FMT</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+
+            <!-- Text input -->
+            <div class="row">
+              <div class="col-md-12">
+                <h4>Other Indications</h4>
+                <label><input class="form-control" type="text" name="indications"></label>
+              </div>
+            </div>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scope popup -->
+    <div class="modal fade" id="scope" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Scope</h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+
+              <!-- Radio Group -->
+              <div class="row">
+                <div class="col-md-6">
+                  <h4>Scopes</h4>
+                  <form role="form">
+                    <div class="radio btn-group-vertical btn-block">
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Pediatric Colonscpe
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Adult Colonscope
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">EGD Scope
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Enteroscope
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Sigmoidoscope
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Other
+                      </label>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Radio Group -->
+              <div class="row">
+                <div class="col-md-4">
+                  <h4>EndoCuff?</h4>
+                  <form role="form">
+                    <div class="radio btn-group-vertical btn-block">
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Yes
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">No
+                      </label>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-md-4">
+                  <h4>Cap Assisted?</h4>
+                  <form role="form">
+                    <div class="radio btn-group-vertical btn-block">
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Yes
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">No
+                      </label>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-md-4">
+                  <h4>Underwater?</h4>
+                  <form role="form">
+                    <div class="radio btn-group-vertical btn-block">
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Yes
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">No
+                      </label>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sedation popup -->
+    <div class="modal fade" id="sedation" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Current Indications</h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <!-- Radio Group -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Sedation Level</h4>
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">Unsedated
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">Moderate
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">Ga
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class='col-md-6'>
+                  <h4>Versed</h4>
+                  <select class="selectpicker show-tick" data-live-search="true">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>>10</option>
+                  </select>
+                </div>
+                <div class='col-md-6'>
+                  <h4>Fentanyl</h4>
+                  <select class="selectpicker show-tick" data-live-search="true">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>>10</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class='col-md-6'>
+                  <h4>Demerol</h4>
+                  <select class="selectpicker show-tick" data-live-search="true">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>>10</option>
+                  </select>
+                </div>
+                <div class='col-md-6'>
+                  <h4>Benadryl</h4>
+                  <select class="selectpicker show-tick" data-live-search="true">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>>10</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Text input -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Other Med</h4>
+                  <label><input class="form-control" type="text" name="AC"></label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extent popup -->
+    <div class="modal fade" id="extent" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Extent</h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+
+              <!-- Radio Group -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Extent</h4>
+                  <form role="form">
+                    <div class="radio btn-group-vertical">
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">TI
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Cecum
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">LLeocolonic Anatomosis
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Ascending
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Hepatic Flexure
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Transverse
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Splenic Flexure
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Descending
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Sigmond
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Rectosigmoid
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="optradio">Rectum
+                      </label>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Prep Quality popup -->
+    <div class="modal fade" id="quality" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Extent</h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+
+              <div class="row">
+                <div class="col-md-12">
+                  <img src="assets/BBP.png">
+                </div>
+              </div>
+
+              <!-- Radio Group -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Prep Left</h4>
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">0
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">1
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">2
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">3
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Radio Group -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Prep Mid</h4>
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">0
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">1
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">2
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">3
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Radio Group -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Prep Right</h4>
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">0
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">1
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">2
+                    </label>
+                    <label class="btn btn-primary btn-lg">
+                      <input type="radio" name="optradio">3
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Times popup -->
+    <div class="modal fade" id="times" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Times</h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+
+              <div class="row">
+                <div class="col-md-6">
+                  <h4>Time Insertion</h4>
+                  <div class='input-group date'>
+                    <input id='timepicker1' type='text' class="form-control" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <h4>Time Begin Withdrawal</h4>
+                  <div class='input-group date'>
+                    <input id='timepicker2' type='text' class="form-control" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <h4>Time Scope Withdrawn</h4>
+                  <div class='input-group date'>
+                    <input id='timepicker3' type='text' class="form-control" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Poplyps or Mass popup MIGHT CHANGE TO OWN PAGE -->
+    <div class="modal fade" id="addPolypOrMass" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Add Edit Polyps or Mass</h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+
+              <!-- Dropdown row -->
+              <div class="row">
+                <div class='col-md-2'>
+                  <h4>Location</h4>
+                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                    <option>None</option>
+                    <option>Drug 1</option>
+                    <option>Drug 2</option>
+                  </select>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Phenotype</h4>
+                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                    <option>None</option>
+                    <option>Drug 1</option>
+                    <option>Drug 2</option>
+                  </select>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Number</h4>
+                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                    <option>None</option>
+                    <option>Drug 1</option>
+                    <option>Drug 2</option>
+                  </select>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Size (mm)</h4>
+                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                    <option>None</option>
+                    <option>Drug 1</option>
+                    <option>Drug 2</option>
+                  </select>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Treatment</h4>
+                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                    <option>None</option>
+                    <option>Drug 1</option>
+                    <option>Drug 2</option>
+                  </select>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Residual</h4>
+                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                    <option>None</option>
+                    <option>Drug 1</option>
+                    <option>Drug 2</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Dropdown row -->
+              <div class="row">
+                <div class='col-md-2'>
+                  <div class="checkbox">
+                    <label class="btn btn-primary">
+                      <input type="checkbox" value="">Clipped?
+                    </label>
+                    <label class="btn btn-primary" >
+                      <input type="checkbox" value="">Submitted?
+                    </label>
+                  </div>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Bottle</h4>
+                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                    <option>None</option>
+                    <option>1</option>
+                    <option>2</option>
+                  </select>
+                </div>
+
+                <div class='col-md-3'>
+                  <h4>Time Start</h4>
+                  <div class='input-group date'>
+                    <input id='timepicker4' type='text' class="form-control" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class='col-md-3'>
+                  <h4>Time End</h4>
+                  <div class='input-group date'>
+                    <input id='timepicker5' type='text' class="form-control" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Image#</h4>
+                  <label><input class="form-control" type="text" name="Image#"></label>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <h5>Nice Criteria</h5>
+                  <img src="assets/NICE_Criteria.png">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h5>Primary NICECriteria</h5>
+                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                        <option>None</option>
+                        <option>Bland/capillaries</option>
+                        <option>Dark Spots</option>
+                        <option>Light Spots</option>
+                        <option>Tubulogyrus</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <h5>Secondary NICECriteria</h5>
+                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                        <option>None</option>
+                        <option>Bland/capillaries</option>
+                        <option>Dark Spots</option>
+                        <option>Light Spots</option>
+                        <option>Tubulogyrus</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h5>Path Best Guess</h5>
+                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                        <option>None</option>
+                        <option>Adenoma</option>
+                        <option>Hyperplastic</option>
+                        <option>SSA</option>
+                        <option>Inflamatory</option>
+                        <option>Lymphoid</option>
+                        <option>Malignancy</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <h5>Guess Confidence</h5>
+                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                        <option>None</option>
+                        <option>High</option>
+                        <option>Low</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <img src="assets/addImage.png" class="img-responsive" alt="Add Image">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <button class='btn btn-primary pull-right'>Add Image</button>
+                    </div>
+                    <div class="col-md-6">
+                      <button class='btn btn-primary pull-left'>Remove Image</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!--My Table-->
     <div class="my-table">
       <div class="container-fluid">
         <!-- ID used to load the tables via Javascript -->
         <div id="tables"></div>
-
-        <!-- <div class="row">
-          <div class="col-md-2">
-            <button class="btn btn-primary pull-right" data-toggle="modal"
-            data-target="#myModal">Identifiers</button>
-          </div>
-          <div class="col-md-6">
-            <table class="table table-condensed table-striped">
-              <tr>
-                <th>Account Number</th>
-                <th>Date of Service</th>
-                <th>Faculty</th>
-                <th>Fellow</th>
-              </tr>
-              <tr>
-                <td>00000000</td>
-                <td>2/15/2015</td>
-                <td>Karnes, William</td>
-                <td>None</td>
-              </tr>
-            </table>
-          </div>
-        </div> -->
-
       </div>
     </div>
 
@@ -182,9 +988,17 @@
     <script src="js/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-    <!-- My Login JS -->
-    <script src="js/main.js"></script>
+    <!-- Downloaded JS Files -->
+    <script src="js/downloaded/moment.min.js"></script>
+    <script src="js/downloaded/bootstrap-datetimepicker.js"></script>
+    <script src="js/downloaded/bootstrap-select.js"></script>
+    <!-- My JS -->
+    <script src="js/my/hash.js"></script>
+    <script src="js/my/cookies.js"></script>
+    <script src="js/my/global.js"></script>
+    <script src="js/my/qualoscopy.js"></script>
+    <script src="js/my/main.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="./js/ie10-viewport-bug-workaround.js"></script>
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>
