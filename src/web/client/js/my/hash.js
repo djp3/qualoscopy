@@ -164,17 +164,3 @@ if (typeof String.prototype.utf8Decode == 'undefined') {
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 if (typeof module != 'undefined' && module.exports) module.exports = Sha256; // CommonJs export
 if (typeof define == 'function' && define.amd) define([], function() { return Sha256; }); // AMD
-
-$(document).ready(function() {
-
-  $('#hash').click(function() {
-
-    document.getElementById("hashText").innerHTML='Luke Raus=\n'
-    + Sha256.hash("Luke Raus") + "\n" + "2064750fff45f6cfb1e31f2dc85ba6cc97270fc6a6fae549ce4b58cb157149af"
-    + "\nHello World 123456=\n" + Sha256.hash("Hello World 123456")
-    + "\n" + "2eed3e5e1304af893409e47df71eb56c8f55625b4eb71d32724ba93b3ceb02b7"
-    + "\néñƔ=\n" + Sha256.hash("éñƔ")
-    + "\n" + "8db3670bea9df87f85cef55d488861b2c2b0f8c97be75090c2db74a4b17033dd";
-  });
-
-});
