@@ -24,8 +24,6 @@ package net.djp3.qualoscopy.api;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -40,33 +38,8 @@ import edu.uci.ics.luci.utility.webserver.event.Event;
 import edu.uci.ics.luci.utility.webserver.event.result.api.APIEventResult;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
-/*
- * /update/patient:
-	request:
-		{
-			"version", <version>
-			"user_id" <user_id>
-			"shsid", <hash(session_id+salt_x),
-			"shsk", <hash(session_key+salt_x),
-			"mr_id", <MRID>,
-			"last": <Last Name>,
-			"first": <First Name>,
-			"dob": <Month/Day/Year>, 01/11/1980
-			"gender": <M/F/O>,
-			"next_procedure":<Month/Day/Year> 01/11/2016
-		}
-	return:
-		{
-			"version", <version>,
-			"salt", <salt>,
-			"error", <true/false>,
-			"errors", [<errors>]
-		}
-
-*/
 public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements Cloneable{ 
 	
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
 	
 	public static final String genderSyntax = "[MFO]";
 	public static final Pattern patternGender = Pattern.compile(genderSyntax);
@@ -103,6 +76,8 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 		}
 		return log;
 	}
+	
+	public final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
 
 	
 	public QAPIEvent_UpdatePatient(String version, DatastoreInterface db) {
@@ -147,7 +122,7 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 		
 		/* Get additional parameters */
 		Set<String> _patient_id = r.getParameters().get("patient_id");
-		Long patient_id = null;
+		Long patientID = null;
 		if(_patient_id == null){
 			error ="true";
 			response.put("error", error);
@@ -156,7 +131,7 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 		}
 		else{
 			try{
-				patient_id = Long.valueOf(_patient_id.iterator().next());
+				patientID = Long.valueOf(_patient_id.iterator().next());
 			}
 			catch(NumberFormatException e){
 				error ="true";
@@ -252,16 +227,13 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 			}
 			else{
 				response.remove("valid");
-				String user_id = r.getParameters().get("user_id").iterator().next();
+				String userID = r.getParameters().get("user_id").iterator().next();
 				
-				error = getDB().updatePatient(user_id,patient_id,mr_id,first,last,gender,dob);
-				if(ac_id != null){
-					response.put("ac_id", ac_id);
-				}
-				else{
+				String howDidItGo = getDB().updatePatient(userID,patientID,mr_id,first,last,gender,dob);
+				if(howDidItGo != null){
 					error = "true";
 					response.put("error",error);
-					errors.add("Unable to add new patient with user_id:"+user_id+", mr_id:"+mr_id);
+					errors.add(howDidItGo);
 					response.put("errors", errors);
 				}
 			}

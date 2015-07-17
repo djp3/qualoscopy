@@ -91,9 +91,9 @@ public class QAPIEvent_AddProcedure extends QAPIEvent_CheckSession implements Cl
 		}
 		
 		/* Get additional parameters */
-		Set<String> _patient_id = r.getParameters().get("patient_id");
-		Long patient_id = null;
-		if(_patient_id == null){
+		Set<String> _patientID = r.getParameters().get("patient_id");
+		Long patientID = null;
+		if(_patientID == null){
 			error ="true";
 			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_PATIENT_ID);
@@ -101,7 +101,7 @@ public class QAPIEvent_AddProcedure extends QAPIEvent_CheckSession implements Cl
 		}
 		else{
 			try{
-				patient_id = Long.valueOf(_patient_id.iterator().next());
+				patientID = Long.valueOf(_patientID.iterator().next());
 			}
 			catch(NumberFormatException e){
 				error ="true";
@@ -123,15 +123,15 @@ public class QAPIEvent_AddProcedure extends QAPIEvent_CheckSession implements Cl
 			}
 			else{
 				response.remove("valid");
-				String user_id = r.getParameters().get("user_id").iterator().next();
-				String ac_id = getDB().addProcedure(user_id,patient_id);
-				if(ac_id != null){
-					response.put("ac_id", ac_id);
+				String userID = r.getParameters().get("user_id").iterator().next();
+				Long procedureID = getDB().addProcedure(userID,patientID);
+				if(procedureID != null){
+					response.put("procedure_id", procedureID);
 				}
 				else{
 					error = "true";
 					response.put("error",error);
-					errors.add("Unable to add new patient with user_id:"+user_id+", mr_id:"+mr_id);
+					errors.add("Unable to add new procedure with user_id:"+userID+", patient_id:"+patientID);
 					response.put("errors", errors);
 				}
 			}

@@ -372,6 +372,7 @@ public class DatastoreInterface {
 		else{
 			Patient patient = Patient.generateFakePatient();
 			patient.clearData();
+			patients.put(patient.getPatientID(), patient);
 			return patient.getPatientID();
 		}
 	}
