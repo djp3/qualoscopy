@@ -27,17 +27,21 @@ $(document).ready(function() {
   };
 
 
+  var patient_id = Cookies.getCookie("patient_id");
+  if(debug) console.log(patient_id);
   var mr_id = Cookies.getCookie("mr_id");
   var last_name = Cookies.getCookie("last_name");
   var firt_name = Cookies.getCookie("firt_name");
   var dob = Cookies.getCookie("dob");
   var next_procedure = Cookies.getCookie("next_procedure");
 
-  $("#patient-info").append(patientRowMaker(mr_id, last_name, firt_name, dob, next_procedure));
+  $("#patient-info").append(patientRowMaker(mr_id, last_name, firt_name,
+    dob, next_procedure));
 
   var salts = JSON.parse(Cookies.getCookie("salts"));
 
-  getProcedure(salts, session_id, session_key, user_id, mr_id).done(function(data) {
+  getPatientProcedure(salts, session_id, session_key,
+    user_id, mr_id, patient_id).done(function(data) {
     if (debug) console.log(data);
     if(data.error == "false"){
       Cookies.addToCookieArray("salts", data.salt, 1);
@@ -47,8 +51,8 @@ $(document).ready(function() {
 
       for (var i = 0; i < procedureArray.length; i++) {
         var procedure = procedureArray[i];
-        $("#procedure-rows").append(procedureRowMaker(procedure.ac_id, procedure.dos,
-          procedure.completed, procedure.faculty));
+        $("#procedure-rows").append(procedureRowMaker(procedure.ac_id,
+          procedure.dos, procedure.completed, procedure.faculty));
         }
         $(".clickable-row").click(function() {
           var ac_id = $(this).find('.ac-id').text();
@@ -69,5 +73,14 @@ $(document).ready(function() {
     $('#operationTime').datetimepicker({
       format: 'LT'}
     );
+
+    $("#save").click(function(){
+      var $ac = $("#ac").val();
+      var $operationDate = $("#operationDate").val();
+      var $operationTime = $("#operationTime").val();
+      var $faculty = $("#faculty").val();
+
+      console.log($ac + "" + $operationDate + $operationTime + $faculty);
+    });
 
 });

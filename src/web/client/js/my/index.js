@@ -20,10 +20,10 @@ $(document).ready(function() {
 
 
   if(session_id == null || session_key == null || user_id == null ||
-    salts.length == 0 || salts[0] == null){
-      initiateSession();
+    salts == null || salts.length == 0 || salts[0] == null){
+      sessionInitiate();
     } else {
-      checkSession(salts, session_id, session_key, user_id);
+      sessionCheck(salts, session_id, session_key, user_id);
     }
 
 });

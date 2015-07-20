@@ -16,6 +16,6 @@ $(document).ready(function() {
   // For the signout button on the toolbar
   $("#signout").click(function() {
     var salts = JSON.parse(Cookies.getCookie("salts"));
-    signOut(salts, session_id, session_key, user_id);
+    sessionKill(salts, session_id, session_key, user_id);
   });
 });
