@@ -44,7 +44,7 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 	public static final String genderSyntax = "[MFO]";
 	public static final Pattern patternGender = Pattern.compile(genderSyntax);
 	
-	public static final String dobSyntax = "[1]?[0-9][/][123]?[0-9][/][12][09][0-9][0-9]";
+	public static final String dobSyntax = "[01]?[0-9][/][123]?[0-9][/][12][09][0-9][0-9]";
 	public static final Pattern patternDOB = Pattern.compile(dobSyntax);
 	
 	public static final String nextProcedureSyntax = "[1]?[0-9][/][123]?[0-9][/][12][09][0-9][0-9]";
