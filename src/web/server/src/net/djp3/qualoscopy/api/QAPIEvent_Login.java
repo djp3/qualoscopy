@@ -121,31 +121,35 @@ public class QAPIEvent_Login extends QAPIEvent_VersionCheck implements Cloneable
 		Set<String> _user_id = r.getParameters().get("user_id");
 		String user_id = null;
 		if((_user_id == null) || ((user_id = (_user_id.iterator().next())) == null)){
+			error ="true";
+			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_USER_ID);
-			response.put("error", "true");
 			response.put("errors", errors);
 		}
 		
 		Set<String> _session_id = r.getParameters().get("session_id");
 		String session_id  = null;
 		if((_session_id == null) || ((session_id = (_session_id.iterator().next())) == null)){
+			error ="true";
+			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_SESSION_ID);
-			response.put("error", "true");
 			response.put("errors", errors);
 		}
 		
 		Set<String> _shp = r.getParameters().get("shp");
 		String shp  = null;
 		if((_shp == null) || ((shp = (_shp.iterator().next())) == null)){
+			error ="true";
+			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_SHP);
-			response.put("error", "true");
 			response.put("errors", errors);
 		}
 		
 		String source = r.getSource();
 		if(source == null){
+			error ="true";
+			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_SOURCE);
-			response.put("error", "true");
 			response.put("errors", errors);
 		}
 		

@@ -209,6 +209,9 @@ public class DatastoreInterface {
 		if(user_id.equals("Luke")){
 			return SHA256.sha256("Raus",1);
 		}
+		else if(user_id.equals("test_user")){
+			return SHA256.sha256("test_password",1);
+		}
 		else{
 			return SHA256.makeSomethingUp();
 		}

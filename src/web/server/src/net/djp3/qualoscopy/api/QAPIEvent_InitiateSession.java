@@ -103,7 +103,7 @@ public class QAPIEvent_InitiateSession extends QAPIEvent_VersionCheck implements
 		
 			Pair<String, String> pair = getDB().createAndStoreInitialSessionIDAndSalt(source);
 			response.put("session_id",pair.getFirst());
-			response.put("session_salt",pair.getSecond());
+			response.put("salt",pair.getSecond());
 		}
 		return response;
 	}

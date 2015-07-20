@@ -46,6 +46,11 @@ public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Clo
 		}
 		return log;
 	}
+	
+	/**
+	 * This is here just to force hash_code and equals to generate
+	 */
+	private final long serialVersionUID = 5025810507293636843L;
 
 	
 	public QAPIEvent_GetPatients(String version, DatastoreInterface db) {
@@ -128,6 +133,35 @@ public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Clo
 			
 		return response;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ (int) (serialVersionUID ^ (serialVersionUID >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof QAPIEvent_GetPatients)) {
+			return false;
+		}
+		QAPIEvent_GetPatients other = (QAPIEvent_GetPatients) obj;
+		if (serialVersionUID != other.serialVersionUID) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 	
 }
 
