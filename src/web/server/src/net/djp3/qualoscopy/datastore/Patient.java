@@ -27,7 +27,7 @@ public class Patient {
 	private static final CalendarCache cc = new CalendarCache();
 	
 	public static Patient generateFakePatient() {
-		Long patientID = r.nextLong();
+		Long patientID = Math.abs(r.nextLong());
 		String medicalRecordID = String.format("MR_%05d",Math.abs(r.nextInt(99999)));
 		String firstName;
 		switch(Math.abs(r.nextInt(10))){
