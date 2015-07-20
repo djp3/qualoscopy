@@ -153,6 +153,8 @@ public class Patient {
 	public JSONObject toJSON() {
 		JSONObject ret = new JSONObject();
 		
+		ret.put("patient_id",this.getPatientID());
+		
 		ret.put("mr_id",this.getMedicalRecordID());
 		
 		ret.put("first",this.getFirstName());
