@@ -17,7 +17,7 @@ var sessionInitiate;
 // Sign out of the system / kill sesssion
 var sessionKill;
 // update patient info
-var updatePatrient;
+var updatePatient;
 
 addPatient = function(salts, session_id, session_key, user_id){
   var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
@@ -62,6 +62,7 @@ addProcedure = function(salts, session_id, session_key, user_id, mrid){
 // Return ajax object so .done can be used elsewhere
 getPatients = function(salts, session_id, session_key, user_id) {
   var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
+  if (debug) console.log(usedSalt);
   return $.ajax({
     dataType: 'jsonp',
     url: "https://" + ipAddress + ":" + port
@@ -148,7 +149,7 @@ sessionInitiate = function () {
     if (debug) console.log(data);
     if(data.error == "false"){
       Cookies.setCookie("session_id", data.session_id, 1);
-      Cookies.setCookie("salts", JSON.stringify([data.session_salt]), 1);
+      Cookies.setCookie("salts", JSON.stringify([data.salt]), 1);
       Cookies.setCookie("session_key", "", 1);
       Cookies.setCookie("user_id", "", 1);
     } else {
@@ -176,10 +177,11 @@ sessionKill = function(salts, session_id, session_key, user_id){
   });
 }
 
-updatePatrient = function(salts, session_id, session_key, user_id, mrid,
+// Return ajax call
+updatePatient = function(salts, session_id, session_key, user_id, mrid,
   lastName, firstName, dob, gender, patient_id){
   var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
-  $.ajax({
+  return $.ajax({
     dataType: 'jsonp',
     url: "https://" + ipAddress + ":" + port
     + "/update/patient",
@@ -189,11 +191,5 @@ updatePatrient = function(salts, session_id, session_key, user_id, mrid,
     "patient_id": patient_id, "mr_id": mrid,
     "last": lastName, "first": firstName, "dob": dob, "gender": gender},
     context: document.body
-  }).done(function(data) {
-    if (debug) console.log(data);
-    if(data.error == "false"){
-      Cookies.addToCookieArray("salts", data.salt, 1);
-      // TODO: DO Somthting
-    }
   });
 }

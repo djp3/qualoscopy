@@ -29,7 +29,6 @@ $(document).ready(function() {
     );
 
     var salts = JSON.parse(Cookies.getCookie("salts"));
-    if(debug) console.log(salts);
     // Ajax call
     getPatients(salts, session_id, session_key, user_id).done(function(data) {
       if (debug) console.log(data);
@@ -73,7 +72,8 @@ $(document).ready(function() {
       addPatient(salts, session_id, session_key, user_id);
     });
 
-    $("#save").click(function(){
+    $("#addPatientForm").submit(function(){
+      event.preventDefault();
       var salts = JSON.parse(Cookies.getCookie("salts"));
       var patient_id = Cookies.getCookie("patient_id");
       if(patient_id != null){
@@ -82,16 +82,17 @@ $(document).ready(function() {
         var lastName = $("#last-name").val();
         var gender = $("#gender").val();
         var dob = $("#dob").val();
-        console.log(mrid + "" + firstName + lastName + gender + dob);
-        updatePatrient(salts, session_id, session_key, user_id, mrid,
-          lastName, firstName, dob, gender, patient_id);
-      }
+        if (debug) console.log(mrid + "" + firstName + lastName + gender + dob);
 
-      // var ac = $("#ac").val();
-      // var operationDate = $("#operationDate").val();
-      // var operationTime = $("#operationTime").val();
-      // var faculty = $("#faculty").val();
-
-    });
+        updatePatient(salts, session_id, session_key, user_id, mrid,
+          lastName, firstName, dob, gender, patient_id).done(function(data) {
+            if (debug) console.log(data);
+            if(data.error == "false"){
+              Cookies.addToCookieArray("salts", data.salt, 1);
+              window.document.location = "admin.html";
+            };
+      });
+    }
+  });
 
 });
