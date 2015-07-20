@@ -161,9 +161,14 @@ public class Patient {
 		
 		ret.put("last",this.getLastName());
 		
-		Calendar calendar = cc.getCalendar(CalendarCache.TZ_GMT);
-		calendar.setTimeInMillis(this.getDateOfBirth());
-		ret.put("dob",sdf.format(calendar.getTime()));
+		if(this.getDateOfBirth() != null){
+			Calendar calendar = cc.getCalendar(CalendarCache.TZ_GMT);
+			calendar.setTimeInMillis(this.getDateOfBirth());
+			ret.put("dob",sdf.format(calendar.getTime()));
+		}
+		else{
+			ret.put("dob","null");
+		}
 		
 		ret.put("gender", this.getGender());
 		
