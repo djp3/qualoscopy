@@ -20,7 +20,7 @@
 */
 
 
-package net.djp3.qualoscopy;
+package net.djp3.qualoscopy.datastore;
 
 
 import java.io.UnsupportedEncodingException;

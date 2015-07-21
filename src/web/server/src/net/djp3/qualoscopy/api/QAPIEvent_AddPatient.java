@@ -105,9 +105,9 @@ public class QAPIEvent_AddPatient extends QAPIEvent_CheckSession implements Clon
 			else{
 				response.remove("valid");
 				String userID = r.getParameters().get("user_id").iterator().next();
-				Long patientID = getDB().addPatient(userID);
+				String patientID = getDB().addPatient(userID);
 				if(patientID != null){
-					response.put("patient_id", ""+patientID);
+					response.put("patient_id", patientID);
 				}
 				else{
 					error = "true";

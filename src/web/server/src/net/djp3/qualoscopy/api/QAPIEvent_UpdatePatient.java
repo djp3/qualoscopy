@@ -122,28 +122,17 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 		
 		/* Get additional parameters */
 		Set<String> _patient_id = r.getParameters().get("patient_id");
-		Long patientID = null;
-		if(_patient_id == null){
+		String patientID = null;
+		if((_patient_id == null) || ((patientID = (_patient_id.iterator().next())) == null)){
 			error ="true";
 			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_PATIENT_ID);
 			response.put("errors", errors);
 		}
-		else{
-			try{
-				patientID = Long.valueOf(_patient_id.iterator().next());
-			}
-			catch(NumberFormatException e){
-				error ="true";
-				response.put("error", error);
-				errors.add("Problem handling "+r.getCommand()+":"+ERROR_PATIENT_ID_PATTERN_FAIL);
-				response.put("errors", errors);
-			}
-		}
 		
 		Set<String> _mr_id = r.getParameters().get("mr_id");
-		String mr_id = null;
-		if((_mr_id == null) || ((mr_id = (_mr_id.iterator().next())) == null)){
+		String mrID = null;
+		if((_mr_id == null) || ((mrID = (_mr_id.iterator().next())) == null)){
 			error ="true";
 			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_MR_ID);
@@ -229,7 +218,7 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 				response.remove("valid");
 				String userID = r.getParameters().get("user_id").iterator().next();
 				
-				String howDidItGo = getDB().updatePatient(userID,patientID,mr_id,first,last,gender,dob);
+				String howDidItGo = getDB().updatePatient(userID,patientID,mrID,first,last,gender,dob);
 				if(howDidItGo != null){
 					error = "true";
 					response.put("error",error);

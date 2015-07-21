@@ -27,10 +27,11 @@ public class Patient {
 	private static final CalendarCache cc = new CalendarCache();
 	
 	public static Patient generateFakePatient() {
-		Long patientID = -1L;
-		while(patientID < 0){
-			patientID = r.nextLong();
+		Long _patientID = -1L;
+		while(_patientID < 0){
+			_patientID = r.nextLong();
 		}
+		String patientID = ""+_patientID;
 		
 		String medicalRecordID = String.format("MR_%05d",Math.abs(r.nextInt(99999)));
 		String firstName;
@@ -78,7 +79,7 @@ public class Patient {
 	
 	private final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	
-	private Long patientID;
+	private String patientID;
 	private String medicalRecordID;
 	private String firstName;
 	private String lastName;
@@ -95,7 +96,7 @@ public class Patient {
 	 * @param dateOfBirth, dateOfBirth
 	 * @param nextProcedure, nextProcedure
 	 */
-	public Patient(Long patientID, String medicalRecordID, String firstName, String lastName, String gender, Long dateOfBirth ) {
+	public Patient(String patientID, String medicalRecordID, String firstName, String lastName, String gender, Long dateOfBirth ) {
 		super();
 		this.setPatientID(patientID);
 		this.setMedicalRecordID(medicalRecordID);
@@ -105,11 +106,11 @@ public class Patient {
 		this.setDateOfBirth(dateOfBirth);
 	}
 	
-	public Long getPatientID() {
+	public String getPatientID() {
 		return patientID;
 	}
 
-	public void setPatientID(Long patientID) {
+	public void setPatientID(String patientID) {
 		this.patientID = patientID;
 	}
 

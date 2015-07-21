@@ -94,23 +94,12 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 		
 		//Get parameters 
 		Set<String> _patient_id = r.getParameters().get("patient_id");
-		Long patient_id = null;
-		if(_patient_id == null){
+		String patient_id = null;
+		if((_patient_id == null) || ((patient_id = (_patient_id.iterator().next())) == null)){
 			error ="true";
 			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_PATIENT_ID);
 			response.put("errors", errors);
-		}
-		else{
-			try{
-				patient_id = Long.valueOf(_patient_id.iterator().next());
-			}
-			catch(NumberFormatException e){
-				error ="true";
-				response.put("error", error);
-				errors.add("Problem handling "+r.getCommand()+":"+ERROR_PATIENT_ID_PATTERN_FAIL);
-				response.put("errors", errors);
-			}
 		}
 		
 		if(error.equals("false")){
@@ -126,7 +115,7 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 			else{
 				response.remove("valid");
 				String user_id = r.getParameters().get("user_id").iterator().next();
-				Map<Long, Procedure> data = getDB().getPatientProcedures(user_id,patient_id);
+				Map<String, Procedure> data = getDB().getPatientProcedures(user_id,patient_id);
 				JSONArray procedures = new JSONArray();
 				for(Procedure p:data.values()){
 					procedures.add(p.toJSON());

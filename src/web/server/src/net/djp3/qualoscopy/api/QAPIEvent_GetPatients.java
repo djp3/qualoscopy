@@ -106,7 +106,7 @@ public class QAPIEvent_GetPatients extends QAPIEvent_CheckSession implements Clo
 			else{
 				response.remove("valid");
 				String user_id = r.getParameters().get("user_id").iterator().next();
-				Map<Long, Patient> data = getDB().getPatients(user_id);
+				Map<String, Patient> data = getDB().getPatients(user_id);
 				JSONArray patients = new JSONArray();
 				for(Patient p:data.values()){
 					patients.add(p.toJSON());

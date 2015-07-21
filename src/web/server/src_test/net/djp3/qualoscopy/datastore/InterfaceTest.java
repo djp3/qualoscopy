@@ -24,6 +24,10 @@ package net.djp3.qualoscopy.datastore;
 
 import static org.junit.Assert.*;
 
+import java.util.Map;
+
+import net.djp3.qualoscopy.datastore.DatastoreInterface.InitialCredentials;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -31,6 +35,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.uci.ics.luci.utility.Globals;
+import edu.uci.ics.luci.utility.datastructure.Pair;
 
 public class InterfaceTest {
 	
@@ -57,43 +62,87 @@ public class InterfaceTest {
 	@Test
 	public void test() {
 		
-		/* Check to make sure that Interface makes a default instance */
-		assertTrue(DatastoreInterface.getInstance() != null);
-		String uniqueSessionID_1 = DatastoreInterface.getInstance().createSessionID();
-		String uniqueSessionSalt_1 = DatastoreInterface.getInstance().createSalt();
+		DatastoreInterface db = null;
+		try{
+			db = new DatastoreInterface(null);
+		}
+		catch(Exception e){
+			fail("This shouldn't throw an exception");
+		}
 		
-		DatastoreInterface.createInterface(null);
-		String uniqueSessionID_2 = DatastoreInterface.getInstance().createSessionID();
-		String uniqueSessionSalt_2 = DatastoreInterface.getInstance().createSalt();
+		assertTrue(db.createSessionID() != db.createSessionID());
+		assertTrue(db.createSessionKey() != db.createSessionKey());
+		assertTrue(db.createSalt() != db.createSalt());
 		
-		/* Check to make sure that Interface's are consistent */
-		long seed = System.currentTimeMillis();
-		DatastoreInterface.createInterface(null, seed);
-		DatastoreInterface interface1 = DatastoreInterface.getInstance();
+		String source = "foo.foo.bar.bar";
+		Pair<String, String> ss = db.createAndStoreInitialSessionIDAndSalt(source);
+		assertTrue(db.getInitialCredentials().size()==1);
 		
-		DatastoreInterface.createInterface(null, seed);
-		DatastoreInterface interface2 = DatastoreInterface.getInstance();
+		for(InitialCredentials x :db.getInitialCredentials()){
+			assertTrue(x.getSalt().equals(ss.getSecond()));
+			assertTrue(x.getSessionID().equals(ss.getFirst()));
+		}
 		
-		assertTrue(interface1 != interface2);
+		db.removeInitialCredentials(db.getInitialCredentials().get(0));
+		assertTrue(db.getInitialCredentials().size()==0);
 		
-		String sessionID_1 = interface1.createSessionID();
-		String sessionID_2 = interface2.createSessionID();
-		String sessionSalt_1 = interface1.createSalt();
-		String sessionSalt_2 = interface2.createSalt();
+		String user_id = "Tom";
+		String salt  = db.createAndStoreSalt(user_id);
 		
-		assertTrue(sessionID_1.equals(sessionID_2));
-		assertTrue(!sessionID_1.equals(uniqueSessionID_1));
-		assertTrue(!sessionID_1.equals(uniqueSessionID_2));
-		assertTrue(!sessionID_2.equals(uniqueSessionID_1));
-		assertTrue(!sessionID_2.equals(uniqueSessionID_2));
-		assertTrue(!uniqueSessionID_1.equals(uniqueSessionID_2));
+		assertTrue(db.getHashedPassword(user_id) != null);
 		
-		assertTrue(sessionSalt_1.equals(sessionSalt_2));
-		assertTrue(!sessionSalt_1.equals(uniqueSessionSalt_1));
-		assertTrue(!sessionSalt_1.equals(uniqueSessionSalt_2));
-		assertTrue(!sessionSalt_2.equals(uniqueSessionSalt_1));
-		assertTrue(!sessionSalt_2.equals(uniqueSessionSalt_2));
-		assertTrue(!uniqueSessionSalt_1.equals(uniqueSessionSalt_2));
+		String shsid = SHA256.makeSomethingUp();
+		String sessionKey = db.createAndStoreSession(user_id, shsid, source);
+		assertTrue(sessionKey != null);
+		
+		assertTrue(!db.checkSession(null, shsid, sessionKey, source));
+		assertTrue(!db.checkSession(user_id, null, sessionKey, source));
+		assertTrue(!db.checkSession(user_id, shsid, null, source));
+		assertTrue(!db.checkSession(user_id, shsid, sessionKey, null));
+		assertTrue(!db.checkSession(user_id, SHA256.sha256(shsid,1), SHA256.sha256(sessionKey+salt,1), source));
+		assertTrue(!db.checkSession(user_id, SHA256.sha256(shsid+salt,1), SHA256.sha256(sessionKey,1), source));
+		assertTrue(db.checkSession(user_id, SHA256.sha256(shsid+salt,1), SHA256.sha256(sessionKey+salt,1), source));
+		
+		assertTrue(db.getPatients(user_id) != null);
+		String patient_id = SHA256.makeSomethingUp();
+		assertTrue(db.getPatientProcedures(user_id,patient_id) != null);
+		
+		/******************/
+		/* Wipe a session */
+		try{
+			db.wipeSessions(user_id);
+		}
+		catch (Exception e){
+			fail("This shouldn't fail");
+		}
+		/* Make sure it works */
+		sessionKey = db.createAndStoreSession(user_id, shsid, source);
+		assertTrue(sessionKey != null);
+		salt  = db.createAndStoreSalt(user_id);
+		assertTrue(salt != null);
+		assertTrue(db.checkSession(user_id, SHA256.sha256(shsid+salt,1), SHA256.sha256(sessionKey+salt,1), source));
+		
+		/* Same thing but wiping */
+		sessionKey = db.createAndStoreSession(user_id, shsid, source);
+		assertTrue(sessionKey != null);
+		salt  = db.createAndStoreSalt(user_id);
+		assertTrue(salt != null);
+		db.wipeSessions(user_id);
+		assertTrue(!db.checkSession(user_id, SHA256.sha256(shsid+salt,1), SHA256.sha256(sessionKey+salt,1), source));
+		
+		/* Same thing but nothing to wipe */
+		db.wipeSessions(user_id);
+		assertTrue(!db.checkSession(user_id, SHA256.sha256(shsid+salt,1), SHA256.sha256(sessionKey+salt,1), source));
+		/******************/
+		
+		
+		patient_id = db.addPatient(user_id);
+		Map<String, Patient> patients = db.getPatients(user_id);
+		assertTrue(patients.keySet().contains(patient_id));
+		
+		assertTrue(db.addPatient(null) == null);
+		
+		
 		
 	}
 

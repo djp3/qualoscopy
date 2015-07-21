@@ -25,7 +25,12 @@ public class Procedure {
 	}
 	
 	public static Procedure generateFakeProcedure() {
-		Long procedure_id = r.nextLong();
+		Long _procedure_id = -1L;
+		while(_procedure_id < 0){
+			_procedure_id = r.nextLong();
+		}
+		String procedure_id = ""+_procedure_id;
+		
 		String ac_id = String.format("AC_%06d",r.nextInt(999999));
 		String faculty;
 		switch(r.nextInt(10)){
@@ -54,13 +59,13 @@ public class Procedure {
 		return null;
 	}
 	
-	Long procedureID;
+	String procedureID;
 	String acID;
 	Long dateOfService;
 	String faculty;
 	Boolean completed;
 	
-	public Procedure(Long procedureID, String acID, Long dateOfService, String faculty, Boolean completed) {
+	public Procedure(String procedureID, String acID, Long dateOfService, String faculty, Boolean completed) {
 		super();
 		this.setProcedureID(procedureID);
 		this.setAcID(acID);
@@ -68,10 +73,10 @@ public class Procedure {
 		this.setFaculty(faculty);
 		this.setCompleted(completed);
 	}
-	public Long getProcedureID() {
+	public String getProcedureID() {
 		return procedureID;
 	}
-	public void setProcedureID(Long procedureID) {
+	public void setProcedureID(String procedureID) {
 		this.procedureID = procedureID;
 	}
 	public String getAcID() {

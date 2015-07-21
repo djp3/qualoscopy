@@ -22,9 +22,9 @@
 
 package net.djp3.qualoscopy.datastore;
 
-import static org.junit.Assert.*;
-
-import java.security.NoSuchAlgorithmException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -66,34 +66,31 @@ public class SHA256Test {
 		} catch (IllegalArgumentException e) {
 			assertTrue(e.toString().contains(SHA256.ITERATIONS_MUST_BE_1));
 
-		} catch (NoSuchAlgorithmException e) {
-			fail("This shouldn't throw this exception ");
 		}
 
-		try {
-			for (int i = 1; i < 100; i++) {
-				assertEquals(SHA256.sha256(x, i), SHA256.sha256(x, i));
-			}
-		} catch (NoSuchAlgorithmException e) {
-			fail("This shouldn't throw an exception ");
+		for (int i = 1; i < 100; i++) {
+			assertEquals(SHA256.sha256(x, i), SHA256.sha256(x, i));
 		}
 
 	}
 
 	@Test
 	public void test2() {
-		try {
-			String test = "Luke Raus";
-			System.out.println(test + ":" + SHA256.sha256(test, 1));
+		String test = "Luke Raus";
+		System.out.println(test + ":" + SHA256.sha256(test, 1));
 
-			test = "Hello World 123456";
-			System.out.println(test + ":" + SHA256.sha256(test, 1));
+		test = "Hello World 123456";
+		System.out.println(test + ":" + SHA256.sha256(test, 1));
 
-			test = "éñƔ";
-			System.out.println(test + ":" + SHA256.sha256(test, 1));
-		} catch (NoSuchAlgorithmException e) {
-			fail("This shouldn't throw an exception ");
-		}
+		test = "éñƔ";
+		System.out.println(test + ":" + SHA256.sha256(test, 1));
+
+	}
+	
+	@Test
+	public void test3() {
+		
+		assertTrue(SHA256.makeSomethingUp()!=SHA256.makeSomethingUp());
 
 	}
 

@@ -55,8 +55,8 @@ public class DatastoreInterface {
 	private List<InitialCredentials> initialCredentials;
 	private List<Session> sessions;
 	private Map<String,Set<String>> unusedSalts;
-	private Map<Long,Patient> patients; // <patient_id,Patient>
-	private Map<Long, Map<Long,Procedure>> procedures; //<patient_id,<procedure_id, Procedure>>
+	private Map<String,Patient> patients; // <patient_id,Patient>
+	private Map<String, Map<String,Procedure>> procedures; //<patient_id,<procedure_id, Procedure>>
 	
 	void setRandom(Random r){
 		DatastoreInterface.r = r;
@@ -276,7 +276,7 @@ public class DatastoreInterface {
 		return false;
 	}
 
-	public Map<Long,Patient> getPatients(String user_id) {
+	public Map<String,Patient> getPatients(String user_id) {
 		if(patients == null){
 			patients = generateFakePatients();
 		}
@@ -284,9 +284,9 @@ public class DatastoreInterface {
 	}
 	
 
-	public Map<Long, Procedure> getPatientProcedures(String userID, Long patientID) {
+	public Map<String, Procedure> getPatientProcedures(String userID, String patientID) {
 		if(procedures == null){
-			procedures = Collections.synchronizedMap(new HashMap<Long,Map<Long,Procedure>>());
+			procedures = Collections.synchronizedMap(new HashMap<String,Map<String,Procedure>>());
 		}
 		if(procedures.get(patientID) == null){
 			procedures.put(patientID,generateFakeProcedures());
@@ -296,9 +296,9 @@ public class DatastoreInterface {
 	
 
 
-	private Map<Long,Patient> generateFakePatients() {
+	private Map<String,Patient> generateFakePatients() {
 		final int numPatients = 25;
-		Map<Long,Patient> patients= new HashMap<Long,Patient>(numPatients);
+		Map<String,Patient> patients= new HashMap<String,Patient>(numPatients);
 		while(patients.size() < numPatients){
 			Patient patient = Patient.generateFakePatient();
 			if(patient != null){
@@ -313,10 +313,10 @@ public class DatastoreInterface {
 
 	
 
-	private Map<Long,Procedure> generateFakeProcedures() {
+	private Map<String,Procedure> generateFakeProcedures() {
 
 		final int numProcedures = r.nextInt(4);
-		Map<Long,Procedure> procedures= new HashMap<Long,Procedure>(numProcedures);
+		Map<String,Procedure> procedures= new HashMap<String,Procedure>(numProcedures);
 		while(procedures.size() < numProcedures){
 			Procedure procedure = Procedure.generateFakeProcedure();
 			if(procedure != null){
@@ -368,7 +368,7 @@ public class DatastoreInterface {
 		}
 	}
 
-	public Long addPatient(String user_id) {
+	public String addPatient(String user_id) {
 		if(user_id == null){
 			return null;
 		}
@@ -380,16 +380,16 @@ public class DatastoreInterface {
 		}
 	}
 
-	public Long addProcedure(String userID, Long patientID) {
+	public String addProcedure(String userID, String patientID) {
 		if(userID != null){
 			if(patientID != null){
 				Procedure procedure = Procedure.generateFakeProcedure();
 				
 				procedure.clearData();
 				
-				Map<Long, Procedure> p = procedures.get(patientID);
+				Map<String, Procedure> p = procedures.get(patientID);
 				if(p == null){
-					p = new HashMap<Long,Procedure>();
+					p = new HashMap<String,Procedure>();
 				}
 				p.put(procedure.getProcedureID(), procedure);
 				procedures.put(patientID, p);
@@ -400,7 +400,7 @@ public class DatastoreInterface {
 		return null;
 	}
 
-	public String updatePatient(String userID, Long patientID, String mrID, String first, String last, String gender, Long dob) {
+	public String updatePatient(String userID, String patientID, String mrID, String first, String last, String gender, Long dob) {
 		
 		if(!patients.containsKey(patientID)){
 			return "Patient with patient ID:"+patientID+" does not exist";

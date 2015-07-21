@@ -91,24 +91,13 @@ public class QAPIEvent_AddProcedure extends QAPIEvent_CheckSession implements Cl
 		}
 		
 		/* Get additional parameters */
-		Set<String> _patientID = r.getParameters().get("patient_id");
-		Long patientID = null;
-		if(_patientID == null){
+		Set<String> _patient_id = r.getParameters().get("patient_id");
+		String patientID = null;
+		if((_patient_id == null) || ((patientID = (_patient_id.iterator().next())) == null)){
 			error ="true";
 			response.put("error", error);
 			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_PATIENT_ID);
 			response.put("errors", errors);
-		}
-		else{
-			try{
-				patientID = Long.valueOf(_patientID.iterator().next());
-			}
-			catch(NumberFormatException e){
-				error ="true";
-				response.put("error", error);
-				errors.add("Problem handling "+r.getCommand()+":"+ERROR_PATIENT_ID_PATTERN_FAIL);
-				response.put("errors", errors);
-			}
 		}
 		
 		if(error.equals("false")){
@@ -124,7 +113,7 @@ public class QAPIEvent_AddProcedure extends QAPIEvent_CheckSession implements Cl
 			else{
 				response.remove("valid");
 				String userID = r.getParameters().get("user_id").iterator().next();
-				Long procedureID = getDB().addProcedure(userID,patientID);
+				String procedureID = getDB().addProcedure(userID,patientID);
 				if(procedureID != null){
 					response.put("procedure_id", procedureID);
 				}

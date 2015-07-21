@@ -20,9 +20,14 @@
 */
 
 
-package net.djp3.qualoscopy.events;
+package net.djp3.qualoscopy.datastore;
 
 import static org.junit.Assert.*;
+
+import java.util.Arrays;
+
+import net.djp3.qualoscopy.GlobalsQualoscopy;
+import net.djp3.qualoscopy.datastore.PasswordUtils;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,10 +37,13 @@ import org.junit.Test;
 
 import edu.uci.ics.luci.utility.Globals;
 
-public class QEventInitiateSessionTest {
+public class PasswordUtilsTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		while(Globals.getGlobals() != null){
+			Thread.sleep(100);
+		}
 	}
 
 	@AfterClass
@@ -51,31 +59,23 @@ public class QEventInitiateSessionTest {
 	public void tearDown() throws Exception {
 	}
 
-	static final String goodVersion = "0.1";
-	static final String badVersion = "0.2";
-
 	@Test
-	public void testNormal() {
-		QEvent s = new QEvent();
-		QEventInitiateSession thing1 = new QEventInitiateSession(goodVersion,goodVersion);
-		QEventInitiateSession thing2 = new QEventInitiateSession(goodVersion,goodVersion);
+	public void test() {
+		//this is to force a UTF-8 check
+		Globals.setGlobals(new GlobalsQualoscopy("TEST VERSION",true));
+		String p = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()-_[{]};:'\"\\|,<.>/?åéøüñ";
 		
-		assertTrue(!thing1.equals(null));
-		assertTrue(!thing1.equals(s));
-		assertTrue(!thing1.equals(new QEventCheckVersion(goodVersion,goodVersion)));//class != superclass
-		assertTrue(thing1.equals(thing1));
-		assertTrue(thing1.equals(thing2));
-		assertTrue(thing2.equals(thing2));
+		byte[] first = PasswordUtils.hashPassword(p);
+		byte[] second = PasswordUtils.hashPassword(p);
+		assertTrue(Arrays.equals(first,second));
 		
-		assertEquals(thing1.hashCode(),thing1.hashCode());
-		assertEquals(thing1.hashCode(),thing2.hashCode());
+		assertTrue(Arrays.equals(first,PasswordUtils.hexStringToByteArray(PasswordUtils.bytesToHexString(first)))); 
 		
-		assertEquals(thing1,QEventInitiateSession.fromJSON(thing1.toJSON()));
-		assertEquals(thing1,QEventInitiateSession.fromJSON(thing2.toJSON()));
 		
-		assertEquals(thing1.hashCode(),thing1.hashCode());
-		assertEquals(thing1.hashCode(),thing2.hashCode());
-		
+		assertTrue(PasswordUtils.checkPassword((String)null,(byte[])null));
+		assertTrue(PasswordUtils.checkPassword((byte[])null,(byte[])null));
+		assertTrue(PasswordUtils.checkPassword(p, PasswordUtils.hashPassword(p)));
+		assertTrue(PasswordUtils.checkPassword(PasswordUtils.hashPassword(p), PasswordUtils.hashPassword(p)));
 	}
 
 }
