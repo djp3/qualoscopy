@@ -13,7 +13,6 @@ import java.util.HashMap;
 import net.djp3.qualoscopy.GlobalsQualoscopy;
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 import net.djp3.qualoscopy.datastore.SHA256;
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
@@ -29,12 +28,11 @@ import edu.uci.ics.luci.utility.webserver.WebServer;
 import edu.uci.ics.luci.utility.webserver.WebUtil;
 import edu.uci.ics.luci.utility.webserver.event.EventVoid;
 import edu.uci.ics.luci.utility.webserver.event.api.APIEvent;
-import edu.uci.ics.luci.utility.webserver.event.api.APIEvent_TimeOut;
 import edu.uci.ics.luci.utility.webserver.event.api.APIEvent_Version;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 import edu.uci.ics.luci.utility.webserver.output.channel.socket.Output_Socket_HTTP;
 
-public class QAPIEvent_GetPatients_Test {
+public class QAPIEvent_Login_Test {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -65,8 +63,8 @@ public class QAPIEvent_GetPatients_Test {
 		try{
 			String version = System.currentTimeMillis()+"";
 		
-			QAPIEvent_GetPatients a = new QAPIEvent_GetPatients(version,null);
-			QAPIEvent_GetPatients b = (QAPIEvent_GetPatients) a.clone();
+			QAPIEvent_Login a = new QAPIEvent_Login(version,null);
+			QAPIEvent_Login b = (QAPIEvent_Login) a.clone();
 			
 			QAPIEvent_CheckSession c = new QAPIEvent_CheckSession(version,null);
 			
@@ -86,17 +84,17 @@ public class QAPIEvent_GetPatients_Test {
 			assertTrue(b.hashCode() == a.hashCode());
 			
 			/*request equals */
-			a.setAPIVersion("foo"+System.currentTimeMillis());
+			a.setDB(new DatastoreInterface(null));
 			assertTrue(!a.equals(b));
 			assertTrue(!b.equals(a));
 			assertTrue(a.hashCode() != b.hashCode());
 			
-			b.setAPIVersion("bar"+System.currentTimeMillis());
+			b.setDB(new DatastoreInterface(null));
 			assertTrue(!a.equals(b));
 			assertTrue(!b.equals(a));
 			assertTrue(a.hashCode() != b.hashCode());
 			
-			b.setAPIVersion(a.getAPIVersion());
+			b.setDB(a.getDB());
 			assertTrue(a.equals(b));
 			assertTrue(b.equals(a));
 			assertTrue(a.hashCode() == b.hashCode());
@@ -104,7 +102,7 @@ public class QAPIEvent_GetPatients_Test {
 			/*setting */
 			b.setRequest(new Request());
 			b.setOutput(new Output_Socket_HTTP(null));
-			b.setAPIVersion(version);
+			b.setDB(new DatastoreInterface(null));
 			assertTrue(!a.equals(b));
 			a.set(b);
 			assertTrue(a.equals(b));
@@ -247,6 +245,191 @@ public class QAPIEvent_GetPatients_Test {
 		}
 		
 		
+		/**** Check to see if the login fails without parameters ****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/login")
+									.setParameter("version", version)
+									//.setParameter("user_id","test_user")
+									.setParameter("session_id", session_id)
+									.setParameter("shp",SHA256.sha256(SHA256.sha256("test_password", 1)+salt,1));
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("true",response.get("error"));
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+		
+		
+		/**** Check to see if the login fails without parameters ****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/login")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									//.setParameter("session_id", session_id)
+									.setParameter("shp",SHA256.sha256(SHA256.sha256("test_password", 1)+salt,1));
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("true",response.get("error"));
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+	
+		
+		/**** Check to see if the login fails without parameters ****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/login")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									.setParameter("session_id", session_id);
+									//.setParameter("shp",SHA256.sha256(SHA256.sha256("test_password", 1)+salt,1));
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("true",response.get("error"));
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+		
+		/**** Check to see if the login fails with bad parameters ****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/login")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									.setParameter("session_id", "bad"+session_id)
+									.setParameter("shp",SHA256.sha256(SHA256.sha256("test_password", 1)+salt,1));
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("true",response.get("error"));
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+		
+
+		
+		/**** Check to see if the login fails with bad parameters ****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/login")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									.setParameter("session_id", session_id)
+									.setParameter("shp","bad"+SHA256.sha256(SHA256.sha256("test_password", 1)+salt,1));
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("true",response.get("error"));
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+		
+		
 		/**** Make sure the login responds ****/
 		responseString = null;
 		try {
@@ -281,96 +464,6 @@ public class QAPIEvent_GetPatients_Test {
 			session_key = ((String)response.get("session_key"));
 			salt = ((String)response.get("salt"));
 			assertTrue(salt != null);
-		} catch (ClassCastException e) {
-			fail("Bad JSON Response");
-		}
-		
-		
-		
-		/**** Now test get_patients with bad session ****/
-		responseString = null;
-		try {
-			URIBuilder uriBuilder = new URIBuilder()
-									.setScheme("http")
-									.setHost("localhost")
-									.setPort(ws.getInputChannel().getPort())
-									.setPath("/get/patients")
-									.setParameter("version", version)
-									.setParameter("user_id","test_user")
-									.setParameter("shsid",SHA256.sha256("bad"+session_id+salt,1))
-									.setParameter("shsk",SHA256.sha256("bad"+session_key+salt,1));
-			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			fail("Bad URL");
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail("IO Exception");
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
-			fail("URISyntaxException");
-		}
-		System.out.println(responseString);
-
-		response = null;
-		try {
-			response = (JSONObject) JSONValue.parse(responseString);
-			assertEquals("true",response.get("error"));
-			assertTrue(((String)response.get("version")).equals(version));
-		} catch (ClassCastException e) {
-			fail("Bad JSON Response");
-		}
-		
-		
-		
-		
-		/**** Now test get_patients ****/
-		responseString = null;
-		try {
-			URIBuilder uriBuilder = new URIBuilder()
-									.setScheme("http")
-									.setHost("localhost")
-									.setPort(ws.getInputChannel().getPort())
-									.setPath("/get/patients")
-									.setParameter("version", version)
-									.setParameter("user_id","test_user")
-									.setParameter("shsid",SHA256.sha256(session_id+salt,1))
-									.setParameter("shsk",SHA256.sha256(session_key+salt,1));
-			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			fail("Bad URL");
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail("IO Exception");
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
-			fail("URISyntaxException");
-		}
-		System.out.println(responseString);
-
-		response = null;
-		try {
-			response = (JSONObject) JSONValue.parse(responseString);
-			assertEquals("false",response.get("error"));
-			assertTrue(((String)response.get("version")).equals(version));
-			salt = ((String)response.get("salt"));
-			assertTrue(salt != null);
-			JSONArray patients = (JSONArray) response.get("patients"); 
-			assertTrue(patients.size() > 0);
-			JSONObject patient = (JSONObject) patients.get(0);
-			assertTrue(patient.size() == 6);
-			for(int i=0;i < patients.size(); i++){
-				patient = (JSONObject) patients.get(i);
-				assertTrue(patient.get("patient_id") != null);
-				assertTrue(patient.get("mr_id") != null);
-				assertTrue(patient.get("first") != null);
-				assertTrue(patient.get("last") != null);
-				assertTrue(patient.get("gender") != null);
-				assertTrue(patient.get("dob") != null);
-			}
 		} catch (ClassCastException e) {
 			fail("Bad JSON Response");
 		}

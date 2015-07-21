@@ -123,6 +123,39 @@ public class QAPIEvent_InitiateSession extends QAPIEvent_VersionCheck implements
 			
 		return response;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((db == null) ? 0 : db.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof QAPIEvent_InitiateSession)) {
+			return false;
+		}
+		QAPIEvent_InitiateSession other = (QAPIEvent_InitiateSession) obj;
+		if (db == null) {
+			if (other.db != null) {
+				return false;
+			}
+		} else if (!db.equals(other.db)) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
 	
 }
 

@@ -29,12 +29,11 @@ import edu.uci.ics.luci.utility.webserver.WebServer;
 import edu.uci.ics.luci.utility.webserver.WebUtil;
 import edu.uci.ics.luci.utility.webserver.event.EventVoid;
 import edu.uci.ics.luci.utility.webserver.event.api.APIEvent;
-import edu.uci.ics.luci.utility.webserver.event.api.APIEvent_TimeOut;
 import edu.uci.ics.luci.utility.webserver.event.api.APIEvent_Version;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 import edu.uci.ics.luci.utility.webserver.output.channel.socket.Output_Socket_HTTP;
 
-public class QAPIEvent_GetPatients_Test {
+public class QAPIEvent_AddPatient_Test {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -65,8 +64,8 @@ public class QAPIEvent_GetPatients_Test {
 		try{
 			String version = System.currentTimeMillis()+"";
 		
-			QAPIEvent_GetPatients a = new QAPIEvent_GetPatients(version,null);
-			QAPIEvent_GetPatients b = (QAPIEvent_GetPatients) a.clone();
+			QAPIEvent_AddPatient a = new QAPIEvent_AddPatient(version,null);
+			QAPIEvent_AddPatient b = (QAPIEvent_AddPatient) a.clone();
 			
 			QAPIEvent_CheckSession c = new QAPIEvent_CheckSession(version,null);
 			
@@ -85,26 +84,10 @@ public class QAPIEvent_GetPatients_Test {
 			assertTrue(b.equals(a));
 			assertTrue(b.hashCode() == a.hashCode());
 			
-			/*request equals */
-			a.setAPIVersion("foo"+System.currentTimeMillis());
-			assertTrue(!a.equals(b));
-			assertTrue(!b.equals(a));
-			assertTrue(a.hashCode() != b.hashCode());
-			
-			b.setAPIVersion("bar"+System.currentTimeMillis());
-			assertTrue(!a.equals(b));
-			assertTrue(!b.equals(a));
-			assertTrue(a.hashCode() != b.hashCode());
-			
-			b.setAPIVersion(a.getAPIVersion());
-			assertTrue(a.equals(b));
-			assertTrue(b.equals(a));
-			assertTrue(a.hashCode() == b.hashCode());
-			
 			/*setting */
 			b.setRequest(new Request());
 			b.setOutput(new Output_Socket_HTTP(null));
-			b.setAPIVersion(version);
+			//b.setAPIVersion(version);
 			assertTrue(!a.equals(b));
 			a.set(b);
 			assertTrue(a.equals(b));
@@ -137,10 +120,12 @@ public class QAPIEvent_GetPatients_Test {
 		ws.updateAPIRegistry("/initiate_session", new QAPIEvent_InitiateSession(version,db));
 		ws.updateAPIRegistry("/login", new QAPIEvent_Login(version,db));
 		ws.updateAPIRegistry("/get/patients", new QAPIEvent_GetPatients(version,db));
+		ws.updateAPIRegistry("/add/patient", new QAPIEvent_AddPatient(version,db));
 		
 		String session_id = null;
 		String session_key = null;
 		String salt = null;
+		String patient_id = null;
 
 		
 		
@@ -287,44 +272,6 @@ public class QAPIEvent_GetPatients_Test {
 		
 		
 		
-		/**** Now test get_patients with bad session ****/
-		responseString = null;
-		try {
-			URIBuilder uriBuilder = new URIBuilder()
-									.setScheme("http")
-									.setHost("localhost")
-									.setPort(ws.getInputChannel().getPort())
-									.setPath("/get/patients")
-									.setParameter("version", version)
-									.setParameter("user_id","test_user")
-									.setParameter("shsid",SHA256.sha256("bad"+session_id+salt,1))
-									.setParameter("shsk",SHA256.sha256("bad"+session_key+salt,1));
-			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			fail("Bad URL");
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail("IO Exception");
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
-			fail("URISyntaxException");
-		}
-		System.out.println(responseString);
-
-		response = null;
-		try {
-			response = (JSONObject) JSONValue.parse(responseString);
-			assertEquals("true",response.get("error"));
-			assertTrue(((String)response.get("version")).equals(version));
-		} catch (ClassCastException e) {
-			fail("Bad JSON Response");
-		}
-		
-		
-		
-		
 		/**** Now test get_patients ****/
 		responseString = null;
 		try {
@@ -349,7 +296,7 @@ public class QAPIEvent_GetPatients_Test {
 			e.printStackTrace();
 			fail("URISyntaxException");
 		}
-		System.out.println(responseString);
+		//System.out.println(responseString);
 
 		response = null;
 		try {
@@ -374,6 +321,144 @@ public class QAPIEvent_GetPatients_Test {
 		} catch (ClassCastException e) {
 			fail("Bad JSON Response");
 		}
+		
+		
+		
+		/**** Now test add_patients with bad credentials ****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/add/patient")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									.setParameter("shsid","bad"+SHA256.sha256(session_id+salt,1))
+									.setParameter("shsk",SHA256.sha256(session_key+salt,1));
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("true",response.get("error"));
+			
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+		
+		/**** Now test add_patients ****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/add/patient")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									.setParameter("shsid",SHA256.sha256(session_id+salt,1))
+									.setParameter("shsk",SHA256.sha256(session_key+salt,1));
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("false",response.get("error"));
+			assertTrue(((String)response.get("version")).equals(version));
+			
+			patient_id = ((String)response.get("patient_id"));
+			assertTrue(patient_id != null);
+			
+			salt = ((String)response.get("salt"));
+			assertTrue(salt != null);
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+		
+
+		/**** Now test get_patients has the patient_id ****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/get/patients")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									.setParameter("shsid",SHA256.sha256(session_id+salt,1))
+									.setParameter("shsk",SHA256.sha256(session_key+salt,1));
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("false",response.get("error"));
+			assertTrue(((String)response.get("version")).equals(version));
+			
+			salt = ((String)response.get("salt"));
+			assertTrue(salt != null);
+			
+			JSONArray patients = (JSONArray) response.get("patients"); 
+			assertTrue(patients.size() > 0);
+			
+			boolean newpatientpresent = false;
+			for(int i=0;i < patients.size(); i++){
+				JSONObject patient = (JSONObject) patients.get(i);
+				//System.out.println(patient_id+" "+patient.toString());
+				if(patient.get("patient_id").equals(patient_id)){
+					newpatientpresent = true;
+				}
+			}
+			assertTrue(newpatientpresent);
+			
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
 		
 		
 		//Globals.getGlobals().setQuitting(true);

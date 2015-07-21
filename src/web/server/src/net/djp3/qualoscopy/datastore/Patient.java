@@ -27,7 +27,11 @@ public class Patient {
 	private static final CalendarCache cc = new CalendarCache();
 	
 	public static Patient generateFakePatient() {
-		Long patientID = Math.abs(r.nextLong());
+		Long patientID = -1L;
+		while(patientID < 0){
+			patientID = r.nextLong();
+		}
+		
 		String medicalRecordID = String.format("MR_%05d",Math.abs(r.nextInt(99999)));
 		String firstName;
 		switch(Math.abs(r.nextInt(10))){
@@ -153,13 +157,13 @@ public class Patient {
 	public JSONObject toJSON() {
 		JSONObject ret = new JSONObject();
 		
-		ret.put("patient_id",this.getPatientID());
+		ret.put("patient_id",""+this.getPatientID());
 		
-		ret.put("mr_id",this.getMedicalRecordID());
+		ret.put("mr_id",""+this.getMedicalRecordID());
 		
-		ret.put("first",this.getFirstName());
+		ret.put("first",""+this.getFirstName());
 		
-		ret.put("last",this.getLastName());
+		ret.put("last",""+this.getLastName());
 		
 		if(this.getDateOfBirth() != null){
 			Calendar calendar = cc.getCalendar(CalendarCache.TZ_GMT);
@@ -170,7 +174,7 @@ public class Patient {
 			ret.put("dob","null");
 		}
 		
-		ret.put("gender", this.getGender());
+		ret.put("gender", ""+this.getGender());
 		
 		return ret;
 	}

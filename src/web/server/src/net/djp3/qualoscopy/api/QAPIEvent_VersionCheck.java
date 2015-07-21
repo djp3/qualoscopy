@@ -148,6 +148,41 @@ public class QAPIEvent_VersionCheck extends APIEvent_Version implements Cloneabl
 			
 		return response;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime
+				* result
+				+ ((requestedVersion == null) ? 0 : requestedVersion.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof QAPIEvent_VersionCheck)) {
+			return false;
+		}
+		QAPIEvent_VersionCheck other = (QAPIEvent_VersionCheck) obj;
+		if (requestedVersion == null) {
+			if (other.requestedVersion != null) {
+				return false;
+			}
+		} else if (!requestedVersion.equals(other.requestedVersion)) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
 	
 }
 

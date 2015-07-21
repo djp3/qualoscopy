@@ -44,6 +44,12 @@ public class QAPIEvent_AddPatient extends QAPIEvent_CheckSession implements Clon
 		}
 		return log;
 	}
+	
+	
+	/**
+	 *  Added for auto hashcode/equals  creation
+	 */
+	private final long serialVersionUID = -6469636333834994162L;
 
 	
 	public QAPIEvent_AddPatient(String version, DatastoreInterface db) {
@@ -130,6 +136,36 @@ public class QAPIEvent_AddPatient extends QAPIEvent_CheckSession implements Clon
 			
 		return response;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ (int) (serialVersionUID ^ (serialVersionUID >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof QAPIEvent_AddPatient)) {
+			return false;
+		}
+		QAPIEvent_AddPatient other = (QAPIEvent_AddPatient) obj;
+		if (serialVersionUID != other.serialVersionUID) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
 	
 }
 
