@@ -22,9 +22,12 @@
 
 package net.djp3.qualoscopy.datastore;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+
+import net.djp3.qualoscopy.GlobalsQualoscopy;
+import net.djp3.qualoscopy.datastore.PasswordUtils;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,8 +37,8 @@ import org.junit.Test;
 
 import edu.uci.ics.luci.utility.Globals;
 
-public class SHA256Test {
-	
+public class PasswordUtilsTest {
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		while(Globals.getGlobals() != null){
@@ -58,40 +61,21 @@ public class SHA256Test {
 
 	@Test
 	public void test() {
-		String x = System.currentTimeMillis() + "";
-
-		try {
-			assertEquals(SHA256.sha256(x, 0), SHA256.sha256(x, 0));
-			fail("This should throw an exception");
-		} catch (IllegalArgumentException e) {
-			assertTrue(e.toString().contains(SHA256.ITERATIONS_MUST_BE_1));
-
-		}
-
-		for (int i = 1; i < 100; i++) {
-			assertEquals(SHA256.sha256(x, i), SHA256.sha256(x, i));
-		}
-
-	}
-
-	@Test
-	public void test2() {
-		String test = "Luke Raus";
-		System.out.println(test + ":" + SHA256.sha256(test, 1));
-
-		test = "Hello World 123456";
-		System.out.println(test + ":" + SHA256.sha256(test, 1));
-
-		test = "éñƔ";
-		System.out.println(test + ":" + SHA256.sha256(test, 1));
-
-	}
-	
-	@Test
-	public void test3() {
+		//this is to force a UTF-8 check
+		Globals.setGlobals(new GlobalsQualoscopy("TEST VERSION",true));
+		String p = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()-_[{]};:'\"\\|,<.>/?åéøüñ";
 		
-		assertTrue(SHA256.makeSomethingUp()!=SHA256.makeSomethingUp());
-
+		byte[] first = PasswordUtils.hashPassword(p);
+		byte[] second = PasswordUtils.hashPassword(p);
+		assertTrue(Arrays.equals(first,second));
+		
+		assertTrue(Arrays.equals(first,PasswordUtils.hexStringToByteArray(PasswordUtils.bytesToHexString(first)))); 
+		
+		
+		assertTrue(PasswordUtils.checkPassword((String)null,(byte[])null));
+		assertTrue(PasswordUtils.checkPassword((byte[])null,(byte[])null));
+		assertTrue(PasswordUtils.checkPassword(p, PasswordUtils.hashPassword(p)));
+		assertTrue(PasswordUtils.checkPassword(PasswordUtils.hashPassword(p), PasswordUtils.hashPassword(p)));
 	}
 
 }

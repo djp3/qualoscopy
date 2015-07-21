@@ -25,13 +25,18 @@ package net.djp3.qualoscopy;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-import net.djp3.qualoscopy.events.QEventWrapper;
-import net.djp3.qualoscopy.events.QEventWrapperFactory;
-import net.djp3.qualoscopy.events.QEventWrapperHandler;
-import net.djp3.qualoscopy.events.QEventWrapperQueuer;
+import net.djp3.qualoscopy.api.QAPIEvent_AddPatient;
+import net.djp3.qualoscopy.api.QAPIEvent_AddProcedure;
+import net.djp3.qualoscopy.api.QAPIEvent_CheckSession;
+import net.djp3.qualoscopy.api.QAPIEvent_GetPatientProcedures;
+import net.djp3.qualoscopy.api.QAPIEvent_GetPatients;
+import net.djp3.qualoscopy.api.QAPIEvent_InitiateSession;
+import net.djp3.qualoscopy.api.QAPIEvent_KillSession;
+import net.djp3.qualoscopy.api.QAPIEvent_Login;
+import net.djp3.qualoscopy.api.QAPIEvent_UpdatePatient;
+import net.djp3.qualoscopy.api.QAPIEvent_VersionCheck;
+import net.djp3.qualoscopy.datastore.DatastoreInterface;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -39,15 +44,12 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.lmax.disruptor.RingBuffer;
-import com.lmax.disruptor.dsl.Disruptor;
-
 import edu.uci.ics.luci.utility.Globals;
 import edu.uci.ics.luci.utility.webserver.AccessControl;
 import edu.uci.ics.luci.utility.webserver.WebServer;
-import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandlerInterface;
-import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandler_Shutdown;
-import edu.uci.ics.luci.utility.webserver.disruptor.eventhandlers.server.ServerCallHandler_Version;
+import edu.uci.ics.luci.utility.webserver.event.api.APIEvent;
+import edu.uci.ics.luci.utility.webserver.event.api.APIEvent_Shutdown;
+import edu.uci.ics.luci.utility.webserver.event.api.APIEvent_Version;
 import edu.uci.ics.luci.utility.webserver.input.channel.socket.HTTPInputOverSocket;
 
 public class QualoscopyWebServer {
@@ -65,40 +67,6 @@ public class QualoscopyWebServer {
 		return log;
 	}
 	
-	private static QEventWrapperQueuer eventPublisher;
-	
-	/**
-	 * Create Event Disruptor
-	 * @return 
-	 */
-	@SuppressWarnings("unchecked")
-	public static QEventWrapperQueuer createEventQueue(String logFile) {
-		// Executor that will be used to construct new threads for consumers
-	    Executor executor = Executors.newCachedThreadPool();
-	
-	    // The factory for the event
-	    QEventWrapperFactory factory = new QEventWrapperFactory();
-	
-	    // Specify the size of the ring buffer, must be power of 2.
-	    int bufferSize = 1024;
-	
-	    // Construct the Disruptor
-	    Disruptor<QEventWrapper> disruptor = new Disruptor<QEventWrapper>(factory, bufferSize, executor);
-	
-	    // Connect the handler
-	    disruptor.handleEventsWith(new QEventWrapperHandler());
-	        
-	    // Start the Disruptor, starts all threads running
-	    disruptor.start();
-	
-	    // Get the ring buffer from the Disruptor to be used for publishing.
-	    RingBuffer<QEventWrapper> ringBuffer = disruptor.getRingBuffer();
-	
-	    QEventWrapperQueuer localEventPublisher = new QEventWrapperQueuer(disruptor,ringBuffer,logFile);
-	    
-	    return(localEventPublisher);
-	}
-
 	
 	
 	public static void main(String[] args) throws ConfigurationException {
@@ -127,7 +95,7 @@ public class QualoscopyWebServer {
 		}
 		
 		WebServer ws = null;
-		HashMap<String, ServerCallHandlerInterface> requestHandlerRegistry;
+		HashMap<String, APIEvent> requestHandlerRegistry;
 
 		try {
 			boolean secure = true;
@@ -135,15 +103,23 @@ public class QualoscopyWebServer {
 			HTTPInputOverSocket inputChannel = new HTTPInputOverSocket(port,secure);
 
 					
-			requestHandlerRegistry = new HashMap<String,ServerCallHandlerInterface>();
+			requestHandlerRegistry = new HashMap<String,APIEvent>();
+			DatastoreInterface db = new DatastoreInterface(null);
 			// Null is a default Handler
-			requestHandlerRegistry.put(null, new ServerCallHandler_Version(VERSION));
-			requestHandlerRegistry.put("", new ServerCallHandler_Version(VERSION));
-			requestHandlerRegistry.put("/", new ServerCallHandler_Version(VERSION));
-			//requestHandlerRegistry.put("/version", new ServerCallHandler_Version(eventPublisher,VERSION));
-			//requestHandlerRegistry.put("/initiate_session", new HandlerInitiateSession(eventPublisher,null));
-			//requestHandlerRegistry.put("/login", new HandlerLogin(eventPublisher,null));
-			requestHandlerRegistry.put("/shutdown", new ServerCallHandler_Shutdown(Globals.getGlobals()));
+			requestHandlerRegistry.put(null, new APIEvent_Version(VERSION));
+			requestHandlerRegistry.put("", new APIEvent_Version(VERSION));
+			requestHandlerRegistry.put("/", new APIEvent_Version(VERSION));
+			requestHandlerRegistry.put("/version", new QAPIEvent_VersionCheck(VERSION));
+			requestHandlerRegistry.put("/session/initiate", new QAPIEvent_InitiateSession(VERSION,db));
+			requestHandlerRegistry.put("/session/check", new QAPIEvent_CheckSession(VERSION,db));
+			requestHandlerRegistry.put("/session/kill", new QAPIEvent_KillSession(VERSION,db));
+			requestHandlerRegistry.put("/get/patients", new QAPIEvent_GetPatients(VERSION,db));
+			requestHandlerRegistry.put("/get/patient/procedures", new QAPIEvent_GetPatientProcedures(VERSION,db));
+			requestHandlerRegistry.put("/add/patient", new QAPIEvent_AddPatient(VERSION,db));
+			requestHandlerRegistry.put("/update/patient", new QAPIEvent_UpdatePatient(VERSION,db));
+			requestHandlerRegistry.put("/add/procedure", new QAPIEvent_AddProcedure(VERSION,db));
+			requestHandlerRegistry.put("/login", new QAPIEvent_Login(VERSION,db));
+			requestHandlerRegistry.put("/shutdown", new APIEvent_Shutdown(Globals.getGlobals()));
 						
 			AccessControl accessControl = new AccessControl();
 			accessControl.reset();
