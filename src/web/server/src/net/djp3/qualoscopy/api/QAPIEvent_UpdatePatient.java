@@ -246,6 +246,39 @@ public class QAPIEvent_UpdatePatient extends QAPIEvent_CheckSession implements C
 			
 		return response;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((sdf == null) ? 0 : sdf.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof QAPIEvent_UpdatePatient)) {
+			return false;
+		}
+		QAPIEvent_UpdatePatient other = (QAPIEvent_UpdatePatient) obj;
+		if (sdf == null) {
+			if (other.sdf != null) {
+				return false;
+			}
+		} else if (!sdf.equals(other.sdf)) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
 	
 }
 

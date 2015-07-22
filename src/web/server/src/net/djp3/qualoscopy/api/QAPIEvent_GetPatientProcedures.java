@@ -50,6 +50,11 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 		}
 		return log;
 	}
+	
+	/**
+	 * Added for hashCode and equals autogeneration
+	 */
+	private final long serialVersionUID = -1516866063389217484L;
 
 	
 	public QAPIEvent_GetPatientProcedures(String version, DatastoreInterface db) {
@@ -142,6 +147,36 @@ public class QAPIEvent_GetPatientProcedures extends QAPIEvent_CheckSession imple
 			
 		return response;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ (int) (serialVersionUID ^ (serialVersionUID >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof QAPIEvent_GetPatientProcedures)) {
+			return false;
+		}
+		QAPIEvent_GetPatientProcedures other = (QAPIEvent_GetPatientProcedures) obj;
+		if (serialVersionUID != other.serialVersionUID) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
 	
 }
 

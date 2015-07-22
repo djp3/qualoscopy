@@ -48,6 +48,11 @@ public class QAPIEvent_AddProcedure extends QAPIEvent_CheckSession implements Cl
 		}
 		return log;
 	}
+	
+	/**
+	 * Added for hashCode and equals autogeneration
+	 */
+	private final long serialVersionUID = -1516866063389217485L;
 
 	
 	public QAPIEvent_AddProcedure(String version, DatastoreInterface db) {
@@ -144,6 +149,35 @@ public class QAPIEvent_AddProcedure extends QAPIEvent_CheckSession implements Cl
 			
 		return response;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ (int) (serialVersionUID ^ (serialVersionUID >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof QAPIEvent_AddProcedure)) {
+			return false;
+		}
+		QAPIEvent_AddProcedure other = (QAPIEvent_AddProcedure) obj;
+		if (serialVersionUID != other.serialVersionUID) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 	
 }
 

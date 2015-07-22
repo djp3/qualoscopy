@@ -166,6 +166,39 @@ public class QAPIEvent_CheckSession extends QAPIEvent_VersionCheck implements Cl
 			
 		return response;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((db == null) ? 0 : db.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof QAPIEvent_CheckSession)) {
+			return false;
+		}
+		QAPIEvent_CheckSession other = (QAPIEvent_CheckSession) obj;
+		if (db == null) {
+			if (other.db != null) {
+				return false;
+			}
+		} else if (!db.equals(other.db)) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
 	
 }
 

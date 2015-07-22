@@ -315,7 +315,7 @@ public class DatastoreInterface {
 
 	private Map<String,Procedure> generateFakeProcedures() {
 
-		final int numProcedures = r.nextInt(4);
+		final int numProcedures = r.nextInt(4)+4;
 		Map<String,Procedure> procedures= new HashMap<String,Procedure>(numProcedures);
 		while(procedures.size() < numProcedures){
 			Procedure procedure = Procedure.generateFakeProcedure();
