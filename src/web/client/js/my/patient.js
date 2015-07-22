@@ -28,7 +28,6 @@ $(document).ready(function() {
 
 
   var patient_id = Cookies.getCookie("patient_id");
-  if(debug) console.log(patient_id);
   var mr_id = Cookies.getCookie("mr_id");
   var last_name = Cookies.getCookie("last_name");
   var firt_name = Cookies.getCookie("firt_name");
@@ -47,12 +46,11 @@ $(document).ready(function() {
       Cookies.addToCookieArray("salts", data.salt, 1);
 
       var procedureArray = data.procedures;
-      if (debug) console.log(procedureArray);
 
       for (var i = 0; i < procedureArray.length; i++) {
         var procedure = procedureArray[i];
         $("#procedure-rows").append(procedureRowMaker(procedure.ac_id,
-          procedure.dos, procedure.completed, procedure.faculty));
+          procedure.date_time_of_service, procedure.completed, procedure.faculty_id));
         }
         $(".clickable-row").click(function() {
           var ac_id = $(this).find('.ac-id').text();
@@ -71,16 +69,39 @@ $(document).ready(function() {
     );
 
     $('#operationTime').datetimepicker({
-      format: 'LT'}
+      format: 'HH:mm'}
     );
 
-    $("#save").click(function(){
-      var $ac = $("#ac").val();
-      var $operationDate = $("#operationDate").val();
-      var $operationTime = $("#operationTime").val();
-      var $faculty = $("#faculty").val();
+    $("#addProcedure").click(function(){
+      var salts = JSON.parse(Cookies.getCookie("salts"));
+      addProcedure(salts, session_id, session_key, user_id, mr_id, patient_id);
+    });
 
-      console.log($ac + "" + $operationDate + $operationTime + $faculty);
+    $("#addProcedureForm").submit(function(){
+      event.preventDefault();
+      var salts = JSON.parse(Cookies.getCookie("salts"));
+      var ac_id = $("#ac").val();
+      var date_of_service = $("#operationDate").val();
+      var service_time = $("#operationTime").val();
+      var date_time_of_service = date_of_service + " " + service_time;
+      var faculty_id = $("#faculty").val();
+      var procedure_id = Cookies.getCookie("procedure_id");
+
+      if (procedure_id != null){
+        if (debug) console.log(ac_id + "" + date_time_of_service
+        + faculty_id + procedure_id);
+        updateProcedure(salts, user_id, session_id, session_key, patient_id,
+          procedure_id, {"ac_id": ac_id,
+          "date_time_of_service": date_time_of_service,
+          "faculty_id": faculty_id}).done(
+            function(data) {
+              if (debug) console.log(data);
+              if(data.error == "false"){
+                Cookies.addToCookieArray("salts", data.salt, 1);
+                window.document.location = "patient.html";
+              }
+            });
+        }
     });
 
 });

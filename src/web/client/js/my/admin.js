@@ -35,7 +35,6 @@ $(document).ready(function() {
       if(data.error == "false"){
         Cookies.addToCookieArray("salts", data.salt, 1);
         var patientsArray = data.patients;
-        if (debug) console.log(patientsArray);
 
         for (var i = 0; i < patientsArray.length; i++) {
           var patient = patientsArray[i];
@@ -52,7 +51,6 @@ $(document).ready(function() {
             var patientNumber = $(this).find('.number').text();
             var patient_id = patientsArray[patientNumber].patient_id;
 
-            if (debug) console.log(patient_id);
             Cookies.setCookie("mr_id", mr_id, 1);
             Cookies.setCookie("last_name", last_name, 1);
             Cookies.setCookie("firt_name", firt_name, 1);

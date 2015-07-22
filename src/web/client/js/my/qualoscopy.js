@@ -18,6 +18,8 @@ var sessionInitiate;
 var sessionKill;
 // update patient info
 var updatePatient;
+// update proceudre info
+var updateProcedure;
 
 addPatient = function(salts, session_id, session_key, user_id){
   var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
@@ -34,12 +36,11 @@ addPatient = function(salts, session_id, session_key, user_id){
     if(data.error == "false"){
       Cookies.addToCookieArray("salts", data.salt, 1);
       Cookies.setCookie("patient_id", data.patient_id, 1);
-      // TODO: DO Somthting
     }
   });
 }
 
-addProcedure = function(salts, session_id, session_key, user_id, mrid){
+addProcedure = function(salts, session_id, session_key, user_id, mr_id, patient_id){
   var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
   $.ajax({
     dataType: 'jsonp',
@@ -47,14 +48,14 @@ addProcedure = function(salts, session_id, session_key, user_id, mrid){
     + "/add/procedure",
     data: {"version": versionNumber, "user_id": user_id,
     "shsid": Sha256.hash(session_id + "" + usedSalt),
-    "shsk": Sha256.hash(session_key + "" + usedSalt), "mr_id": mrid},
+    "shsk": Sha256.hash(session_key + "" + usedSalt),
+    "mr_id": mr_id, "patient_id": patient_id},
     context: document.body
   }).done(function(data) {
     if (debug) console.log(data);
     if(data.error == "false"){
       Cookies.addToCookieArray("salts", data.salt, 1);
       Cookies.setCookie("procedure_id", data.procedure_id, 1);
-      // TODO: DO Somthting
     }
   });
 }
@@ -62,7 +63,6 @@ addProcedure = function(salts, session_id, session_key, user_id, mrid){
 // Return ajax object so .done can be used elsewhere
 getPatients = function(salts, session_id, session_key, user_id) {
   var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
-  if (debug) console.log(usedSalt);
   return $.ajax({
     dataType: 'jsonp',
     url: "https://" + ipAddress + ":" + port
@@ -178,7 +178,7 @@ sessionKill = function(salts, session_id, session_key, user_id){
 }
 
 // Return ajax call
-updatePatient = function(salts, session_id, session_key, user_id, mrid,
+updatePatient = function(salts, session_id, session_key, user_id, mr_id,
   lastName, firstName, dob, gender, patient_id){
   var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
   return $.ajax({
@@ -188,8 +188,29 @@ updatePatient = function(salts, session_id, session_key, user_id, mrid,
     data: {"version": versionNumber, "user_id": user_id,
     "shsid": Sha256.hash(session_id + "" + usedSalt),
     "shsk": Sha256.hash(session_key + "" + usedSalt),
-    "patient_id": patient_id, "mr_id": mrid,
+    "patient_id": patient_id, "mr_id": mr_id,
     "last": lastName, "first": firstName, "dob": dob, "gender": gender},
     context: document.body
+  });
+}
+
+
+// Return ajax call
+updateProcedure = function(salts, user_id, session_id, session_key, patient_id,
+  procedure_id, opts){
+    var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
+    var data_dict = {"version": versionNumber, "user_id": user_id,
+    "shsid": Sha256.hash(session_id + "" + usedSalt),
+    "shsk": Sha256.hash(session_key + "" + usedSalt),
+    "patient_id": patient_id, "procedure_id": procedure_id}
+    for(var key in opts){
+      data_dict[key] = opts[key];
+    }
+    return $.ajax({
+      dataType: 'jsonp',
+      url: "https://" + ipAddress + ":" + port
+      + "/update/procedure",
+      data: data_dict,
+      context: document.body
   });
 }

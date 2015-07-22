@@ -94,19 +94,19 @@ $(document).ready(function() {
        format: 'MM/DD/YYYY'
     });
     $('#timepicker1').datetimepicker({
-      format: 'LT'
+      format: 'HH:mm'
     });
     $('#timepicker2').datetimepicker({
-      format: 'LT'
+      format: 'HH:mm'
     });
     $('#timepicker3').datetimepicker({
-      format: 'LT'
+      format: 'HH:mm'
     });
     $('#timepicker4').datetimepicker({
-      format: 'LT'
+      format: 'HH:mm'
     });
     $('#timepicker5').datetimepicker({
-      format: 'LT'
+      format: 'HH:mm'
     });
 
     // Link Timepickers
@@ -121,6 +121,14 @@ $(document).ready(function() {
     $("#timepicker4").on("dp.change", function (e) {
         $('#timepicker5').data("DateTimePicker").minDate(e.date);
     });
+  });
+
+  $("#identifiersForm").submit(function(){
+    event.preventDefault();
+  });
+
+  $("#preparationForm").submit(function(){
+    event.preventDefault();
   });
 
 });
