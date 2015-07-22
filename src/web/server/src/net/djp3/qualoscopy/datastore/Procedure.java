@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +14,16 @@ import org.apache.logging.log4j.Logger;
 import net.minidev.json.JSONObject;
 
 public class Procedure {
+	
+	public static final String acIDSyntax = "..*";
+	public static final Pattern patternAcID = Pattern.compile(acIDSyntax);
+	public static final String ERROR_PATTERN_FAIL_AC_ID = "Ac ID failed to match syntax: "+acIDSyntax;
+	public static final String ERROR_PATTERN_FAIL_AC_ID_NULL = "Ac ID failed to match syntax: it was null";
+	
+	public static final String dosSyntax = "^[01]?[0-9][/][123]?[0-9][/][12][09][0-9][0-9] [0-2]?[0-9]:[0-5][0-9]$";
+	public static final Pattern patternDOS = Pattern.compile(dosSyntax);
+	public static final String ERROR_PATTERN_FAIL_DOS = "\"date_time_of_service\" did not conform to the expected syntax:"+dosSyntax;
+
 	
 	private static Random r = new Random();
 	
@@ -48,31 +59,32 @@ public class Procedure {
 		}
 		boolean completed = r.nextBoolean();
 		try {
-			SimpleDateFormat sdf  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss.SSS");
+			SimpleDateFormat sdf  = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			Date date;
-			date = sdf.parse("2014-07-01 00:00:00.000");
-			long dateOfService = date.getTime() + Math.abs(r.nextInt(365*24*60*60))*1000; //365 days from 7/1/14
-			return new Procedure(procedure_id, ac_id, dateOfService,faculty, completed);
+			date = sdf.parse("2014-07-01 12:00");
+			long dateTimeOfService = date.getTime() + Math.abs(r.nextInt(365*24*60*60))*1000; //365 days from 7/1/14
+			Procedure procedure = new Procedure();
+			procedure.setProcedureID(procedure_id);
+			procedure.setAcID(ac_id);
+			procedure.setDateTimeOfService(dateTimeOfService);
+			procedure.setFacultyID(faculty);
+			procedure.setCompleted(completed);
+			return procedure;
 		} catch (ParseException e) {
 			getLog().error("Problem making fake patients:"+e);
 		}
 		return null;
 	}
 	
-	String procedureID;
-	String acID;
-	Long dateOfService;
-	String faculty;
-	Boolean completed;
+	public final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY HH:MM");
 	
-	public Procedure(String procedureID, String acID, Long dateOfService, String faculty, Boolean completed) {
-		super();
-		this.setProcedureID(procedureID);
-		this.setAcID(acID);
-		this.setDateOfService(dateOfService);
-		this.setFaculty(faculty);
-		this.setCompleted(completed);
-	}
+	String procedureID = null;
+	String acID = null;
+	Long dateTimeOfService = null;
+	String facultyID = null;
+	Boolean completed = null;
+	
+	
 	public String getProcedureID() {
 		return procedureID;
 	}
@@ -82,22 +94,61 @@ public class Procedure {
 	public String getAcID() {
 		return acID;
 	}
-	public void setAcID(String ac_id) {
-		this.acID = ac_id;
+	public String setAcID(String ac_id) {
+		if(ac_id != null){
+			if(!patternAcID.matcher(ac_id).matches()){
+				return ERROR_PATTERN_FAIL_AC_ID;
+			}
+			else{
+				this.acID = ac_id;
+				return null;
+			}
+		}else{
+			return ERROR_PATTERN_FAIL_AC_ID_NULL;
+		}
 	}
-	public Long getDateOfService() {
-		return dateOfService;
+	
+	public Long getDateTimeOfService() {
+		return dateTimeOfService;
 	}
-	public void setDateOfService(Long dateOfService) {
-		this.dateOfService = dateOfService;
+	
+	public String getDateTimeOfServiceString() {
+		Date date = new Date(this.getDateTimeOfService());
+		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:MM");
+		format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+		String formatted = format.format(date);
+		return formatted;
 	}
-	public String getFaculty() {
-		return faculty;
+	
+	public void setDateTimeOfService(Long dateTimeOfService) {
+		this.dateTimeOfService = dateTimeOfService;
 	}
-	public void setFaculty(String faculty) {
-		this.faculty = faculty;
+	
+	public String setDateTimeOfService(String dateTimeOfService) {
+		if(!patternDOS.matcher(dateTimeOfService).matches()){
+			return ERROR_PATTERN_FAIL_DOS;
+		}
+		else{
+			try{
+				long localdos = sdf.parse(dateTimeOfService).getTime();
+				this.dateTimeOfService = localdos;
+				return null;
+			}
+			catch(ParseException e){
+				return ERROR_PATTERN_FAIL_DOS;
+			}
+		}
 	}
-	public boolean isCompleted() {
+	
+	public String getFacultyID() {
+		return facultyID;
+	}
+	
+	public String setFacultyID(String facultyID) {
+		this.facultyID = facultyID;
+		return null; //Return error message if it doesn't match a pattern
+	}
+	public Boolean isCompleted() {
 		return completed;
 	}
 	public void setCompleted(Boolean completed) {
@@ -109,23 +160,30 @@ public class Procedure {
 		
 		ret.put("ac_id",this.getAcID());
 		
-		ret.put("faculty",this.getFaculty());
+		ret.put("faculty_id",this.getFacultyID());
 		
-		ret.put("completed",this.isCompleted()?"true":"false");
+		if(this.isCompleted() != null){
+			ret.put("completed",this.isCompleted()?"true":"false");
+		}
+		else{
+			ret.put("completed","null");
+		}
 		
-		Date date = new Date(this.getDateOfService());
-        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-        String formatted = format.format(date);
-		ret.put("dos",formatted);
+		if(this.getDateTimeOfService() != null){
+			ret.put("date_time_of_service",getDateTimeOfServiceString());
+		}
+		else{
+			ret.put("date_time_of_service","null");
+		}
 		
 		return ret;
 	}
+	
 	public void clearData() {
 		this.setAcID(null);
 		this.setCompleted(null);
-		this.setDateOfService(null);
-		this.setFaculty(null);
+		this.setDateTimeOfService((Long)null);
+		this.setFacultyID(null);
 	}
 	
 	

@@ -40,6 +40,12 @@ import edu.uci.ics.luci.utility.webserver.event.api.login.Datastore;
 public class DatastoreInterface {
 	
 	private static final Integer ITERATIONS = 200;
+	private static final String ERROR_FAIL_USER_ID_NULL = "Internal error: tried to update a procedure with a null user id";
+	private static final String ERROR_FAIL_PATIENT_ID_NULL = "Internal error: tried to update a procedure with a null patient id";
+	private static final String ERROR_FAIL_PROCEDURE_NULL = "Internal error: tried to update a procedure with a null procedure";
+	private static final String ERROR_FAIL_PATIENT_ID_UNKNOWN = "Internal error: patient id does not exist in the database";
+	private static final String ERROR_FAIL_PATIENT_ID_HAS_NO_PROCEDURES = "Internal error: patient id has no procedures, add one first";
+	private static final String ERROR_FAIL_PROCEDURE_DOESNT_EXIST = "Internal error: procedure id does not exist, add one first";
 	private static Random r = new Random(System.currentTimeMillis()-45060);
 
 	private static transient volatile Logger log = null;
@@ -379,6 +385,18 @@ public class DatastoreInterface {
 			return patient.getPatientID();
 		}
 	}
+	
+	public String updatePatient(String userID, String patientID, String mrID, String first, String last, String gender, Long dob) {
+		
+		if(!patients.containsKey(patientID)){
+			return "Patient with patient ID:"+patientID+" does not exist";
+		}
+		else{
+			Patient newPatient = new Patient(patientID,mrID,first,last,gender,dob);
+			patients.put(patientID, newPatient);
+		}
+		return null;
+	}
 
 	public String addProcedure(String userID, String patientID) {
 		if(userID != null){
@@ -400,16 +418,54 @@ public class DatastoreInterface {
 		return null;
 	}
 
-	public String updatePatient(String userID, String patientID, String mrID, String first, String last, String gender, Long dob) {
-		
-		if(!patients.containsKey(patientID)){
-			return "Patient with patient ID:"+patientID+" does not exist";
+
+
+	public String updateProcedure(String userID, String patientID, Procedure procedure) {
+		if(userID != null){
+			if(patientID != null){
+				if(procedure != null){
+					Map<String, Procedure> plist = procedures.get(patientID);
+					if(plist == null){
+						return ERROR_FAIL_PATIENT_ID_UNKNOWN;
+					}
+					else{
+						if (plist.size() == 0){
+							return ERROR_FAIL_PATIENT_ID_HAS_NO_PROCEDURES;
+						}
+						else{
+							Procedure p = plist.get(procedure.getProcedureID());
+							if(p == null){
+								return ERROR_FAIL_PROCEDURE_DOESNT_EXIST;
+							}
+							else{
+								if(procedure.getAcID() != null){
+									p.setAcID(procedure.getAcID());
+								}
+								if(procedure.getDateTimeOfService() != null){
+									p.setDateTimeOfService(procedure.getDateTimeOfService());
+								}
+								if(procedure.getFacultyID() != null){
+									p.setFacultyID(procedure.getFacultyID());
+								}
+								
+								plist.put(p.getProcedureID(), p);
+								procedures.put(patientID, plist);
+								return null; //No error
+							}
+						}
+					}
+				}
+				else{
+					return ERROR_FAIL_PROCEDURE_NULL;
+				}
+			}
+			else{
+				return ERROR_FAIL_PATIENT_ID_NULL;
+			}
 		}
 		else{
-			Patient newPatient = new Patient(patientID,mrID,first,last,gender,dob);
-			patients.put(patientID, newPatient);
+			return ERROR_FAIL_USER_ID_NULL;
 		}
-		return null;
 	}
 
 }

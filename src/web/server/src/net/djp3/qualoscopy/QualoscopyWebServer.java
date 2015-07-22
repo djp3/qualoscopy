@@ -35,6 +35,7 @@ import net.djp3.qualoscopy.api.QAPIEvent_InitiateSession;
 import net.djp3.qualoscopy.api.QAPIEvent_KillSession;
 import net.djp3.qualoscopy.api.QAPIEvent_Login;
 import net.djp3.qualoscopy.api.QAPIEvent_UpdatePatient;
+import net.djp3.qualoscopy.api.QAPIEvent_UpdateProcedure;
 import net.djp3.qualoscopy.api.QAPIEvent_VersionCheck;
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 
@@ -118,6 +119,7 @@ public class QualoscopyWebServer {
 			requestHandlerRegistry.put("/add/patient", new QAPIEvent_AddPatient(VERSION,db));
 			requestHandlerRegistry.put("/update/patient", new QAPIEvent_UpdatePatient(VERSION,db));
 			requestHandlerRegistry.put("/add/procedure", new QAPIEvent_AddProcedure(VERSION,db));
+			requestHandlerRegistry.put("/update/procedure", new QAPIEvent_UpdateProcedure(VERSION,db));
 			requestHandlerRegistry.put("/login", new QAPIEvent_Login(VERSION,db));
 			requestHandlerRegistry.put("/shutdown", new APIEvent_Shutdown(Globals.getGlobals()));
 						
