@@ -22,6 +22,8 @@
 package net.djp3.qualoscopy.api;
 
 import java.security.InvalidParameterException;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
@@ -168,6 +170,309 @@ public class QAPIEvent_UpdateProcedure extends QAPIEvent_CheckSession implements
 						response.put("errors", errors);
 					}
 				}
+				
+
+				Set<String> _location = r.getParameters().get("location");
+				String location = null;
+				if((_location != null) && ((location = (_location.iterator().next())) != null)){
+					String errorMessage = procedure.setLocation(location);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _fellow = r.getParameters().get("fellow");
+				String fellow = null;
+				if((_fellow != null) && ((fellow = (_fellow.iterator().next())) != null)){
+					String errorMessage = procedure.setFellow(fellow);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _pre_drug = r.getParameters().get("pre_drug");
+				String pre_drug = null;
+				if((_pre_drug!= null) && ((pre_drug= (_pre_drug.iterator().next())) != null)){
+					String errorMessage = procedure.setPreDrug(pre_drug);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _prep_liters= r.getParameters().get("prep_liters");
+				String prep_liters= null;
+				if((_prep_liters!= null) && ((prep_liters= (_prep_liters.iterator().next())) != null)){
+					String errorMessage = procedure.setPrepLiters(prep_liters);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _split_prep= r.getParameters().get("split_prep");
+				String split_prep= null;
+				if((_split_prep!= null) && ((split_prep= (_split_prep.iterator().next())) != null)){
+					String errorMessage = procedure.setSplitPrep(split_prep);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _bisacodyl= r.getParameters().get("bisacodyl");
+				String bisacodyl= null;
+				if((_bisacodyl!= null) && ((bisacodyl= (_bisacodyl.iterator().next())) != null)){
+					String errorMessage = procedure.setBisacodyl(bisacodyl);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _last_colon= r.getParameters().get("last_colon");
+				String last_colon= null;
+				if((_last_colon!= null) && ((last_colon= (_last_colon.iterator().next())) != null)){
+					String errorMessage = procedure.setLastColon(last_colon);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _primary_indication= r.getParameters().get("primary_indication");
+				String primary_indication= null;
+				if((_primary_indication!= null) && ((primary_indication= (_primary_indication.iterator().next())) != null)){
+					String errorMessage = procedure.setPrimaryIndication(primary_indication);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _other_indication= r.getParameters().get("other_indication");
+				String other_indication= null;
+				if((_other_indication!= null) && ((other_indication= (_other_indication.iterator().next())) != null)){
+					String errorMessage = procedure.setOtherIndication(other_indication);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _scope= r.getParameters().get("scope");
+				String scope= null;
+				if((_scope!= null) && ((scope= (_scope.iterator().next())) != null)){
+					String errorMessage = procedure.setScope(scope);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _endocuff= r.getParameters().get("endocuff");
+				String endocuff= null;
+				if((_endocuff!= null) && ((endocuff= (_endocuff.iterator().next())) != null)){
+					String errorMessage = procedure.setEndocuff(endocuff);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _cap_assisted= r.getParameters().get("cap_assisted");
+				String cap_assisted= null;
+				if((_cap_assisted!= null) && ((cap_assisted= (_cap_assisted.iterator().next())) != null)){
+					String errorMessage = procedure.setCapAssisted(cap_assisted);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _underwater= r.getParameters().get("underwater");
+				String underwater= null;
+				if((_underwater!= null) && ((underwater= (_underwater.iterator().next())) != null)){
+					String errorMessage = procedure.setUnderwater(underwater);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _sedation_level= r.getParameters().get("sedation_level");
+				String sedation_level= null;
+				if((_sedation_level!= null) && ((sedation_level= (_sedation_level.iterator().next())) != null)){
+					String errorMessage = procedure.setSedationLevel(sedation_level);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _versed= r.getParameters().get("versed");
+				String versed= null;
+				if((_versed!= null) && ((versed= (_versed.iterator().next())) != null)){
+					String errorMessage = procedure.setVersed(versed);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _fentanyl= r.getParameters().get("fentanyl");
+				String fentanyl= null;
+				if((_fentanyl!= null) && ((fentanyl= (_fentanyl.iterator().next())) != null)){
+					String errorMessage = procedure.setFentanyl(fentanyl);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _demerol= r.getParameters().get("demerol");
+				String demerol= null;
+				if((_demerol!= null) && ((demerol= (_demerol.iterator().next())) != null)){
+					String errorMessage = procedure.setDemerol(demerol);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _benadryl= r.getParameters().get("benadryl");
+				String benadryl= null;
+				if((_benadryl!= null) && ((benadryl= (_benadryl.iterator().next())) != null)){
+					String errorMessage = procedure.setBenadryl(benadryl);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _extent= r.getParameters().get("extent");
+				String extent= null;
+				if((_extent!= null) && ((extent= (_extent.iterator().next())) != null)){
+					String errorMessage = procedure.setExtent(extent);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _prep_quality_left= r.getParameters().get("prep_quality_left");
+				String prep_quality_left= null;
+				if((_prep_quality_left!= null) && ((prep_quality_left= (_prep_quality_left.iterator().next())) != null)){
+					String errorMessage = procedure.setPrepQualityLeft(prep_quality_left);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _prep_quality_mid= r.getParameters().get("prep_quality_mid");
+				String prep_quality_mid= null;
+				if((_prep_quality_mid!= null) && ((prep_quality_mid= (_prep_quality_mid.iterator().next())) != null)){
+					String errorMessage = procedure.setPrepQualityMid(prep_quality_mid);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _prep_quality_right= r.getParameters().get("prep_quality_right");
+				String prep_quality_right= null;
+				if((_prep_quality_right!= null) && ((prep_quality_right= (_prep_quality_right.iterator().next())) != null)){
+					String errorMessage = procedure.setPrepQualityRight(prep_quality_right);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _time_insertion= r.getParameters().get("time_insertion");
+				String time_insertion= null;
+				if((_time_insertion!= null) && ((time_insertion= (_time_insertion.iterator().next())) != null)){
+					String errorMessage = procedure.setTimeInsertionString(time_insertion);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _time_begin_withdrawal= r.getParameters().get("time_begin_withdrawal");
+				String time_begin_withdrawal= null;
+				if((_time_begin_withdrawal!= null) && ((time_begin_withdrawal= (_time_begin_withdrawal.iterator().next())) != null)){
+					String errorMessage = procedure.setTimeBeginWithdrawalString(time_begin_withdrawal);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+				Set<String> _time_scope_withdrawn= r.getParameters().get("time_scope_withdrawn");
+				String time_scope_withdrawn= null;
+				if((_time_scope_withdrawn!= null) && ((time_scope_withdrawn= (_time_scope_withdrawn.iterator().next())) != null)){
+					String errorMessage = procedure.setTimeScopeWithdrawnString(time_scope_withdrawn);
+					if(errorMessage != null){
+						error = "true";
+						response.put("error",error);
+						errors.add(errorMessage);
+						response.put("errors", errors);
+					}
+				}
+
+
 				
 				
 				String userID = r.getParameters().get("user_id").iterator().next();

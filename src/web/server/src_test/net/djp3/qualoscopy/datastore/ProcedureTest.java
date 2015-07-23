@@ -1,9 +1,11 @@
 package net.djp3.qualoscopy.datastore;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.ParseException;
 
 import net.minidev.json.JSONObject;
 
@@ -77,11 +79,21 @@ public class ProcedureTest {
 	@Test
 	public void testDateOfService() {
 		
-	
+		String time = "07/22/2015 20:00";
+		
 		Procedure procedure = Procedure.generateFakeProcedure();
+		
+		/*This is to catch an error in SimpleDateFormat patterning which I made once. once. */
+		try {
+			assertTrue(procedure.sdf.format(procedure.sdf.parse(time)).equals(time));
+		} catch (ParseException e) {
+			fail("This shouldn't throw an exception");
+		}
+		
 		assertTrue(procedure.getDateTimeOfService() != null);
 		assertTrue(procedure.setDateTimeOfService("12/31/2015 24:62") == Procedure.ERROR_PATTERN_FAIL_DOS);
-		assertTrue(procedure.setDateTimeOfService("12/31/2015 12:12") == null);
+		assertTrue(procedure.setDateTimeOfService(time) == null);
+		assertTrue(procedure.getDateTimeOfServiceString().equals(time));
 	}
 	
 	@Test
@@ -91,23 +103,43 @@ public class ProcedureTest {
 		assertTrue(procedure.getFacultyID() != null);
 	}
 	
-	@Test
-	public void testCompleted() {
-		
-		Procedure procedure = Procedure.generateFakeProcedure();
-		assertTrue(procedure.isCompleted() != null);
-	}
 	
 	@Test
 	public void testToJSON() {
 		
 		Procedure procedure = Procedure.generateFakeProcedure();
 		JSONObject j = procedure.toJSON();
+		assertTrue(j.get("procedure_id").equals(procedure.getProcedureID()));
 		assertTrue(j.get("ac_id").equals(procedure.getAcID()));
 		assertTrue(j.get("faculty_id").equals(procedure.getFacultyID()));
-		assertTrue(j.get("completed").equals(procedure.isCompleted()?"true":"false"));
+		//TODO: Figure out completed
+		assertTrue(j.get("completed").equals("false"));
 		assertTrue(j.get("date_time_of_service").equals(procedure.getDateTimeOfServiceString()));
 		
+	}
+	
+	@Test
+	public void testGenerate() {
+		
+		Procedure procedure = Procedure.generateFakeProcedure();
+		for(Field f: procedure.getClass().getDeclaredFields()){
+			if(!f.getName().equals("procedureID")){
+				if(!Modifier.isFinal(f.getModifiers())){
+					if(!Modifier.isPrivate(f.getModifiers())){
+						try {
+							assertTrue(f.get(procedure) != null);
+						}catch(AssertionError e){
+							System.err.println(f.getName());
+							throw e;
+						} catch (IllegalArgumentException e) {
+							fail("This exception: "+e);
+						} catch (IllegalAccessException e) {
+							fail("This exception: "+e);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	@Test
@@ -115,15 +147,20 @@ public class ProcedureTest {
 		
 		Procedure procedure = Procedure.generateFakeProcedure();
 		procedure.clearData();
-		for(Field f: procedure.getClass().getFields()){
+		for(Field f: procedure.getClass().getDeclaredFields()){
 			if(!f.getName().equals("procedureID")){
 				if(!Modifier.isFinal(f.getModifiers())){
-					try {
-						assertTrue(f.get(procedure) == null);
-					} catch (IllegalArgumentException e) {
-						fail("This exception: "+e);
-					} catch (IllegalAccessException e) {
-						fail("This exception: "+e);
+					if(!Modifier.isPrivate(f.getModifiers())){
+						try {
+							assertTrue(f.get(procedure) == null);
+						}catch(AssertionError e){
+							System.err.println(f.getName());
+							throw e;
+						} catch (IllegalArgumentException e) {
+							fail("This exception: "+e);
+						} catch (IllegalAccessException e) {
+							fail("This exception: "+e);
+						}
 					}
 				}
 			}

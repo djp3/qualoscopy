@@ -322,7 +322,8 @@ public class DatastoreInterface {
 	private Map<String,Procedure> generateFakeProcedures() {
 
 		final int numProcedures = r.nextInt(4)+4;
-		Map<String,Procedure> procedures= new HashMap<String,Procedure>(numProcedures);
+		Map<String,Procedure> _procedures= new HashMap<String,Procedure>(numProcedures);
+		Map<String, Procedure> procedures = Collections.synchronizedMap(_procedures);
 		while(procedures.size() < numProcedures){
 			Procedure procedure = Procedure.generateFakeProcedure();
 			if(procedure != null){
@@ -442,11 +443,94 @@ public class DatastoreInterface {
 									p.setAcID(procedure.getAcID());
 								}
 								if(procedure.getDateTimeOfService() != null){
-									p.setDateTimeOfService(procedure.getDateTimeOfService());
+									if(p.setDateTimeOfService(procedure.getDateTimeOfService()) != null){
+										return procedure.ERROR_PATTERN_FAIL_DOS;
+									}
 								}
 								if(procedure.getFacultyID() != null){
 									p.setFacultyID(procedure.getFacultyID());
 								}
+								if(procedure.getFacultyID() != null){
+									p.setFacultyID(procedure.getFacultyID());
+								}
+
+								if(procedure.getLocation() != null){
+									p.setLocation(procedure.getLocation());
+								}
+								if(procedure.getFellow() != null){
+									p.setFellow(procedure.getFellow());
+								}
+								if(procedure.getPreDrug() != null){
+									p.setPreDrug(procedure.getPreDrug());
+								}
+								if(procedure.getPrepLiters() != null){
+									p.setPrepLiters(procedure.getPrepLiters());
+								}
+								if(procedure.getSplitPrep() != null){
+									p.setSplitPrep(procedure.getSplitPrep());
+								}
+								if(procedure.getBisacodyl() != null){
+									p.setBisacodyl(procedure.getBisacodyl());
+								}
+								if(procedure.getLastColon() != null){
+									p.setLastColon(procedure.getLastColon());
+								}
+								if(procedure.getPrimaryIndication() != null){
+									p.setPrimaryIndication(procedure.getPrimaryIndication());
+								}
+								if(procedure.getOtherIndication() != null){
+									p.setOtherIndication(procedure.getOtherIndication());
+								}
+								if(procedure.getScope() != null){
+									p.setScope(procedure.getScope());
+								}
+								if(procedure.getEndocuff() != null){
+									p.setEndocuff(procedure.getEndocuff());
+								}
+								if(procedure.getCapAssisted() != null){
+									p.setCapAssisted(procedure.getCapAssisted());
+								}
+								if(procedure.getUnderwater() != null){
+									p.setUnderwater(procedure.getUnderwater());
+								}
+								if(procedure.getSedationLevel() != null){
+									p.setSedationLevel(procedure.getSedationLevel());
+								}
+								if(procedure.getVersed() != null){
+									p.setVersed(procedure.getVersed());
+								}
+								if(procedure.getFentanyl() != null){
+									p.setFentanyl(procedure.getFentanyl());
+								}
+								if(procedure.getDemerol() != null){
+									p.setDemerol(procedure.getDemerol());
+								}
+								if(procedure.getBenadryl() != null){
+									p.setBenadryl(procedure.getBenadryl());
+								}
+								if(procedure.getExtent() != null){
+									p.setExtent(procedure.getExtent());
+								}
+								if(procedure.getPrepQualityLeft() != null){
+									p.setPrepQualityLeft(procedure.getPrepQualityLeft());
+								}
+								if(procedure.getPrepQualityMid() != null){
+									p.setPrepQualityMid(procedure.getPrepQualityMid());
+								}
+								if(procedure.getPrepQualityRight() != null){
+									p.setPrepQualityRight(procedure.getPrepQualityRight());
+								}
+								if(procedure.getTimeInsertion() != null){
+									p.setTimeInsertion(procedure.getTimeInsertion());
+								}
+								if(procedure.getTimeBeginWithdrawal() != null){
+									p.setTimeBeginWithdrawal(procedure.getTimeBeginWithdrawal());
+								}
+								if(procedure.getTimeScopeWithdrawn() != null){
+									p.setTimeScopeWithdrawn(procedure.getTimeScopeWithdrawn());
+								}
+
+
 								
 								plist.put(p.getProcedureID(), p);
 								procedures.put(patientID, plist);
