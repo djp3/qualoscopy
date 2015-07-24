@@ -13,11 +13,12 @@ $(document).ready(function() {
     return $element;
   };
 
-  var procedureRowMaker = function(ac, dos, completed, factulty){
+  var procedureRowMaker = function(ac, dos, completed, factulty, procedure_id){
 
     var $element = $(" \
     <tr class='clickable-row' data-href='main.html'> \
-    <td class='ac-id'>" + ac + "</td> \
+    <td style='display:none' class='procedure_id'>" + procedure_id + "</td> \
+    <td class='ac_id'>" + ac + "</td> \
     <td>"+ dos + "</td> \
     <td>"+ completed + "</td> \
     <td>"+ factulty +"</td> \
@@ -50,12 +51,14 @@ $(document).ready(function() {
       for (var i = 0; i < procedureArray.length; i++) {
         var procedure = procedureArray[i];
         $("#procedure-rows").append(procedureRowMaker(procedure.ac_id,
-          procedure.date_time_of_service, procedure.completed, procedure.faculty_id));
+          procedure.date_time_of_service, procedure.completed, procedure.faculty_id,
+        procedure.procedure_id));
         }
         $(".clickable-row").click(function() {
-          var ac_id = $(this).find('.ac-id').text();
-          if (debug) console.log(ac_id);
+          var ac_id = $(this).find('.ac_id').text();
+          var procedure_id = $(this).find('.procedure_id').text();
           Cookies.setCookie("ac_id", ac_id, 1);
+          Cookies.setCookie("procedure_id", procedure_id, 1);
           window.document.location = $(this).data("href");
         });
         $('#procedure-table').dataTable();

@@ -8,6 +8,8 @@ var addProcedure
 var getPatients;
 // Get procedure
 var getPatientProcedures;
+// get procedure Polyps
+var getProceduresPolyps;
 // Login to the system
 var login;
 // Check cookies to see if session is still valid
@@ -87,6 +89,21 @@ getPatientProcedure = function(salts, session_id, session_key,
     "shsk": Sha256.hash(session_key + "" + usedSalt), "mr_id": mr_id},
     context: document.body
   });
+}
+
+getProceduresPolyps = function(salts, user_id, session_id,
+  session_key, procedure_id) {
+    var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
+    return $.ajax({
+      dataType: 'jsonp',
+      url: "https://" + ipAddress + ":" + port
+      + "/get/procedure/polyps",
+      data: {"version": versionNumber, "user_id": user_id,
+      "shsid": Sha256.hash(session_id + "" + usedSalt),
+      "shsk": Sha256.hash(session_key + "" + usedSalt),
+      "procedure_id": procedure_id},
+      context: document.body
+    });
 }
 
 login = function(){

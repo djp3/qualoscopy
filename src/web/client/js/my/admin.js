@@ -28,6 +28,21 @@ $(document).ready(function() {
       format: 'LT'}
     );
 
+    $("#viewTodaysPatients").click(function(){
+
+      var search = document.getElementById('search');
+      search.value ="7/24/2015";
+      // TODO: make it so a keypress happens
+    });
+
+
+    $("#viewAllPatients").click(function(){
+      var search = document.getElementById('search');
+      search.value = "";
+      search.focus();
+      // TODO: make it so a keypress happens
+    });
+
     var salts = JSON.parse(Cookies.getCookie("salts"));
     // Ajax call
     getPatients(salts, session_id, session_key, user_id).done(function(data) {
