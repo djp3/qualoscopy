@@ -23,7 +23,6 @@
 package net.djp3.qualoscopy.api;
 
 import java.security.InvalidParameterException;
-import java.util.Set;
 
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 import net.minidev.json.JSONArray;
@@ -45,6 +44,12 @@ public class QAPIEvent_KillSession extends QAPIEvent_CheckSession implements Clo
 		}
 		return log;
 	}
+	
+
+	/**
+	 * Added for hashCode and equals autogeneration
+	 */
+	private final long serialVersionUID = -1516866063389217486L;
 
 	
 	public QAPIEvent_KillSession(String version, DatastoreInterface db) {
@@ -123,6 +128,35 @@ public class QAPIEvent_KillSession extends QAPIEvent_CheckSession implements Clo
 			
 		return response;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ (int) (serialVersionUID ^ (serialVersionUID >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof QAPIEvent_KillSession)) {
+			return false;
+		}
+		QAPIEvent_KillSession other = (QAPIEvent_KillSession) obj;
+		if (serialVersionUID != other.serialVersionUID) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 	
 }
 

@@ -19,7 +19,6 @@
  along with Utilities.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 package net.djp3.qualoscopy.api;
 
 import java.security.InvalidParameterException;
@@ -36,45 +35,34 @@ import edu.uci.ics.luci.utility.webserver.event.Event;
 import edu.uci.ics.luci.utility.webserver.event.result.api.APIEventResult;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 
-public class QAPIEvent_CheckSession extends QAPIEvent_VersionCheck implements Cloneable{ 
+public class QAPIEvent_AddPolyp extends QAPIEvent_CheckSession implements Cloneable{ 
 	
-	public static final String ERROR_NULL_USER_ID = "\"user_id\" was null";
-	public static final String ERROR_NULL_SHSID = "\"shsid\" (Salted Hashed Session ID) was null";
-	public static final String ERROR_NULL_SHSK = "\"shsk\" (Salted Hashed Session Key) was null";
-	public static final String ERROR_NULL_SOURCE = "Internal Error - source was null- not a parameter";
-	
+	public static final String ERROR_NULL_PROCEDURE_ID = "\"procedure_id\" was null";
 	
 	private static transient volatile Logger log = null;
 	public static Logger getLog(){
 		if(log == null){
-			log = LogManager.getLogger(QAPIEvent_CheckSession.class);
+			log = LogManager.getLogger(QAPIEvent_AddPolyp.class);
 		}
 		return log;
 	}
-
-	private DatastoreInterface db = null;
 	
-	public DatastoreInterface getDB() {
-		return db;
-	}
-
-	public void setDB(DatastoreInterface db) {
-		this.db = db;
-	}
+	/**
+	 * Added for hashCode and equals autogeneration
+	 */
+	private final long serialVersionUID = -1516866063389218485L;
 
 	
-	public QAPIEvent_CheckSession(String version, DatastoreInterface db) {
-		super(version);
-		setDB(db);
+	public QAPIEvent_AddPolyp(String version, DatastoreInterface db) {
+		super(version,db);
 	}
 	
 	@Override
 	public void set(Event _incoming) {
-		QAPIEvent_CheckSession incoming = null;
-		if(_incoming instanceof QAPIEvent_CheckSession){
-			incoming = (QAPIEvent_CheckSession) _incoming;
+		QAPIEvent_AddPolyp incoming = null;
+		if(_incoming instanceof QAPIEvent_AddPolyp){
+			incoming = (QAPIEvent_AddPolyp) _incoming;
 			super.set(incoming);
-			this.setDB(incoming.getDB());
 		}
 		else{
 			getLog().error(ERROR_SET_ENCOUNTERED_TYPE_MISMATCH+", incoming:"+_incoming.getClass().getName()+", this:"+this.getClass().getName());
@@ -105,52 +93,45 @@ public class QAPIEvent_CheckSession extends QAPIEvent_VersionCheck implements Cl
 			response.put("errors", errors);
 		}
 		
-		//Get parameters 
-		Set<String> _user_id = r.getParameters().get("user_id");
-		String user_id = null;
-		if((_user_id == null) || ((user_id = (_user_id.iterator().next())) == null)){
-			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_USER_ID);
-			response.put("error", "true");
-			response.put("errors", errors);
-		}
-				
-		Set<String> _shsid = r.getParameters().get("shsid");
-		String shsid  = null;
-		if((_shsid == null) || ((shsid = (_shsid.iterator().next())) == null)){
-			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_SHSID);
-			response.put("error", "true");
-			response.put("errors", errors);
-		}
-				
-		Set<String> _shsk = r.getParameters().get("shsk");
-		String shsk  = null;
-		if((_shsk == null) || ((shsk = (_shsk.iterator().next())) == null)){
-			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_SHSK);
-			response.put("error", "true");
-			response.put("errors", errors);
-		}
-				
-		String source = r.getSource();
-		if(source == null){
-			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_SOURCE);
-			response.put("error", "true");
+		/* Get additional parameters */
+		Set<String> _procedure_id = r.getParameters().get("procedure_id");
+		String procedureID = null;
+		if((_procedure_id == null) || ((procedureID = (_procedure_id.iterator().next())) == null)){
+			error ="true";
+			response.put("error", error);
+			errors.add("Problem handling "+r.getCommand()+":"+ERROR_NULL_PROCEDURE_ID);
 			response.put("errors", errors);
 		}
 		
 		if(error.equals("false")){
-			if(getDB().checkSession(user_id,shsid,shsk,source)){
-				String salt = getDB().createAndStoreSalt(user_id);
-				response.put("valid", "true");
-				response.put("salt", salt);
+			/* Clean up from session checking */
+			String valid = (String) response.get("valid");
+			if(valid.equals("false")){
+				response.remove("valid");
+				error = "true";
+				response.put("error",error);
+				errors.add("Session did not validate");
+				response.put("errors", errors);
 			}
 			else{
-				response.put("valid", "false");
+				response.remove("valid");
+				String userID = r.getParameters().get("user_id").iterator().next();
+				String polypID = getDB().addPolyp(userID,procedureID);
+				if(polypID != null){
+					response.put("polyp_id", polypID);
+				}
+				else{
+					error = "true";
+					response.put("error",error);
+					errors.add("Unable to add new polyp with user_id:"+userID+", procedure_id:"+procedureID);
+					response.put("errors", errors);
+				}
 			}
 		}
+			
 		return response;
 	}
 	
-
 	@Override
 	public APIEventResult onEvent() {
 		
@@ -171,7 +152,8 @@ public class QAPIEvent_CheckSession extends QAPIEvent_VersionCheck implements Cl
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((db == null) ? 0 : db.hashCode());
+		result = prime * result
+				+ (int) (serialVersionUID ^ (serialVersionUID >>> 32));
 		return result;
 	}
 
@@ -183,20 +165,15 @@ public class QAPIEvent_CheckSession extends QAPIEvent_VersionCheck implements Cl
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (!(obj instanceof QAPIEvent_CheckSession)) {
+		if (!(obj instanceof QAPIEvent_AddPolyp)) {
 			return false;
 		}
-		QAPIEvent_CheckSession other = (QAPIEvent_CheckSession) obj;
-		if (db == null) {
-			if (other.db != null) {
-				return false;
-			}
-		} else if (!db.equals(other.db)) {
+		QAPIEvent_AddPolyp other = (QAPIEvent_AddPolyp) obj;
+		if (serialVersionUID != other.serialVersionUID) {
 			return false;
 		}
 		return true;
 	}
-	
 	
 	
 	

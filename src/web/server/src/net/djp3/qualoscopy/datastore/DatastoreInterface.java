@@ -40,6 +40,18 @@ import edu.uci.ics.luci.utility.webserver.event.api.login.Datastore;
 public class DatastoreInterface {
 	
 	private static final Integer ITERATIONS = 200;
+	private static final String ERROR_FAIL_USER_ID_NULL = "Internal error: tried to update a procedure with a null user id";
+	private static final String ERROR_FAIL_PATIENT_ID_NULL = "Internal error: tried to update a procedure with a null patient id";
+	private static final String ERROR_FAIL_PROCEDURE_NULL = "Internal error: tried to update a procedure with a null procedure";
+	private static final String ERROR_FAIL_PATIENT_ID_UNKNOWN = "Internal error: patient id does not exist in the database";
+	private static final String ERROR_FAIL_PATIENT_ID_HAS_NO_PROCEDURES = "Internal error: patient id has no procedures, add one first";
+	private static final String ERROR_FAIL_PROCEDURE_DOESNT_EXIST = "Internal error: procedure id does not exist, add one first";
+	
+	private static final String ERROR_FAIL_PROCEDURE_ID_NULL = "Internal error: tried to update a polyp with a null procedure id";
+	private static final String ERROR_FAIL_POLYP_NULL = "Internal error: tried to update a polyp with a null polyp";
+	private static final String ERROR_FAIL_PROCEDURE_ID_UNKNOWN = "Internal error: procedure id does not exist in the database";
+	private static final String ERROR_FAIL_PROCEDURE_ID_HAS_NO_POLYPS = "Internal error: procedure id has no polyps, add one first";
+	private static final String ERROR_FAIL_POLYP_DOESNT_EXIST = "Internal error: polyp with that id does not exist, add one first";
 	private static Random r = new Random(System.currentTimeMillis()-45060);
 
 	private static transient volatile Logger log = null;
@@ -57,6 +69,7 @@ public class DatastoreInterface {
 	private Map<String,Set<String>> unusedSalts;
 	private Map<String,Patient> patients; // <patient_id,Patient>
 	private Map<String, Map<String,Procedure>> procedures; //<patient_id,<procedure_id, Procedure>>
+	private Map<String, Map<String,Polyp>> polyps; //<procedure_id,<polyp_id, Polyp>>
 	
 	void setRandom(Random r){
 		DatastoreInterface.r = r;
@@ -315,8 +328,9 @@ public class DatastoreInterface {
 
 	private Map<String,Procedure> generateFakeProcedures() {
 
-		final int numProcedures = r.nextInt(4);
-		Map<String,Procedure> procedures= new HashMap<String,Procedure>(numProcedures);
+		final int numProcedures = r.nextInt(4)+4;
+		Map<String,Procedure> _procedures= new HashMap<String,Procedure>(numProcedures);
+		Map<String, Procedure> procedures = Collections.synchronizedMap(_procedures);
 		while(procedures.size() < numProcedures){
 			Procedure procedure = Procedure.generateFakeProcedure();
 			if(procedure != null){
@@ -327,6 +341,24 @@ public class DatastoreInterface {
 			}
 		}
 		return procedures;
+	}
+	
+	
+	private Map<String,Polyp> generateFakePolyps() {
+
+		final int numPolyps = r.nextInt(4)+1;
+		Map<String,Polyp> _polyps= new HashMap<String,Polyp>(numPolyps);
+		Map<String, Polyp> polyps = Collections.synchronizedMap(_polyps);
+		while(polyps.size() < numPolyps){
+			Polyp polyp = Polyp.generateFakePolyp();
+			if(polyp != null){
+				polyps.put(polyp.getPolypID(),polyp);
+			}
+			else{
+				getLog().error("Null polyp created ??!?!!?");
+			}
+		}
+		return polyps;
 	}
 
 	
@@ -379,6 +411,18 @@ public class DatastoreInterface {
 			return patient.getPatientID();
 		}
 	}
+	
+	public String updatePatient(String userID, String patientID, String mrID, String first, String last, String gender, Long dob) {
+		
+		if(!patients.containsKey(patientID)){
+			return "Patient with patient ID:"+patientID+" does not exist";
+		}
+		else{
+			Patient newPatient = new Patient(patientID,mrID,first,last,gender,dob);
+			patients.put(patientID, newPatient);
+		}
+		return null;
+	}
 
 	public String addProcedure(String userID, String patientID) {
 		if(userID != null){
@@ -400,16 +444,210 @@ public class DatastoreInterface {
 		return null;
 	}
 
-	public String updatePatient(String userID, String patientID, String mrID, String first, String last, String gender, Long dob) {
-		
-		if(!patients.containsKey(patientID)){
-			return "Patient with patient ID:"+patientID+" does not exist";
+
+
+	public String updateProcedure(String userID, String patientID, Procedure procedure) {
+		if(userID != null){
+			if(patientID != null){
+				if(procedure != null){
+					Map<String, Procedure> plist = procedures.get(patientID);
+					if(plist == null){
+						return ERROR_FAIL_PATIENT_ID_UNKNOWN;
+					}
+					else{
+						if (plist.size() == 0){
+							return ERROR_FAIL_PATIENT_ID_HAS_NO_PROCEDURES;
+						}
+						else{
+							Procedure p = plist.get(procedure.getProcedureID());
+							if(p == null){
+								return ERROR_FAIL_PROCEDURE_DOESNT_EXIST;
+							}
+							else{
+								if(procedure.getAcID() != null){
+									p.setAcID(procedure.getAcID());
+								}
+								if(procedure.getDateTimeOfService() != null){
+									if(p.setDateTimeOfService(procedure.getDateTimeOfService()) != null){
+										return procedure.ERROR_PATTERN_FAIL_DOS;
+									}
+								}
+								if(procedure.getFacultyID() != null){
+									p.setFacultyID(procedure.getFacultyID());
+								}
+								if(procedure.getFacultyID() != null){
+									p.setFacultyID(procedure.getFacultyID());
+								}
+
+								if(procedure.getLocation() != null){
+									p.setLocation(procedure.getLocation());
+								}
+								if(procedure.getFellow() != null){
+									p.setFellow(procedure.getFellow());
+								}
+								if(procedure.getPreDrug() != null){
+									p.setPreDrug(procedure.getPreDrug());
+								}
+								if(procedure.getPrepLiters() != null){
+									p.setPrepLiters(procedure.getPrepLiters());
+								}
+								if(procedure.getSplitPrep() != null){
+									p.setSplitPrep(procedure.getSplitPrep());
+								}
+								if(procedure.getBisacodyl() != null){
+									p.setBisacodyl(procedure.getBisacodyl());
+								}
+								if(procedure.getLastColon() != null){
+									p.setLastColon(procedure.getLastColon());
+								}
+								if(procedure.getPrimaryIndication() != null){
+									p.setPrimaryIndication(procedure.getPrimaryIndication());
+								}
+								if(procedure.getOtherIndication() != null){
+									p.setOtherIndication(procedure.getOtherIndication());
+								}
+								if(procedure.getScope() != null){
+									p.setScope(procedure.getScope());
+								}
+								if(procedure.getEndocuff() != null){
+									p.setEndocuff(procedure.getEndocuff());
+								}
+								if(procedure.getCapAssisted() != null){
+									p.setCapAssisted(procedure.getCapAssisted());
+								}
+								if(procedure.getUnderwater() != null){
+									p.setUnderwater(procedure.getUnderwater());
+								}
+								if(procedure.getSedationLevel() != null){
+									p.setSedationLevel(procedure.getSedationLevel());
+								}
+								if(procedure.getVersed() != null){
+									p.setVersed(procedure.getVersed());
+								}
+								if(procedure.getFentanyl() != null){
+									p.setFentanyl(procedure.getFentanyl());
+								}
+								if(procedure.getDemerol() != null){
+									p.setDemerol(procedure.getDemerol());
+								}
+								if(procedure.getBenadryl() != null){
+									p.setBenadryl(procedure.getBenadryl());
+								}
+								if(procedure.getExtent() != null){
+									p.setExtent(procedure.getExtent());
+								}
+								if(procedure.getPrepQualityLeft() != null){
+									p.setPrepQualityLeft(procedure.getPrepQualityLeft());
+								}
+								if(procedure.getPrepQualityMid() != null){
+									p.setPrepQualityMid(procedure.getPrepQualityMid());
+								}
+								if(procedure.getPrepQualityRight() != null){
+									p.setPrepQualityRight(procedure.getPrepQualityRight());
+								}
+								if(procedure.getTimeInsertion() != null){
+									p.setTimeInsertion(procedure.getTimeInsertion());
+								}
+								if(procedure.getTimeBeginWithdrawal() != null){
+									p.setTimeBeginWithdrawal(procedure.getTimeBeginWithdrawal());
+								}
+								if(procedure.getTimeScopeWithdrawn() != null){
+									p.setTimeScopeWithdrawn(procedure.getTimeScopeWithdrawn());
+								}
+
+
+								
+								plist.put(p.getProcedureID(), p);
+								procedures.put(patientID, plist);
+								return null; //No error
+							}
+						}
+					}
+				}
+				else{
+					return ERROR_FAIL_PROCEDURE_NULL;
+				}
+			}
+			else{
+				return ERROR_FAIL_PATIENT_ID_NULL;
+			}
 		}
 		else{
-			Patient newPatient = new Patient(patientID,mrID,first,last,gender,dob);
-			patients.put(patientID, newPatient);
+			return ERROR_FAIL_USER_ID_NULL;
+		}
+	}
+	
+	public Map<String, Polyp> getProcedurePolyps(String userID, String procedureID) {
+		if(polyps == null){
+			polyps = Collections.synchronizedMap(new HashMap<String,Map<String,Polyp>>());
+		}
+		if(polyps.get(procedureID) == null){
+			polyps.put(procedureID,generateFakePolyps());
+		}
+		return polyps.get(procedureID);
+	}
+
+	public String addPolyp(String userID, String procedureID) {
+		if(userID != null){
+			if(procedureID != null){
+				Polyp polyp = Polyp.generateFakePolyp();
+				
+				polyp.clearData();
+				
+				Map<String, Polyp> p = polyps.get(procedureID);
+				if(p == null){
+					p = new HashMap<String,Polyp>();
+				}
+				p.put(polyp.getPolypID(), polyp);
+				polyps.put(procedureID, p);
+				
+				return polyp.getPolypID();
+			}
 		}
 		return null;
+	}
+
+	public String updatePolyp(String userID, String procedure_id, Polyp polyp) {
+		if(userID != null){
+			if(procedure_id != null){
+				if(polyp != null){
+					Map<String, Polyp> plist = polyps.get(procedure_id);
+					if(plist == null){
+						return ERROR_FAIL_PROCEDURE_ID_UNKNOWN;
+					}
+					else{
+						if (plist.size() == 0){
+							return ERROR_FAIL_PROCEDURE_ID_HAS_NO_POLYPS;
+						}
+						else{
+							Polyp p = plist.get(polyp.getPolypID());
+							if(p == null){
+								return ERROR_FAIL_POLYP_DOESNT_EXIST;
+							}
+							else{
+								if(polyp.getTimeRemoved() != null){
+									p.setTimeRemoved(polyp.getTimeRemoved());
+								}
+
+								
+								plist.put(p.getPolypID(), p);
+								polyps.put(procedure_id, plist);
+								return null; //No error
+							}
+						}
+					}
+				}
+				else{
+					return ERROR_FAIL_POLYP_NULL;
+				}
+			}
+			else{
+				return ERROR_FAIL_PROCEDURE_ID_NULL;
+			}
+		}
+		else{
+			return ERROR_FAIL_USER_ID_NULL;
+		}
 	}
 
 }
