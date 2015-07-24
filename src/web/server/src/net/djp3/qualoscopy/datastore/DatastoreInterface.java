@@ -443,6 +443,22 @@ public class DatastoreInterface {
 		}
 		return null;
 	}
+	
+	public Procedure getProcedure(String userID, String patientID, String procedureID) {
+		if(userID != null){
+			if(patientID != null){
+				if(procedureID != null){
+					Map<String, Procedure> p = procedures.get(patientID);
+					
+					if(p != null){
+						return p.get(procedureID);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 
 
 
@@ -648,6 +664,20 @@ public class DatastoreInterface {
 		else{
 			return ERROR_FAIL_USER_ID_NULL;
 		}
+	}
+
+	public Polyp getPolyp(String userID, String procedureID, String polypID) {
+		if(userID != null){
+			if(procedureID != null){
+				if(polypID != null){
+					Map<String, Polyp> p = polyps.get(procedureID);
+					if(p != null){
+						return(p.get(polypID));
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 }

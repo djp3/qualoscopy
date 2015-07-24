@@ -154,6 +154,12 @@ public class QAPIEvent_UpdatePolyp extends QAPIEvent_CheckSession implements Clo
 					errors.add(errorMessage);
 					response.put("errors", errors);
 				}
+				else{
+					Polyp localpolyp = getDB().getPolyp(userID,procedure_id,polyp.getPolypID());
+					response.put("procedure_id",procedure_id);
+					response.put("polyp_id",localpolyp.getPolypID());
+					response.put("polyp", localpolyp.toJSON());
+				}
 			}
 		}
 			

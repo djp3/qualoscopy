@@ -483,6 +483,12 @@ public class QAPIEvent_UpdateProcedure extends QAPIEvent_CheckSession implements
 					errors.add(errorMessage);
 					response.put("errors", errors);
 				}
+				else{
+					Procedure localprocedure = getDB().getProcedure(userID,patient_id,procedure.getProcedureID());
+					response.put("patient_id", patient_id);
+					response.put("procedure_id", localprocedure.getProcedureID());
+					response.put("procedure", localprocedure.toJSON());
+				}
 			}
 		}
 			
