@@ -46,6 +46,12 @@ public class DatastoreInterface {
 	private static final String ERROR_FAIL_PATIENT_ID_UNKNOWN = "Internal error: patient id does not exist in the database";
 	private static final String ERROR_FAIL_PATIENT_ID_HAS_NO_PROCEDURES = "Internal error: patient id has no procedures, add one first";
 	private static final String ERROR_FAIL_PROCEDURE_DOESNT_EXIST = "Internal error: procedure id does not exist, add one first";
+	
+	private static final String ERROR_FAIL_PROCEDURE_ID_NULL = "Internal error: tried to update a polyp with a null procedure id";
+	private static final String ERROR_FAIL_POLYP_NULL = "Internal error: tried to update a polyp with a null polyp";
+	private static final String ERROR_FAIL_PROCEDURE_ID_UNKNOWN = "Internal error: procedure id does not exist in the database";
+	private static final String ERROR_FAIL_PROCEDURE_ID_HAS_NO_POLYPS = "Internal error: procedure id has no polyps, add one first";
+	private static final String ERROR_FAIL_POLYP_DOESNT_EXIST = "Internal error: polyp with that id does not exist, add one first";
 	private static Random r = new Random(System.currentTimeMillis()-45060);
 
 	private static transient volatile Logger log = null;
@@ -63,6 +69,7 @@ public class DatastoreInterface {
 	private Map<String,Set<String>> unusedSalts;
 	private Map<String,Patient> patients; // <patient_id,Patient>
 	private Map<String, Map<String,Procedure>> procedures; //<patient_id,<procedure_id, Procedure>>
+	private Map<String, Map<String,Polyp>> polyps; //<procedure_id,<polyp_id, Polyp>>
 	
 	void setRandom(Random r){
 		DatastoreInterface.r = r;
@@ -335,6 +342,24 @@ public class DatastoreInterface {
 		}
 		return procedures;
 	}
+	
+	
+	private Map<String,Polyp> generateFakePolyps() {
+
+		final int numPolyps = r.nextInt(4)+1;
+		Map<String,Polyp> _polyps= new HashMap<String,Polyp>(numPolyps);
+		Map<String, Polyp> polyps = Collections.synchronizedMap(_polyps);
+		while(polyps.size() < numPolyps){
+			Polyp polyp = Polyp.generateFakePolyp();
+			if(polyp != null){
+				polyps.put(polyp.getPolypID(),polyp);
+			}
+			else{
+				getLog().error("Null polyp created ??!?!!?");
+			}
+		}
+		return polyps;
+	}
 
 	
 
@@ -545,6 +570,79 @@ public class DatastoreInterface {
 			}
 			else{
 				return ERROR_FAIL_PATIENT_ID_NULL;
+			}
+		}
+		else{
+			return ERROR_FAIL_USER_ID_NULL;
+		}
+	}
+	
+	public Map<String, Polyp> getProcedurePolyps(String userID, String procedureID) {
+		if(polyps == null){
+			polyps = Collections.synchronizedMap(new HashMap<String,Map<String,Polyp>>());
+		}
+		if(polyps.get(procedureID) == null){
+			polyps.put(procedureID,generateFakePolyps());
+		}
+		return polyps.get(procedureID);
+	}
+
+	public String addPolyp(String userID, String procedureID) {
+		if(userID != null){
+			if(procedureID != null){
+				Polyp polyp = Polyp.generateFakePolyp();
+				
+				polyp.clearData();
+				
+				Map<String, Polyp> p = polyps.get(procedureID);
+				if(p == null){
+					p = new HashMap<String,Polyp>();
+				}
+				p.put(polyp.getPolypID(), polyp);
+				polyps.put(procedureID, p);
+				
+				return polyp.getPolypID();
+			}
+		}
+		return null;
+	}
+
+	public String updatePolyp(String userID, String procedure_id, Polyp polyp) {
+		if(userID != null){
+			if(procedure_id != null){
+				if(polyp != null){
+					Map<String, Polyp> plist = polyps.get(procedure_id);
+					if(plist == null){
+						return ERROR_FAIL_PROCEDURE_ID_UNKNOWN;
+					}
+					else{
+						if (plist.size() == 0){
+							return ERROR_FAIL_PROCEDURE_ID_HAS_NO_POLYPS;
+						}
+						else{
+							Polyp p = plist.get(polyp.getPolypID());
+							if(p == null){
+								return ERROR_FAIL_POLYP_DOESNT_EXIST;
+							}
+							else{
+								if(polyp.getTimeRemoved() != null){
+									p.setTimeRemoved(polyp.getTimeRemoved());
+								}
+
+								
+								plist.put(p.getPolypID(), p);
+								polyps.put(procedure_id, plist);
+								return null; //No error
+							}
+						}
+					}
+				}
+				else{
+					return ERROR_FAIL_POLYP_NULL;
+				}
+			}
+			else{
+				return ERROR_FAIL_PROCEDURE_ID_NULL;
 			}
 		}
 		else{
