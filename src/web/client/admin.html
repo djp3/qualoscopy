@@ -62,92 +62,105 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3 class="modal-title">Add New Paitent</h3>
       </div>
-      <div class="modal-body">
-        <div class="form-group">
+      <form id="addPatientForm">
+        <div class="modal-body">
+          <div class="form-group">
 
-          <!-- Text input -->
-          <div class="row">
-            <div class="col-md-3">
-              <h4>MR</h4>
-              <label>
-                <input class="form-control" type="text" placeholder="Enter MR">
-              </label>
-            </div>
-            <div class="col-md-3">
-              <h4>First Name</h4>
-              <label>
-                <input class="form-control" type="text" placeholder="Enter First Name">
-              </label>
-            </div>
-            <div class="col-md-3">
-              <h4>Last Name</h4>
-              <label>
-                <input class="form-control" type="text" placeholder="Enter Last Name">
-              </label>
-            </div>
-            <div class="col-md-3">
-              <h4>Gender</h4>
-              <label>
-                <input class="form-control" type="text" name="AC" placeholder="Enter Gender">
-              </label>
-            </div>
-          </div><!-- /.row -->
+            <!-- Text input -->
+            <div class="row">
+              <div class="col-md-2">
+                <h4>MR*</h4>
+                <label>
+                  <input id="mr" required class="form-control" type="text" placeholder="Enter MR">
+                </label>
+              </div>
+              <div class="col-md-2">
+                <h4>First Name*</h4>
+                <label>
+                  <input id="first-name" required class="form-control" type="text" placeholder="First Name">
+                </label>
+              </div>
+              <div class="col-md-3">
+                <h4>Last Name*</h4>
+                <label>
+                  <input id="last-name" required class="form-control" type="text" placeholder="Last Name">
+                </label>
+              </div>
+              <div class="col-md-3">
+                <h4>Date of Birth*</h4>
+                <div class='input-group date'>
+                  <input required id='dob' type='text' class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <h4>Gender*</h4>
+                <select id='gender' class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                  <option>M</option>
+                  <option>F</option>
+                  <option>O</option>
+                </select>
+              </div>
+            </div><!-- /.row -->
 
-          <!-- Schedule Operation -->
-          <div class="row">
-            <div class="col-md-12">
-              <h3>Schedule a Procedure (Optional)</h3>
-            </div>
-          </div>
-
-          <!-- Text input -->
-          <div class="row">
-            <div class="col-md-3">
-              <h4>AC</h4>
-              <label>
-                <input class="form-control" type="text" placeholder="Enter AC">
-              </label>
-            </div>
-            <div class="col-md-3">
-              <h4>Operation Date</h4>
-              <div class='input-group date'>
-                <input id='operationDate' type='text' class="form-control" />
-                <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-calendar"></span>
-                </span>
+            <!-- Schedule Operation -->
+            <div class="row">
+              <div class="col-md-12">
+                <h3>Schedule a Procedure (Optional)</h3>
               </div>
             </div>
-            <div class="col-md-3">
-              <h4>Operation Time</h4>
-              <div class='input-group date'>
-                <input id='operationTime' type='text' class="form-control" />
-                <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-time"></span>
-                </span>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <h4>Faculty</h4>
-              <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                <option>None</option>
-                <option>Karnes, Willam</option>
-                <option>Saget, Bob</option>
-                <option>Doctor, 3</option>
-                <option>Doctor, 4</option>
-                <option>Doctor, 5</option>
-                <option>Doctor, 6</option>
-                <option>Doctor, 7</option>
-                <option>Doctor, 8</option>
-                <option>Doctor, 9</option>
-              </select>
-            </div>
-          </div><!-- /.row -->
 
-        </div><!-- form-group -->
-      </div><!-- modal-body -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
-      </div>
+            <!-- Text input -->
+            <div class="row">
+              <div class="col-md-3">
+                <h4>AC</h4>
+                <label>
+                  <input id="ac" class="form-control" type="text" placeholder="Enter AC">
+                </label>
+              </div>
+              <div class="col-md-3">
+                <h4>Operation Date</h4>
+                <div class='input-group date'>
+                  <input id='operationDate' type='text' class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <h4>Operation Time</h4>
+                <div class='input-group date'>
+                  <input id='operationTime' type='text' class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <h4>Faculty</h4>
+                <select id='faculty' class="selectpicker show-tick" data-width="100%" data-live-search="true">
+                  <option>None</option>
+                  <option>Karnes, Willam</option>
+                  <option>Saget, Bob</option>
+                  <option>Doctor, 3</option>
+                  <option>Doctor, 4</option>
+                  <option>Doctor, 5</option>
+                  <option>Doctor, 6</option>
+                  <option>Doctor, 7</option>
+                  <option>Doctor, 8</option>
+                  <option>Doctor, 9</option>
+                </select>
+              </div>
+            </div><!-- /.row -->
+
+          </div><!-- form-group -->
+        </div><!-- modal-body -->
+        <div class="modal-footer">
+          <input id="save" type="submit" class="btn btn-default" value="save"/>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -156,14 +169,14 @@
 <div class="container">
   <div clas="row">
     <div class="col-md-2">
-      <button class="btn btn-primary btn-lg center-block">View All Patients</button>
+      <button id="viewAllPatients" class="btn btn-primary btn-lg center-block">View All Patients</button>
     </div>
     <div class="col-md-3">
-      <button class="btn btn-primary btn-lg center-block">View Today's Patients</button>
+      <button id="viewTodaysPatients" class="btn btn-primary btn-lg center-block">View Today's Patients</button>
     </div>
     <div class="col-md-2">
-      <button class="btn btn-primary btn-lg pull-left" data-toggle='modal'
-        data-target='#addPatient'>Add New Patient
+      <button id='add-p' class="btn btn-primary btn-lg pull-left"
+       data-toggle='modal' data-target='#addPatient'>Add New Patient
       </button>
     </div>
     <div class="col-md-5">
@@ -177,6 +190,7 @@
       <table id="paitents" class='table table-hover table-bordered table-striped'>
         <thead>
           <tr>
+            <th style="display:none">Number</th>
             <th>MR</th>
             <th>Last Name</th>
             <th>First Name</th>
