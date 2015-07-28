@@ -82,14 +82,16 @@
               <!-- Dropdown -->
               <div class="row">
                 <div class="col-md-12">
-                  <label for="Location" name="location"><h4>Location</h4></label>
-                  <select class="form-control" id="location">
+                  <!-- <label for="Location" name="location"><h4>Location</h4></label> -->
+                  <h4>Location</h4>
+                  <label><input id="location" required class="form-control" type="text" name="location"></label>
+                  <!-- <select class="form-control" id="location">
                     <option>Bldg200</option>
                     <option>CathLab</option>
                     <option>OSS</option>
                     <option>OR</option>
                     <option>CDDC</option>
-                  </select>
+                  </select> -->
                 </div>
               </div>
             </div>
@@ -117,7 +119,7 @@
             </div>
 
             <div class="row">
-              <div class='col-md-12'>
+              <div class='col-md-6'>
                 <h4>Faculty</h4>
                 <select id='faculty' class="selectpicker show-tick" data-live-search="true">
                   <option>Karnes, William</option>
@@ -125,36 +127,34 @@
                   <option>Don, Patterson</option>
                   <option>Doctor, 3</option>
                   <option>Doctor, 4</option>
-                  <option>Doctor, 5</option>
-                  <option>Doctor, 6</option>
-                  <option>Doctor, 7</option>
-                  <option>Doctor, 8</option>
-                  <option>Doctor, 9</option>
                 </select>
                 </div>
-              </div>
-
-
-            <div class="row">
-              <div class='col-md-12'>
-                <h4>Fellow</h4>
-                <select id="fellow" class="selectpicker show-tick" title="" data-live-search="true">
-                  <option>None</option>
-                  <option>Skywalker, Luke</option>
-                  <option>Solo, Hans</option>
-                  <option>Fellow, 3</option>
-                  <option>Fellow, 4</option>
-                  <option>Fellow, 5</option>
-                  <option>Fellow, 6</option>
-                  <option>Fellow, 7</option>
-                  <option>Fellow, 8</option>
-                  <option>Fellow, 9</option>
-                </select>
+                <div class='col-md-6'>
+                  <h4>Fellow</h4>
+                  <select id="fellow" class="selectpicker show-tick" title="" data-live-search="true">
+                    <option>None</option>
+                    <option>Skywalker, Luke</option>
+                    <option>Solo, Hans</option>
+                    <option>Fellow, 3</option>
+                    <option>Fellow, 4</option>
+                  </select>
                 </div>
               </div>
 
             <div class="modal-footer">
-              <input type="submit" class="btn btn-default" value="Save"/>
+              <div class="row">
+                <div class='col-md-10'>
+                  <div class="progress hide">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar"
+                    aria-valuenow="0" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+                    Saving
+                    </div>
+                  </div>
+                </div>
+                <div class='col-md-2'>
+                  <input id="save1" type="submit" class="btn btn-default" value="Save"/>
+                </div>
+              </div>
             </div>
             </form>
           </div>

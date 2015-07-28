@@ -1,3 +1,6 @@
+// var itemval= '<option>TEST</option>';
+// $("#faculty").append(itemval);
+
 $(document).ready(function() {
   // The function tableMaker
   var tableMaker = function(buttonName, buttonID, numberOfColumns, buttonTarget,
@@ -39,6 +42,7 @@ $(document).ready(function() {
   var procedure_id = Cookies.getCookie("procedure_id");
   var procedure;
 
+
   var populatePolypsTable = function(){
     var salts = JSON.parse(Cookies.getCookie("salts"));
     getProceduresPolyps(salts, user_id, session_id, session_key,
@@ -51,7 +55,7 @@ $(document).ready(function() {
 
           $("#tables").append(tableMaker("Add Polyps or Mass", "btn_addPolypOrMass", 8, "#addPolypOrMass", "col-md-8", "table7",
           ["Loc", "Phe", "Num", "Size", "Tx", "Residual", "Bottle", "Path"],
-          [polyps[0].polyp_id, "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE"]));
+          ["NA", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE"]));
 
         }
       });
@@ -60,12 +64,17 @@ $(document).ready(function() {
   var createButtonFunctions = function(){
     $("#btn_identifiers").click(function(){
       document.getElementById("ac_id").value = procedure.ac_id;
-      // document.getElementById("location").value = procedure.location;
+      document.getElementById("location").value = procedure.location;
       var dateArray = procedure.date_time_of_service.split(" ");
       document.getElementById("date_of_service").value = dateArray[0];
       document.getElementById("service_time").value = dateArray[1];
-      document.getElementById("faculty").value = procedure.faculty_id;
-      document.getElementById("fellow").value = procedure.fellow;
+      // var itemval= '<option>'+ procedure.faculty_id + '</option>';
+      // $("#faculty").append(itemval);
+      // TODO I can populate this list with options from the database
+      // facultySelect.options[0] = new Option(procedure.faculty_id, "faculty_id", true, true);
+      // var fellowSelect = document.getElementById("fellow");
+      // // TODO I can populate this list with options from the database
+      // fellowSelect.options[0] = new Option(procedure.fellow, "fellow_id", false, false);
     });
   }
 
@@ -75,7 +84,7 @@ $(document).ready(function() {
 
     // Created each table programically
     // Identifiers
-    $allTables.push(tableMaker("Identifiers", "btn_identifiers", 4, "#identifiers", "col-md-4", "table0",
+    $allTables.push(tableMaker("Identifiers", "btn_identifiers", 4, "#identifiers", "col-md-5", "table0",
     ["Account Number", "Date of Service", "Faculty", "Fellow"],
     [procedure.ac_id, procedure.date_time_of_service, procedure.faculty_id, procedure.fellow]));
 
@@ -87,7 +96,7 @@ $(document).ready(function() {
     // Indications
     $allTables.push(tableMaker("Indications", "btn_indications", 5, "#indications", "col-md-5", "table2",
     ["Last Colon", "Indication", "Category", "Subcategory", "Specifics"],
-    [procedure.last_colon + " years", procedure.primary_indication, "NEED THIS", "NEED THIS", "NEED THIS"]));
+    [procedure.last_colon + " years", procedure.primary_indication, "NA", "NA", "NA"]));
 
     // Scope
     $allTables.push(tableMaker("Scope", "btn_scope", 4, "#scope", "col-md-4", "table3",
@@ -97,12 +106,12 @@ $(document).ready(function() {
     // Sedation
     $allTables.push(tableMaker("Sedation", "btn_sedation", 6, "#sedation", "col-md-5", "table4",
     ["Sedation Level", "Versed", "Fentanyl", "Demerol", "Benadryl", "Other Med"],
-    [procedure.sedation_level, procedure.versed, procedure.fentanyl, procedure.demerol, procedure.benadryl, "NEED THIS"]));
+    [procedure.sedation_level, procedure.versed, procedure.fentanyl, procedure.demerol, procedure.benadryl, "NA"]));
 
     // Extent
     $allTables.push(tableMaker("Extent", "btn_extent", 2, "#extent", "col-md-2", "table5",
     ["Extent", "Reson Incomplete"],
-    [procedure.extent, "NEED THIS"]));
+    [procedure.extent, "NA"]));
 
     // Prep Quality
     $allTables.push(tableMaker("Prep Quality", "btn_quality", 3, "#quality", "col-md-3", "table6",
@@ -119,6 +128,19 @@ $(document).ready(function() {
     }
     createButtonFunctions();
     populatePolypsTable();
+  }
+
+  var updateTables = function(procedure){
+    $("#tables").empty();
+    populateTables(procedure);
+  }
+
+  var updateProgressBar = function(show){
+    if (show == true ){
+      $('.progress').removeClass('hide');
+    } else {
+      $(".progress").addClass('hide');
+    }
   }
 
 
@@ -139,7 +161,13 @@ $(document).ready(function() {
 
   $("#identifiersForm").submit(function(){
     event.preventDefault();
-
+    updateProgressBar(true);
+    var form = document.getElementById("identifiersForm");
+    var elements = form.elements;
+    for (var i = 0, len = elements.length; i < len; ++i) {
+      elements[i].readOnly = true;
+    }
+    document.getElementById("save1").setAttribute("disabled", true);
     var patient_id = Cookies.getCookie("patient_id");
     var salts = JSON.parse(Cookies.getCookie("salts"));
     var ac_id = $("#ac_id").val();
@@ -151,6 +179,7 @@ $(document).ready(function() {
     var fellow_id = $("#fellow").val();
     var procedure_id = Cookies.getCookie("procedure_id");
 
+
     if (procedure_id != null){
       updateProcedure(salts, user_id, session_id, session_key, patient_id,
         procedure_id, {"ac_id": ac_id,
@@ -160,7 +189,15 @@ $(document).ready(function() {
             if (debug) console.log(data);
             if(data.error == "false"){
               Cookies.addToCookieArray("salts", data.salt, 1);
-              window.document.location = "main.html";
+              updateTables(data.procedure);
+              for (var i = 0, len = elements.length; i < len; ++i) {
+                elements[i].readOnly = false;
+              }
+              document.getElementById("save1").removeAttribute("disabled");
+              updateProgressBar(false);
+              $("#identifiers").modal('toggle');
+
+              // window.document.location = "main.html";
             }
           });
       }
