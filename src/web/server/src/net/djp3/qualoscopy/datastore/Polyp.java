@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.PrimaryKey;
+
 import net.minidev.json.JSONObject;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.uci.ics.luci.utility.CalendarCache;
 
+@PersistenceCapable
 public class Polyp {
 	
 	private static Random random = new Random();
@@ -43,6 +47,7 @@ public class Polyp {
 	public final SimpleDateFormat sdf;
 	public final SimpleDateFormat shortSdf;
 	
+	@PrimaryKey
 	String polypID = null;
 	Long time_removed = null;
 	

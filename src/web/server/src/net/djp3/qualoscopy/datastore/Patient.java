@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import net.minidev.json.JSONObject;
 
@@ -12,7 +14,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.uci.ics.luci.utility.CalendarCache;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.PrimaryKey;
 
+@PersistenceCapable
 public class Patient {
 	private static final Random r = new Random(System.currentTimeMillis()-234134);
 	
@@ -79,12 +84,15 @@ public class Patient {
 	
 	private final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	
-	private String patientID;
-	private String medicalRecordID;
-	private String firstName;
-	private String lastName;
-	private String gender;
-	private Long dateOfBirth;
+	@PrimaryKey
+	private String patientID = null;
+	private String medicalRecordID = null;
+	private String firstName = null;
+	private String lastName = null;
+	private String gender = null;
+	private Long dateOfBirth = null;
+	
+	private Set<Polyp> polyps = new HashSet<Polyp>();
 	
 	/**
 	 * 
