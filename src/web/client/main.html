@@ -177,7 +177,7 @@
             <div class="row">
               <div class='col-md-12'>
                 <h4>Prep</h4>
-                <select class="selectpicker show-tick" data-live-search="true">
+                <select id="prep_drug" class="selectpicker show-tick" data-live-search="true">
                   <option>None</option>
                   <option>Drug 1</option>
                   <option>Drug 2</option>
@@ -197,7 +197,7 @@
               <div class="col-md-4">
                 <h4>Prep Liters</h4>
                 <form role="form">
-                  <div class="radio btn-group-vertical btn-block">
+                  <div class="radio btn-group-vertical btn-block prep_liters">
                     <label class="btn btn-primary">
                       <input type="radio" name="optradio">None
                     </label>
@@ -238,7 +238,7 @@
               <div class="col-md-4">
                 <h4>Bisacodyl?</h4>
                 <form role="form">
-                  <div class="radio btn-group-vertical btn-block">
+                  <div required class="radio btn-group-vertical btn-block">
                     <label class="btn btn-primary">
                       <input type="radio" name="optradio">Yes
                     </label>
@@ -252,7 +252,19 @@
 
           </div>
           <div class="modal-footer">
-            <input type="submit" class="btn btn-default" value="save"/>
+            <div class="row">
+              <div class='col-md-10'>
+                <div class="progress hide">
+                  <div class="progress-bar progress-bar-striped active" role="progressbar"
+                  aria-valuenow="0" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+                  Saving
+                  </div>
+                </div>
+              </div>
+              <div class='col-md-2'>
+                <button id="savePrep" class="btn btn-default">Save</button>
+              </div>
+            </div>
           </div>
         </form>
         </div>

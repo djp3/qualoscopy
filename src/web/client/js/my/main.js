@@ -1,3 +1,4 @@
+// TODO: need a call to populate Faculty
 // var itemval= '<option>TEST</option>';
 // $("#faculty").append(itemval);
 
@@ -68,14 +69,30 @@ $(document).ready(function() {
       var dateArray = procedure.date_time_of_service.split(" ");
       document.getElementById("date_of_service").value = dateArray[0];
       document.getElementById("service_time").value = dateArray[1];
+      //TODO Still cant figure out selectors
+      // var selectedIndex = 0;
+      // var facultyArray = [];
+      // $("#faculty option").each(function(){
+      //   facultyArray.push($(this).val())
+      // });
+      // for(var i = 0; i < facultyArray.length; i++){
+      //   if (facultyArray[i] == procedure.faculty_id){
+      //     break;
+      //   } else {
+      //     selectedIndex++;
+      //   }
+      // }
+      // if (debug) console.log(facultyArray);
+      // To select via index
+      // $('#faculty :nth-child(' + selectedIndex + ')').prop('selected', true);
+      // $("#faculty").change();
       // var itemval= '<option>'+ procedure.faculty_id + '</option>';
       // $("#faculty").append(itemval);
-      // TODO I can populate this list with options from the database
       // facultySelect.options[0] = new Option(procedure.faculty_id, "faculty_id", true, true);
       // var fellowSelect = document.getElementById("fellow");
-      // // TODO I can populate this list with options from the database
       // fellowSelect.options[0] = new Option(procedure.fellow, "fellow_id", false, false);
     });
+
   }
 
   var populateTables = function(procedure){
@@ -135,11 +152,28 @@ $(document).ready(function() {
     populateTables(procedure);
   }
 
-  var updateProgressBar = function(show){
+  var toggleForm = function(id, readOnly){
+    var form = document.getElementById(id);
+    var elements = form.elements;
+    for (var i = 0, len = elements.length; i < len; ++i) {
+      elements[i].readOnly = readOnly;
+    }
+  }
+
+  var toggleProgressBar = function(show){
     if (show == true ){
       $('.progress').removeClass('hide');
     } else {
       $(".progress").addClass('hide');
+    }
+  }
+
+  var toggleSaveButton = function(id, state){
+    var button = document.getElementById(id);
+    if(state == false){
+      button.setAttribute("disabled", true);
+    } else {
+      button.removeAttribute("disabled");
     }
   }
 
@@ -161,13 +195,10 @@ $(document).ready(function() {
 
   $("#identifiersForm").submit(function(){
     event.preventDefault();
-    updateProgressBar(true);
-    var form = document.getElementById("identifiersForm");
-    var elements = form.elements;
-    for (var i = 0, len = elements.length; i < len; ++i) {
-      elements[i].readOnly = true;
-    }
-    document.getElementById("save1").setAttribute("disabled", true);
+    toggleSaveButton("save1", false);
+    toggleForm("identifiersForm", true);
+    toggleProgressBar(true);
+
     var patient_id = Cookies.getCookie("patient_id");
     var salts = JSON.parse(Cookies.getCookie("salts"));
     var ac_id = $("#ac_id").val();
@@ -190,21 +221,60 @@ $(document).ready(function() {
             if(data.error == "false"){
               Cookies.addToCookieArray("salts", data.salt, 1);
               updateTables(data.procedure);
-              for (var i = 0, len = elements.length; i < len; ++i) {
-                elements[i].readOnly = false;
-              }
-              document.getElementById("save1").removeAttribute("disabled");
-              updateProgressBar(false);
+              toggleSaveButton("save1", true);
+              toggleForm("identifiersForm", false);
+              toggleProgressBar(false);
               $("#identifiers").modal('toggle');
-
-              // window.document.location = "main.html";
             }
           });
       }
   });
 
-  $("#preparationForm").submit(function(){
-    event.preventDefault();
+  $("#savePrep").click(function(){
+    toggleSaveButton("savePrep", false);
+    toggleForm("preparationForm", true);
+    toggleProgressBar(true);
+
+    var prep_liters;
+    var salts = JSON.parse(Cookies.getCookie("salts"));
+    var procedure_id = Cookies.getCookie("procedure_id");
+
+    var prep_drug = $("#prep_drug").val();
+
+    // $(".prep_liters .input").click(function() {
+    //   // whenever a button is clicked, set the hidden helper
+    //   prep_liters = $(this).text();
+    // });
+
+
+
+    var prep_liters = $('input[name=liters]:checked', '#preparationForm').val();
+    var split_prep = $('input[name=radioName]:checked', '#myForm').val();
+    var bisacodyl = $('input[name=radioName]:checked', '#myForm').val();
+    if (debug) console.log(prep_liters);
+
+    var patient_id = Cookies.getCookie("patient_id");
+
+
+
+
+    if (procedure_id != null){
+      updateProcedure(salts, user_id, session_id, session_key, patient_id,
+        procedure_id, {"prep_drug": prep_drug,
+        "prep_liters": prep_liters, "split_prep": split_prep,
+        "bisacodyl": bisacodyl}).done(
+          function(data) {
+            if (debug) console.log(data);
+            if(data.error == "false"){
+              Cookies.addToCookieArray("salts", data.salt, 1);
+              updateTables(data.procedure);
+              toggleSaveButton("savePrep", true);
+              toggleForm("preparationForm", false);
+              toggleProgressBar(false);
+              $("#preparation").modal('toggle');
+            }
+          });
+      }
   });
 
   $(function () {
