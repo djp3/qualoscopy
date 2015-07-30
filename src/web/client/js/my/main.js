@@ -1,8 +1,5 @@
-// TODO: need a call to populate Faculty
-// var itemval= '<option>TEST</option>';
-// $("#faculty").append(itemval);
-
 $(document).ready(function() {
+
   // The function tableMaker
   var tableMaker = function(buttonName, buttonID, numberOfColumns, buttonTarget,
       tableLength, tableId, columnNames, columnValues){
@@ -38,14 +35,10 @@ $(document).ready(function() {
         return $element;
   };
 
-  var salts = JSON.parse(Cookies.getCookie("salts"));
-  var patient_id = Cookies.getCookie("patient_id");
-  var procedure_id = Cookies.getCookie("procedure_id");
-  var procedure;
-
-
+  // Populating Polyps table
   var populatePolypsTable = function(){
     var salts = JSON.parse(Cookies.getCookie("salts"));
+    var procedure_id = Cookies.getCookie("procedure_id");
     getProceduresPolyps(salts, user_id, session_id, session_key,
       procedure_id).done(function(data){
         if (debug) console.log(data);
@@ -62,35 +55,36 @@ $(document).ready(function() {
       });
   }
 
-  var createButtonFunctions = function(){
+  // Create click functions for buttons
+  var createButtonFunctions = function(procedure){
     $("#btn_identifiers").click(function(){
-      document.getElementById("ac_id").value = procedure.ac_id;
-      document.getElementById("location").value = procedure.location;
+      $("#ac_id").val(procedure.ac_id);
+      // document.getElementById("location").value = procedure.location;
       var dateArray = procedure.date_time_of_service.split(" ");
-      document.getElementById("date_of_service").value = dateArray[0];
-      document.getElementById("service_time").value = dateArray[1];
-      //TODO Still cant figure out selectors
-      // var selectedIndex = 0;
-      // var facultyArray = [];
-      // $("#faculty option").each(function(){
-      //   facultyArray.push($(this).val())
-      // });
-      // for(var i = 0; i < facultyArray.length; i++){
-      //   if (facultyArray[i] == procedure.faculty_id){
-      //     break;
-      //   } else {
-      //     selectedIndex++;
-      //   }
-      // }
-      // if (debug) console.log(facultyArray);
-      // To select via index
-      // $('#faculty :nth-child(' + selectedIndex + ')').prop('selected', true);
-      // $("#faculty").change();
-      // var itemval= '<option>'+ procedure.faculty_id + '</option>';
-      // $("#faculty").append(itemval);
-      // facultySelect.options[0] = new Option(procedure.faculty_id, "faculty_id", true, true);
-      // var fellowSelect = document.getElementById("fellow");
-      // fellowSelect.options[0] = new Option(procedure.fellow, "fellow_id", false, false);
+      $("#date_of_service").val(dateArray[0]);
+      $("#service_time").val(dateArray[1]);
+      $("#" + procedure.location).addClass("active");
+      $("#" + procedure.location + " input").prop('checked', "checked");
+
+      $("#" + procedure.faculty_id).addClass("active");
+      $("#" + procedure.faculty_id + " input").prop('checked', "checked");
+
+      $("#" + procedure.fellow).addClass("active");
+      $("#" + procedure.fellow + " input").prop('checked', "checked");
+
+    });
+
+    $("#btn_preparation").click(function(){
+      $("#pre_drug").on('change', function(){
+        if(this.value == "Other"){
+          $('.other').removeClass('hide');
+          $('#pre_drug_other').prop('required',true);
+        } else {
+          $('.other').addClass('hide');
+          $('#pre_drug_other').removeAttr('required');
+        }
+      });
+
     });
 
   }
@@ -101,14 +95,14 @@ $(document).ready(function() {
 
     // Created each table programically
     // Identifiers
-    $allTables.push(tableMaker("Identifiers", "btn_identifiers", 4, "#identifiers", "col-md-5", "table0",
-    ["Account Number", "Date of Service", "Faculty", "Fellow"],
-    [procedure.ac_id, procedure.date_time_of_service, procedure.faculty_id, procedure.fellow]));
+    $allTables.push(tableMaker("Identifiers", "btn_identifiers", 5, "#identifiers", "col-md-5", "table0",
+    ["Account Number", "Service Time", "Location", "Faculty", "Fellow"],
+    [procedure.ac_id, procedure.date_time_of_service, procedure.location, procedure.faculty_id, procedure.fellow]));
 
     // Preparation
-    $allTables.push(tableMaker("Preparation", "btn_preparation", 3, "#preparation", "col-md-3", "table1",
-    ["Prep Liters", "Split Prep", "Bisacodyl"],
-    [procedure.prep_liters, procedure.split_prep, procedure.bisacodyl]));
+    $allTables.push(tableMaker("Preparation", "btn_preparation", 4, "#preparation", "col-md-4", "table1",
+    ["Prep Drug", "Prep Liters", "Split Prep", "Bisacodyl"],
+    [procedure.pre_drug, procedure.prep_liters, procedure.split_prep, procedure.bisacodyl]));
 
     // Indications
     $allTables.push(tableMaker("Indications", "btn_indications", 5, "#indications", "col-md-5", "table2",
@@ -143,7 +137,7 @@ $(document).ready(function() {
     for (var i = 0; i < $allTables.length; i++) {
       $("#tables").append($allTables[i]);
     }
-    createButtonFunctions();
+    createButtonFunctions(procedure);
     populatePolypsTable();
   }
 
@@ -152,132 +146,197 @@ $(document).ready(function() {
     populateTables(procedure);
   }
 
-  var toggleForm = function(id, readOnly){
+  var toggleForm = function(id, disabled){
     var form = document.getElementById(id);
     var elements = form.elements;
-    for (var i = 0, len = elements.length; i < len; ++i) {
-      elements[i].readOnly = readOnly;
+    if (disabled == true){
+      for (var i = 0, len = elements.length; i < len; ++i) {
+        elements[i].setAttribute("disabled", true);
+      }
+    } else {
+      for (var i = 0, len = elements.length; i < len; ++i) {
+        elements[i].removeAttribute("disabled");
+      }
     }
   }
 
   var toggleProgressBar = function(show){
-    if (show == true ){
+    if (show == true){
       $('.progress').removeClass('hide');
     } else {
       $(".progress").addClass('hide');
     }
   }
 
-  var toggleSaveButton = function(id, state){
-    var button = document.getElementById(id);
-    if(state == false){
-      button.setAttribute("disabled", true);
-    } else {
-      button.removeAttribute("disabled");
-    }
+
+  var saveProcedureForm = function(opts, formID, modalID){
+    toggleProgressBar(true);
+    toggleForm(formID, true);
+
+    var salts = JSON.parse(Cookies.getCookie("salts"));
+    var procedure_id = Cookies.getCookie("procedure_id");
+    var patient_id = Cookies.getCookie("patient_id");
+
+    if (procedure_id != null){
+      updateProcedure(salts, user_id, session_id, session_key, patient_id,
+        procedure_id, opts).done(
+          function(data) {
+            if (debug) console.log(data);
+            if(data.error == "false"){
+              Cookies.addToCookieArray("salts", data.salt, 1);
+              updateTables(data.procedure);
+              toggleForm(formID, false);
+              toggleProgressBar(false);
+              $(modalID).modal('toggle');
+            }
+          });
+      }
   }
 
+  var buttonListMaker = function(valueList, buttonGroupName){
+    var elementString = "<div class='button-list'> \
+      <div class='btn-group-vertical center-block' data-toggle='buttons'>";
 
+    for (var i = 0; i < valueList.length; i++){
+      elementString += " \
+      <label id=" + valueList[i] + " class='btn btn-primary'> \
+        <input required type='radio' name=" + buttonGroupName +
+        " value=" + valueList[i]  + ">" + valueList[i]  +" \
+      </label>";
+    }
 
+     return $(elementString);
+  }
 
-  updateProcedure(salts, user_id, session_id, session_key,
-    patient_id, procedure_id,{}).done(function(data) {
-      if (debug) console.log(data);
-      if(data.error == "false") {
-        procedure = data.procedure;
-        Cookies.addToCookieArray("salts", data.salt, 1);
-        populateTables(procedure);
-      }
-  });
+  var loadButtonLists = function() {
+    var locationArray = ["Bldg200", "CathLab", "OSS", "OR", "CDDC", "UCI 1", "UCI 2"];
+    $("#location_selector").append(buttonListMaker(locationArray, "location"));
+
+    var facultyArray = ["DrKarnes", "DrRaus", "DrPatterson", "DrSpock"];
+    $("#faculty_selector").append(buttonListMaker(facultyArray, "faculty"));
+
+    var fellowArray = ["None", "Pr. John", "Smith", "Carel", "Mike", "John", "Pat"];
+    $("#fellow_selector").append(buttonListMaker(fellowArray, "fellow"));
+  }
+
+  // Populate the tables on reloads
+  var onLoad = function(){
+    var salts = JSON.parse(Cookies.getCookie("salts"));
+    var patient_id = Cookies.getCookie("patient_id");
+    var procedure_id = Cookies.getCookie("procedure_id");
+    updateProcedure(salts, user_id, session_id, session_key,
+      patient_id, procedure_id,{}).done(function(data) {
+        if (debug) console.log(data);
+        if(data.error == "false") {
+          Cookies.addToCookieArray("salts", data.salt, 1);
+          populateTables(data.procedure);
+          loadButtonLists();
+        }
+    });
+  }
+
+  onLoad();
 
 
 
 
   $("#identifiersForm").submit(function(){
     event.preventDefault();
-    toggleSaveButton("save1", false);
-    toggleForm("identifiersForm", true);
-    toggleProgressBar(true);
 
-    var patient_id = Cookies.getCookie("patient_id");
-    var salts = JSON.parse(Cookies.getCookie("salts"));
     var ac_id = $("#ac_id").val();
     var date_of_service = $("#date_of_service").val();
     var service_time = $("#service_time").val();
     var date_time_of_service = date_of_service + " " + service_time;
-    var location = $("#location").val();
-    var faculty_id = $("#faculty").val();
-    var fellow_id = $("#fellow").val();
-    var procedure_id = Cookies.getCookie("procedure_id");
+    var location = $("input[name=location]:checked").val();
+    var faculty_id = $("input[name=faculty]:checked").val();
+    var fellow_id = $("input[name=fellow]:checked").val();
 
-
-    if (procedure_id != null){
-      updateProcedure(salts, user_id, session_id, session_key, patient_id,
-        procedure_id, {"ac_id": ac_id,
-        "date_time_of_service": date_time_of_service, "location": location,
-        "faculty_id": faculty_id, "fellow": fellow_id}).done(
-          function(data) {
-            if (debug) console.log(data);
-            if(data.error == "false"){
-              Cookies.addToCookieArray("salts", data.salt, 1);
-              updateTables(data.procedure);
-              toggleSaveButton("save1", true);
-              toggleForm("identifiersForm", false);
-              toggleProgressBar(false);
-              $("#identifiers").modal('toggle');
-            }
-          });
-      }
+    saveProcedureForm({"ac_id": ac_id,
+    "date_time_of_service": date_time_of_service, "location": location,
+    "faculty_id": faculty_id, "fellow": fellow_id}, "identifiersForm", "#identifiers");
   });
 
-  $("#savePrep").click(function(){
-    toggleSaveButton("savePrep", false);
-    toggleForm("preparationForm", true);
-    toggleProgressBar(true);
+  $("#preparationForm").submit(function(){
+    event.preventDefault();
 
-    var prep_liters;
-    var salts = JSON.parse(Cookies.getCookie("salts"));
-    var procedure_id = Cookies.getCookie("procedure_id");
+    var pre_drug = $("#pre_drug").val();
+    if (pre_drug == "Other"){
+      pre_drug = $("#pre_drug_other").val();
+    }
+    var prep_liters = $('input[name=prep_liters]:checked').val();
+    var split_prep = $('input[name=split_prep]:checked').val();
+    var bisacodyl = $('input[name=bisacodyl]:checked').val();
 
-    var prep_drug = $("#prep_drug").val();
+    saveProcedureForm({"pre_drug": pre_drug,
+    "prep_liters": prep_liters, "split_prep": split_prep,
+    "bisacodyl": bisacodyl}, "preparationForm", "#preparation");
 
-    // $(".prep_liters .input").click(function() {
-    //   // whenever a button is clicked, set the hidden helper
-    //   prep_liters = $(this).text();
-    // });
+  });
 
+  $("#indicationForm").submit(function(){
+    event.preventDefault();
 
-
-    var prep_liters = $('input[name=liters]:checked', '#preparationForm').val();
-    var split_prep = $('input[name=radioName]:checked', '#myForm').val();
-    var bisacodyl = $('input[name=radioName]:checked', '#myForm').val();
-    if (debug) console.log(prep_liters);
-
-    var patient_id = Cookies.getCookie("patient_id");
-
-
+    var last_colon = $("#last_colon").val();
+    var filter = $('input[name=filter]:checked').val();
+    if(debug) console.log(last_colon);
+    if(debug) console.log(filter);
 
 
-    if (procedure_id != null){
-      updateProcedure(salts, user_id, session_id, session_key, patient_id,
-        procedure_id, {"prep_drug": prep_drug,
-        "prep_liters": prep_liters, "split_prep": split_prep,
-        "bisacodyl": bisacodyl}).done(
-          function(data) {
-            if (debug) console.log(data);
-            if(data.error == "false"){
-              Cookies.addToCookieArray("salts", data.salt, 1);
-              updateTables(data.procedure);
-              toggleSaveButton("savePrep", true);
-              toggleForm("preparationForm", false);
-              toggleProgressBar(false);
-              $("#preparation").modal('toggle');
-            }
-          });
-      }
+
+
+    saveProcedureForm({}, "indicationForm", "#indications");
+    // var pre_drug = $("#pre_drug").val();
+    // var prep_liters = $('.prep_liters input[name=optradio]:checked').val();
+    // var split_prep = $('.split_prep input[name=optradio]:checked').val();
+    // var bisacodyl = $('.bisacodyl input[name=optradio]:checked').val();
+    //
+    // if (pre_drug == "None"){
+    //   alert("Please select a Prep Drug");
+    // } else if (prep_liters == null){
+    //   alert("Please choose number of liters for Prep Drug");
+    // } else if (split_prep == null) {
+    //   alert("Please respond to Split Prep (Yes/No)");
+    // } else if (bisacodyl == null) {
+    //   alert("Please respond to Bisacodyl (Yes/No)");
+    // } else {
+    //   saveProcedureForm({"pre_drug": pre_drug,
+    //   "prep_liters": prep_liters, "split_prep": split_prep,
+    //   "bisacodyl": bisacodyl}, "savePrep", "preparationForm", "#preparation");
+    // }
+
   });
 
   $(function () {
+    $(".today").click(function(){
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth()+1; //January is 0!
+      var yyyy = today.getFullYear();
+
+      if(dd<10) {
+          dd='0'+dd
+      }
+
+      if(mm<10) {
+          mm='0'+mm
+      }
+
+      today = mm+'/'+dd+'/'+yyyy;
+      $(".service_date").val(today);
+    });
+
+    $(".now").click(function(){
+      var today = new Date();
+     var hh = today.getHours();
+     var mm = today.getMinutes();
+     // add a zero in front of numbers<10
+     if (mm < 10) {
+         mm = "0" + mm;
+     }
+      today = hh + ':' + mm;
+      $(".service_time").val(today);
+    });
+
     // Set up date and time pickers
     $('#date_of_service').datetimepicker({
        format: 'MM/DD/YYYY'
@@ -285,6 +344,7 @@ $(document).ready(function() {
     $('#service_time').datetimepicker({
       format: 'HH:mm'
     });
+
     $('#timepicker1').datetimepicker({
       format: 'HH:mm'
     });
