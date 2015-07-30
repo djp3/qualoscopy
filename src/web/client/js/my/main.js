@@ -63,25 +63,106 @@ $(document).ready(function() {
       var dateArray = procedure.date_time_of_service.split(" ");
       $("#date_of_service").val(dateArray[0]);
       $("#service_time").val(dateArray[1]);
-      $("#" + procedure.location).addClass("active");
-      $("#" + procedure.location + " input").prop('checked', "checked");
+      $("#identifiers #" + procedure.location).addClass("active");
+      $("#identifiers #" + procedure.location + " input").prop('checked', "checked");
 
-      $("#" + procedure.faculty_id).addClass("active");
-      $("#" + procedure.faculty_id + " input").prop('checked', "checked");
+      $("#identifiers #" + procedure.faculty_id).addClass("active");
+      $("#identifiers #" + procedure.faculty_id + " input").prop('checked', "checked");
 
-      $("#" + procedure.fellow).addClass("active");
-      $("#" + procedure.fellow + " input").prop('checked', "checked");
+      $("#identifiers #" + procedure.fellow).addClass("active");
+      $("#identifiers #" + procedure.fellow + " input").prop('checked', "checked");
 
     });
 
     $("#btn_preparation").click(function(){
-      $("#pre_drug").on('change', function(){
-        if(this.value == "Other"){
-          $('.other').removeClass('hide');
-          $('#pre_drug_other').prop('required',true);
+      $("#preparation #" + procedure.pre_drug).addClass("active");
+      $("#preparation #" + procedure.pre_drug + " input").prop('checked', "checked");
+
+      $("#preparation #" + procedure.prep_liters).addClass("active");
+      $("#preparation #" + procedure.prep_liters + " input").prop('checked', "checked");
+
+      $("#preparation .split #" + procedure.split_prep).addClass("active");
+      $("#preparation .split #" + procedure.split_prep + " input").prop('checked', "checked");
+
+      $("#preparation .bisaco #" + procedure.bisacodyl).addClass("active");
+      $("#preparation .bisaco #" + procedure.bisacodyl + " input").prop('checked', "checked");
+
+      if (procedure.pre_drug == "Other"){
+        $('.other').removeClass('hide');
+        $('#pre_drug_other').prop('required',true);
+      }
+
+
+      $("#preparation #pre_drug_selector label").click(function(){
+        if($(this).prop('id') == "Other"){
+          $('#preparation .other').removeClass('hide');
+          $('#preparation #pre_drug_other').prop('required',true);
         } else {
-          $('.other').addClass('hide');
-          $('#pre_drug_other').removeAttr('required');
+          $('#preparation .other').addClass('hide');
+          $('#preparation #pre_drug_other').removeAttr('required');
+        }
+      });
+    });
+
+    $("#btn_indications").click(function(){
+      $("#indications #" + procedure.last_colon).addClass("active");
+      $("#indications #" + procedure.last_colon + " input").prop('checked', "checked");
+
+    });
+
+    $("#btn_scope").click(function(){
+      $("#scope #" + procedure.scope).addClass("active");
+      $("#scope #" + procedure.scope + " input").prop('checked', "checked");
+
+      $("#scope .endo #" + procedure.endocuff).addClass("active");
+      $("#scope .endo #" + procedure.endocuff + " input").prop('checked', "checked");
+
+      $("#scope .cap #" + procedure.cap_assisted).addClass("active");
+      $("#scope .cap #" + procedure.cap_assisted + " input").prop('checked', "checked");
+
+      $("#scope .underwater #" + procedure.underwater).addClass("active");
+      $("#scope .underwater #" + procedure.underwater + " input").prop('checked', "checked");
+
+      if (procedure.scope == "Other"){
+        $('#scope .other').removeClass('hide');
+        $('#scope #scope_other').prop('required',true);
+      }
+
+      $("#scope_selector label").click(function(){
+        if($(this).prop('id') == "Other"){
+          $('#scope .other').removeClass('hide');
+          $('#scope #scope_other').prop('required',true);
+        } else {
+          $('#scope .other').addClass('hide');
+          $('#scope #scope_other').removeAttr('required');
+        }
+      });
+    });
+
+    $("#btn_sedation").click(function(){
+      $("#sedation #" + procedure.sedation_level).addClass("active");
+      $("#sedation #" + procedure.sedation_level + " input").prop('checked', "checked");
+
+      if (procedure.sedation_level == "Moderate"){
+        $('#sedation #moderate_sed').removeClass('hide');
+        $("#sedation #" + procedure.versed).addClass("active");
+        $("#sedation #" + procedure.versed + " input").prop('checked', "checked");
+
+        $("#sedation #" + procedure.fentanyl).addClass("active");
+        $("#sedation #" + procedure.fentanyl + " input").prop('checked', "checked");
+
+        $("#sedation #" + procedure.demerol).addClass("active");
+        $("#sedation #" + procedure.demerol + " input").prop('checked', "checked");
+
+        $("#sedation #" + procedure.benadryl).addClass("active");
+        $("#sedation #" + procedure.benadryl + " input").prop('checked', "checked");
+      }
+
+      $("#sedation_level_selector label").click(function(){
+        if($(this).prop('id') == "Moderate"){
+          $('#sedation #moderate_sed').removeClass('hide');
+        } else {
+          $('#sedation #moderate_sed').addClass('hide');
         }
       });
 
@@ -107,12 +188,12 @@ $(document).ready(function() {
     // Indications
     $allTables.push(tableMaker("Indications", "btn_indications", 5, "#indications", "col-md-5", "table2",
     ["Last Colon", "Indication", "Category", "Subcategory", "Specifics"],
-    [procedure.last_colon + " years", procedure.primary_indication, "NA", "NA", "NA"]));
+    [procedure.last_colon, procedure.primary_indication, "NA", "NA", "NA"]));
 
     // Scope
     $allTables.push(tableMaker("Scope", "btn_scope", 4, "#scope", "col-md-4", "table3",
-    ["Scopes", "Underwater", "CapAssisted", "EndoCuff"],
-    [procedure.scope, procedure.underwater, procedure.cap_assisted, procedure.endocuff]));
+    ["Scopes", "EndoCuff", "CapAssisted", "Underwater"],
+    [procedure.scope, procedure.endocuff, procedure.cap_assisted, procedure.underwater]));
 
     // Sedation
     $allTables.push(tableMaker("Sedation", "btn_sedation", 6, "#sedation", "col-md-5", "table4",
@@ -193,30 +274,89 @@ $(document).ready(function() {
       }
   }
 
-  var buttonListMaker = function(valueList, buttonGroupName){
-    var elementString = "<div class='button-list'> \
+  var buttonListMaker = function(required, valueList, textList, buttonGroupName, height){
+    var elementString = "<div class='button-list' style='height:" + height + "'> \
       <div class='btn-group-vertical center-block' data-toggle='buttons'>";
+
 
     for (var i = 0; i < valueList.length; i++){
       elementString += " \
       <label id=" + valueList[i] + " class='btn btn-primary'> \
-        <input required type='radio' name=" + buttonGroupName +
-        " value=" + valueList[i]  + ">" + valueList[i]  +" \
+        <input " + required + " type='radio' name=" + buttonGroupName +
+        " value=" + valueList[i]  + ">" + textList[i]  +" \
       </label>";
     }
 
      return $(elementString);
   }
 
+  // Populate all the button list with these arrays
   var loadButtonLists = function() {
-    var locationArray = ["Bldg200", "CathLab", "OSS", "OR", "CDDC", "UCI 1", "UCI 2"];
-    $("#location_selector").append(buttonListMaker(locationArray, "location"));
+    var locationTextArray = ["Bldg200", "CathLab", "OSS", "OR", "CDDC", "UCI 1", "UCI 2"];
+    var locationIDArray = ["bldg200", "cathlab", "OSS", "OR", "CDDC", "UCI_1", "UCI_2"];
+    $("#location_selector").append(buttonListMaker("required", locationIDArray,
+    locationTextArray, "location", "175px"));
 
-    var facultyArray = ["DrKarnes", "DrRaus", "DrPatterson", "DrSpock"];
-    $("#faculty_selector").append(buttonListMaker(facultyArray, "faculty"));
+    var facultyTextArray = ["Dr. Karnes", "Dr. Raus", "Dr. Patterson", "Dr. Spock"];
+    var facultyIDArray = ["DrKarnes", "DrRaus", "DrPatterson", "DrSpock"];
+    $("#faculty_selector").append(buttonListMaker("required", facultyIDArray,
+    facultyTextArray, "faculty", "175px"));
 
-    var fellowArray = ["None", "Pr. John", "Smith", "Carel", "Mike", "John", "Pat"];
-    $("#fellow_selector").append(buttonListMaker(fellowArray, "fellow"));
+    var fellowTextArray = ["None", "Pr. John", "Smith", "Carel", "Mike", "John", "Pat"];
+    var fellowIDArray = ["None", "PrJohn", "Smith", "Carel", "Mike", "John", "Pat"];
+    $("#fellow_selector").append(buttonListMaker("required", fellowIDArray,
+    fellowTextArray, "fellow", "175px"));
+
+    var preDrugTextArray = ["Miralax (or generic)", "PEG w lytes (Golytely, Trilyte, etc)",
+    "Sodium picosulfate (Prepopik, Picoprepm, etc)", "MoviPrep", "Suprep",
+    "Sodium phosphate (OsmoPrep, Visicol, etc)", "Magnesium citrate", "Other"];
+    var preDrugIDArray = ["miralax", "PEG_w_lytes", "Sodium_picosulfate",
+    "MoviPrep", "Suprep", "Sodium_phosphate", "Magnesium_citrate", "Other"];
+    $("#pre_drug_selector").append(buttonListMaker("required", preDrugIDArray,
+    preDrugTextArray, "pre_drug", "275px"));
+
+    var lastColonTextArray = ["None", "< 6 months",
+    "6-12 months", "1 year", "2 years", "3 years", "4 years", "5 years",
+    "6 years", "7 years", "8 years", "9 years", "10 or more years"];
+    var lastColonIDArray = ["None", "<6_m",
+    "6-12_m", "1_yr", "2_yr", "3_yr", "4_yr", "5_yr",
+    "6_yr", "7_yr", "8_yr", "9_yr", "10_yr"];
+    $("#indications #last_colon_selector").append(buttonListMaker("required",
+    lastColonIDArray, lastColonTextArray, "last_colon", "275px"));
+
+    var scopeTextArray = ["Pediatric Colonscope", "Adult Colonscope", "EGD Scope",
+    "Entro Scope", "Sigmoido Scope", "Other"];
+    var scopeIDArray = ["Pediatric", "Adult", "EGD", "Entro", "Sigmoido", "Other"];
+    $("#scope #scope_selector").append(buttonListMaker("required", scopeIDArray,
+    scopeTextArray, "scope", "200px"));
+
+    var versedIDTextArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    $("#sedation #versed_selector").append(buttonListMaker("", versedIDTextArray,
+    versedIDTextArray, "versed", "200px"));
+
+    var fentanylIDTextArray = [];
+    for(var i = 0; i <= 300; i +=25){
+      fentanylIDTextArray.push(i);
+    }
+    $("#sedation #fentanyl_selector").append(buttonListMaker("", fentanylIDTextArray,
+    fentanylIDTextArray, "fentanyl", "200px"));
+
+    var demerolIDTextArray = [];
+    for(var i = 0; i <= 300; i +=25){
+      demerolIDTextArray.push(i);
+      if(i == 25) demerolIDTextArray.push(37.5);
+      if(i == 50) demerolIDTextArray.push(62.5);
+    }
+    $("#sedation #demerol_selector").append(buttonListMaker("", demerolIDTextArray,
+    demerolIDTextArray, "demerol", "200px"));
+
+    var benadrylIDTextArray = [];
+    for(var i = 0; i <= 100; i +=25){
+      benadrylIDTextArray.push(i);
+    }
+    $("#sedation #benadryl_selector").append(buttonListMaker("", benadrylIDTextArray,
+    benadrylIDTextArray, "benadryl", "200px"));
+
   }
 
   // Populate the tables on reloads
@@ -259,9 +399,10 @@ $(document).ready(function() {
   $("#preparationForm").submit(function(){
     event.preventDefault();
 
-    var pre_drug = $("#pre_drug").val();
+    var pre_drug = $("input[name=pre_drug]:checked").val();
     if (pre_drug == "Other"){
-      pre_drug = $("#pre_drug_other").val();
+      // TODO: save this in another field
+      var pre_drug_other = $("#pre_drug_other").val();
     }
     var prep_liters = $('input[name=prep_liters]:checked').val();
     var split_prep = $('input[name=split_prep]:checked').val();
@@ -270,40 +411,49 @@ $(document).ready(function() {
     saveProcedureForm({"pre_drug": pre_drug,
     "prep_liters": prep_liters, "split_prep": split_prep,
     "bisacodyl": bisacodyl}, "preparationForm", "#preparation");
-
   });
 
   $("#indicationForm").submit(function(){
     event.preventDefault();
 
-    var last_colon = $("#last_colon").val();
+    var last_colon = $("#indications input[name=last_colon]:checked").val();
     var filter = $('input[name=filter]:checked').val();
-    if(debug) console.log(last_colon);
-    if(debug) console.log(filter);
 
+    saveProcedureForm({"last_colon": last_colon}, "indicationForm", "#indications");
+  });
 
+  $("#scopeForm").submit(function(){
+    event.preventDefault();
 
+    var scope = $("#scope input[name=scope]:checked").val();
+    if (scope == "Other"){
+      // TODO: save this in another field
+      var scope_other = $("#scope #scope_other").val();
+    }
+    var endocuff = $('#scope input[name=endocuff]:checked').val();
+    var cap_assisted = $('#scope input[name=cap_assisted]:checked').val();
+    var underwater = $('#scope input[name=underwater]:checked').val();
 
-    saveProcedureForm({}, "indicationForm", "#indications");
-    // var pre_drug = $("#pre_drug").val();
-    // var prep_liters = $('.prep_liters input[name=optradio]:checked').val();
-    // var split_prep = $('.split_prep input[name=optradio]:checked').val();
-    // var bisacodyl = $('.bisacodyl input[name=optradio]:checked').val();
-    //
-    // if (pre_drug == "None"){
-    //   alert("Please select a Prep Drug");
-    // } else if (prep_liters == null){
-    //   alert("Please choose number of liters for Prep Drug");
-    // } else if (split_prep == null) {
-    //   alert("Please respond to Split Prep (Yes/No)");
-    // } else if (bisacodyl == null) {
-    //   alert("Please respond to Bisacodyl (Yes/No)");
-    // } else {
-    //   saveProcedureForm({"pre_drug": pre_drug,
-    //   "prep_liters": prep_liters, "split_prep": split_prep,
-    //   "bisacodyl": bisacodyl}, "savePrep", "preparationForm", "#preparation");
-    // }
+    saveProcedureForm({"scope": scope, "endocuff": endocuff,
+    "cap_assisted": cap_assisted, "underwater": underwater}, "scopeForm", "#scope");
+  });
 
+  $("#sedationForm").submit(function(){
+    event.preventDefault();
+    var sedation_level = $('#sedation input[name=sedation_level]:checked').val();
+    var versed = null;
+    var fentanyl = null;
+    var demerol = null;
+    var benadryl = null;
+    if (sedation_level == "Moderate"){
+      versed = $('#sedation input[name=versed]:checked').val();
+      fentanyl = $('#sedation input[name=fentanyl]:checked').val();
+      demerol = $('#sedation input[name=demerol]:checked').val();
+      benadryl = $('#sedation input[name=benadryl]:checked').val();
+    }
+
+    saveProcedureForm({"sedation_level": sedation_level, "versed": versed,
+  "fentanyl": fentanyl, "demerol": demerol, "benadryl": benadryl}, "sedationForm", "#sedation");
   });
 
   $(function () {

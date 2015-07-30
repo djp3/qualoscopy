@@ -145,77 +145,72 @@
 
             <!-- Dropdown -->
             <div class="row">
-              <div class='col-md-6'>
+              <div class='col-md-8'>
                 <h4>Prep Drug</h4>
-                <select id="pre_drug" class="selectpicker show-tick" data-live-search="true">
-                  <option>Miralax (or generic)</option>
-                  <option>PEG w lytes (Golytely, Trilyte, etc)</option>
-                  <option>Sodium picosulfate (Prepopik, Picoprepm, etc)</option>
-                  <option>MoviPrep</option>
-                  <option>Suprep</option>
-                  <option>Sodium phosphate (OsmoPrep, Visicol, etc)</option>
-                  <option>Magnesium citrate</option>
-                  <option>Other</option>
-                </select>
+                <div id="pre_drug_selector"></div>
               </div>
-              <div class='col-md-6'>
+              <div class="col-md-4">
+                <h4>Prep Liters</h4>
+                <div class="btn-group-vertical" data-toggle="buttons">
+                  <label id='1' class="btn btn-primary btn-lg">
+                    <input required type="radio" name="prep_liters" value="1">1 Liter
+                  </label>
+                  <label id='2' class="btn btn-primary btn-lg">
+                    <input required type="radio" name="prep_liters" value="2">2 Liters
+                  </label>
+                  <label id='3' class="btn btn-primary btn-lg"
+                    <input required type="radio" name="prep_liters" value="3">3 Liters
+                  </label>
+                  <label id='4' class="btn btn-primary btn-lg">
+                    <input required type="radio" name="prep_liters" value="4">4 Liters
+                  </label>
+                  <label id='5' class="btn btn-primary btn-lg">
+                    <input required type="radio" name="prep_liters" value="5">5 Liters
+                  </label>
+                  <label id='>6' class="btn btn-primary btn-lg">
+                    <input required type="radio" name="prep_liters" value=">6">6 or more
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Radio Group -->
+            <div class="row">
+              <div class="col-md-4">
+                <h4>Split Prep?</h4>
+                <div class="split">
+                  <div class="btn-group" data-toggle="buttons">
+                    <label id="Y" class="btn btn-primary btn-lg">
+                      <input required type="radio" name="split_prep" value="Y">Yes
+                    </label>
+                    <label id="N" class="btn btn-primary btn-lg">
+                      <input required type="radio" name="split_prep" value="N">No
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <h4>Bisacodyl?</h4>
+                <div class="bisaco">
+                  <div class="btn-group" data-toggle="buttons">
+                    <label id="Y" class="btn btn-primary btn-lg">
+                      <input required type="radio" name="bisacodyl" value="Y">Yes
+                    </label>
+                    <label id="N" class="btn btn-primary btn-lg">
+                      <input required type="radio" name="bisacodyl" value="N">No
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class='col-md-4'>
                 <div class='other hide'>
                   <h4>Other Drug:</h4>
                   <label>
                     <input id="pre_drug_other" class="form-control" type="text" name="pre_drug_other">
                   </label>
                 </div>
-              </div>
-              </div>
-
-            <!-- Radio Group -->
-            <div class="row">
-              <div class="col-md-4">
-                <h4>Prep Liters</h4>
-                <div class="btn-group-vertical" data-toggle="buttons">
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="prep_liters" value="1">1 Liter
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="prep_liters" value="2">2 Liters
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="prep_liters" value="3">3 Liters
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="prep_liters" value="4">4 Liters
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="prep_liters" value="5">5 Liters
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="prep_liters" value="6 or more">6 or more
-                  </label>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <h4>Split Prep?</h4>
-                <div class="btn-group" data-toggle="buttons">
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="split_prep" value="Y">Yes
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="split_prep" value="N">No
-                  </label>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <h4>Bisacodyl?</h4>
-                <div class="btn-group" data-toggle="buttons">
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="bisacodyl" value="Y">Yes
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="bisacodyl" value="N">No
-                  </label>
-                </div>
-              </div>
             </div>
+          </div>
 
           </div>
           <div class="modal-footer">
@@ -254,21 +249,7 @@
             <div class="row">
               <div class='col-md-6'>
                 <h4>Last Colon</h4>
-                <select id="last_colon" class="selectpicker show-tick" data-live-search="true">
-                  <option>None</option>
-                  <option>< 6 months</option>
-                  <option>6-12 months</option>
-                  <option>1 yr</option>
-                  <option>2 yrs</option>
-                  <option>3 yrs</option>
-                  <option>4 yrs</option>
-                  <option>5 yrs</option>
-                  <option>6 yrs</option>
-                  <option>7 yrs</option>
-                  <option>8 yrs</option>
-                  <option>9 yrs</option>
-                  <option>10 or more yrs</option>
-                </select>
+                <div id="last_colon_selector"></div>
               </div>
 
               <!-- Radio Group -->
@@ -385,6 +366,7 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3 class="modal-title">Scope</h3>
           </div>
+          <form id="scopeForm">
           <div class="modal-body">
             <div class="form-group">
 
@@ -392,79 +374,79 @@
               <div class="row">
                 <div class="col-md-6">
                   <h4>Scopes</h4>
-                  <form role="form">
-                    <div class="radio btn-group-vertical btn-block">
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Pediatric Colonscpe
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Adult Colonscope
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">EGD Scope
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Enteroscope
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Sigmoidoscope
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Other
-                      </label>
-                    </div>
-                  </form>
+                  <div id="scope_selector"></div>
                 </div>
+                <div class='col-md-6'>
+                  <div class='other hide'>
+                    <h4>Other Scope:</h4>
+                    <label>
+                      <input id="scope_other" class="form-control" type="text" name="scope_other">
+                    </label>
+                  </div>
+              </div>
               </div>
 
               <!-- Radio Group -->
               <div class="row">
                 <div class="col-md-4">
                   <h4>EndoCuff?</h4>
-                  <form role="form">
-                    <div class="radio btn-group-vertical btn-block">
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Yes
+                  <div class="endo">
+                    <div class="btn-group" data-toggle="buttons">
+                      <label id="Y" class="btn btn-primary btn-lg">
+                        <input required type="radio" name="endocuff" value="Y">Yes
                       </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">No
+                      <label id="N" class="btn btn-primary btn-lg">
+                        <input required type="radio" name="endocuff" value="N">No
                       </label>
                     </div>
-                  </form>
+                  </div>
                 </div>
                 <div class="col-md-4">
                   <h4>Cap Assisted?</h4>
-                  <form role="form">
-                    <div class="radio btn-group-vertical btn-block">
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Yes
+                  <div class="cap">
+                    <div class="btn-group" data-toggle="buttons">
+                      <label id="Y" class="btn btn-primary btn-lg">
+                        <input required type="radio" name="cap_assisted" value="Y">Yes
                       </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">No
+                      <label id="N" class="btn btn-primary btn-lg">
+                        <input required type="radio" name="cap_assisted" value="N">No
                       </label>
                     </div>
-                  </form>
+                  </div>
                 </div>
                 <div class="col-md-4">
                   <h4>Underwater?</h4>
-                  <form role="form">
-                    <div class="radio btn-group-vertical btn-block">
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Yes
+                  <div class="underwater">
+                    <div class="btn-group" data-toggle="buttons">
+                      <label id="Y" class="btn btn-primary btn-lg">
+                        <input required type="radio" name="underwater" value="Y">Yes
                       </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">No
+                      <label id="N" class="btn btn-primary btn-lg">
+                        <input required type="radio" name="underwater" value="N">No
                       </label>
                     </div>
-                  </form>
+                  </div>
                 </div>
               </div>
 
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+            <div class="row">
+              <div class='col-md-10'>
+                <div class="progress hide">
+                  <div class="progress-bar progress-bar-striped active" role="progressbar"
+                  aria-valuenow="0" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+                  Saving
+                  </div>
+                </div>
+              </div>
+              <div class='col-md-2'>
+                <input type="submit" class="btn btn-default" value="Save"/>
+              </div>
+            </div>
           </div>
+        </form>
         </div>
       </div>
     </div>
@@ -477,113 +459,85 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3 class="modal-title">Sedation</h3>
           </div>
+          <form id="sedationForm">
           <div class="modal-body">
             <div class="form-group">
+
               <!-- Radio Group -->
               <div class="row">
                 <div class="col-md-12">
                   <h4>Sedation Level</h4>
-                  <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">Unsedated
-                    </label>
-                    <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">Moderate
-                    </label>
-                    <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">Ga
-                    </label>
+                  <div id="sedation_level_selector">
+                    <div class="btn-group" data-toggle="buttons">
+                      <label id="Unsedated" class="btn btn-primary btn-lg">
+                        <input required type="radio" name="sedation_level" value="Unsedated">Unsedated
+                      </label>
+                      <label id="Moderate" class="btn btn-primary btn-lg">
+                        <input required type="radio" name="sedation_level" value="Moderate">Moderate
+                      </label>
+                      <label id="GA" class="btn btn-primary btn-lg">
+                        <input required type="radio" name="sedation_level" value="GA">GA
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div class="row">
-                <div class='col-md-6'>
-                  <h4>Versed</h4>
-                  <select class="selectpicker show-tick" data-live-search="true">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>>10</option>
-                  </select>
+              <div id="moderate_sed" class="hide">
+                <div class="row">
+                  <div class='col-md-3'>
+                    <h4>Versed</h4>
+                    <div id="versed_selector"></div>
+                  </div>
+                  <div class='col-md-3'>
+                    <h4>Fentanyl</h4>
+                    <div id="fentanyl_selector"></div>
+                  </div>
+                  <div class='col-md-3'>
+                    <h4>Demerol</h4>
+                    <div id="demerol_selector"></div>
+                  </div>
+                  <div class='col-md-3'>
+                    <h4>Benadryl</h4>
+                    <div id="benadryl_selector"></div>
+                  </div>
                 </div>
-                <div class='col-md-6'>
-                  <h4>Fentanyl</h4>
-                  <select class="selectpicker show-tick" data-live-search="true">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>>10</option>
-                  </select>
-                </div>
-              </div>
 
-              <div class="row">
-                <div class='col-md-6'>
-                  <h4>Demerol</h4>
-                  <select class="selectpicker show-tick" data-live-search="true">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>>10</option>
-                  </select>
-                </div>
-                <div class='col-md-6'>
-                  <h4>Benadryl</h4>
-                  <select class="selectpicker show-tick" data-live-search="true">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>>10</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Text input -->
-              <div class="row">
-                <div class="col-md-12">
-                  <h4>Other Med</h4>
-                  <label><input class="form-control" type="text" name="AC"></label>
+                <!-- Text input -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <h4>Other Sedative Name</h4>
+                    <label>
+                      <input id="other_sed_name" class="form-control" type="text" name="other_sed_name">
+                    </label>
+                  </div>
+                  <div class="col-md-6">
+                    <h4>Other Sedative Quantity</h4>
+                    <label>
+                      <input id="other_sed_quantity" class="form-control" type="text" name="other_sed_quantity">
+                    </label>
+                  </div>
                 </div>
               </div>
 
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+            <div class="row">
+              <div class='col-md-10'>
+                <div class="progress hide">
+                  <div class="progress-bar progress-bar-striped active" role="progressbar"
+                  aria-valuenow="0" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+                  Saving
+                  </div>
+                </div>
+              </div>
+              <div class='col-md-2'>
+                <input type="submit" class="btn btn-default" value="Save"/>
+              </div>
+            </div>
           </div>
+        </form>
         </div>
       </div>
     </div>
