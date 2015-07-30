@@ -1,4 +1,4 @@
-package net.djp3.qualoscopy.api;
+package net.djp3.qualoscopy.api.procedure;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +11,15 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 
 import net.djp3.qualoscopy.GlobalsQualoscopy;
+import net.djp3.qualoscopy.api.QAPIEvent_AddPatient;
+import net.djp3.qualoscopy.api.QAPIEvent_AddProcedure;
+import net.djp3.qualoscopy.api.QAPIEvent_CheckSession;
+import net.djp3.qualoscopy.api.QAPIEvent_GetPatientProcedures;
+import net.djp3.qualoscopy.api.QAPIEvent_GetPatients;
+import net.djp3.qualoscopy.api.QAPIEvent_InitiateSession;
+import net.djp3.qualoscopy.api.QAPIEvent_Login;
+import net.djp3.qualoscopy.api.QAPIEvent_Test;
+import net.djp3.qualoscopy.api.QAPIEvent_VersionCheck;
 import net.djp3.qualoscopy.datastore.DatastoreInterface;
 import net.djp3.qualoscopy.datastore.SHA256;
 import net.minidev.json.JSONArray;
@@ -33,7 +42,7 @@ import edu.uci.ics.luci.utility.webserver.event.api.APIEvent_Version;
 import edu.uci.ics.luci.utility.webserver.input.request.Request;
 import edu.uci.ics.luci.utility.webserver.output.channel.socket.Output_Socket_HTTP;
 
-public class QAPIEvent_GetPatientProcedures_Test {
+public class QAPIEvent_AddProcedure_Test {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -64,8 +73,8 @@ public class QAPIEvent_GetPatientProcedures_Test {
 		try{
 			String version = System.currentTimeMillis()+"";
 		
-			QAPIEvent_GetPatientProcedures a = new QAPIEvent_GetPatientProcedures(version,null);
-			QAPIEvent_GetPatientProcedures b = (QAPIEvent_GetPatientProcedures) a.clone();
+			QAPIEvent_AddProcedure a = new QAPIEvent_AddProcedure(version,null);
+			QAPIEvent_AddProcedure b = (QAPIEvent_AddProcedure) a.clone();
 			
 			QAPIEvent_CheckSession c = new QAPIEvent_CheckSession(version,null);
 			
@@ -122,6 +131,8 @@ public class QAPIEvent_GetPatientProcedures_Test {
 		ws.updateAPIRegistry("/get/patients", new QAPIEvent_GetPatients(version,db));
 		ws.updateAPIRegistry("/get/patient/procedures", new QAPIEvent_GetPatientProcedures(version,db));
 		ws.updateAPIRegistry("/add/patient", new QAPIEvent_AddPatient(version,db));
+		ws.updateAPIRegistry("/add/procedure", new QAPIEvent_AddProcedure(version,db));
+
 		
 		String session_id = null;
 		String session_key = null;
@@ -373,84 +384,6 @@ public class QAPIEvent_GetPatientProcedures_Test {
 		
 		
 		
-
-		/**** Now test get patient procedures with bad credentials****/
-		responseString = null;
-		try {
-			URIBuilder uriBuilder = new URIBuilder()
-									.setScheme("http")
-									.setHost("localhost")
-									.setPort(ws.getInputChannel().getPort())
-									.setPath("/get/patient/procedures")
-									.setParameter("version", version)
-									.setParameter("user_id","test_user")
-									.setParameter("shsid","bad"+SHA256.sha256(session_id+salt,1))
-									.setParameter("shsk",SHA256.sha256(session_key+salt,1))
-									.setParameter("patient_id",patient_id);
-			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			fail("Bad URL");
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail("IO Exception");
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
-			fail("URISyntaxException");
-		}
-		
-		//System.out.println(responseString);
-
-		response = null;
-		try {
-			response = (JSONObject) JSONValue.parse(responseString);
-			assertEquals("true",response.get("error"));
-			assertTrue(((String)response.get("version")).equals(version));
-			
-		} catch (ClassCastException e) {
-			fail("Bad JSON Response");
-		}
-		
-		
-		/**** Now test get patient procedures without patient_id ****/
-		responseString = null;
-		try {
-			URIBuilder uriBuilder = new URIBuilder()
-									.setScheme("http")
-									.setHost("localhost")
-									.setPort(ws.getInputChannel().getPort())
-									.setPath("/get/patient/procedures")
-									.setParameter("version", version)
-									.setParameter("user_id","test_user")
-									.setParameter("shsid",SHA256.sha256(session_id+salt,1))
-									.setParameter("shsk",SHA256.sha256(session_key+salt,1));
-			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			fail("Bad URL");
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail("IO Exception");
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
-			fail("URISyntaxException");
-		}
-		
-		//System.out.println(responseString);
-
-		response = null;
-		try {
-			response = (JSONObject) JSONValue.parse(responseString);
-			assertEquals("true",response.get("error"));
-			assertTrue(((String)response.get("version")).equals(version));
-			salt = ((String)response.get("salt"));
-			assertTrue(salt != null);
-			
-		} catch (ClassCastException e) {
-			fail("Bad JSON Response");
-		}
 		
 		
 
@@ -493,12 +426,134 @@ public class QAPIEvent_GetPatientProcedures_Test {
 			assertTrue(procedures.size() >0);
 			for(int i = 0; i < procedures.size(); i++){
 				JSONObject procedure = (JSONObject) procedures.get(i);
-				assertTrue(procedure.size()==4);
-				assertTrue(procedure.get("dos")!= null);
-				assertTrue(procedure.get("completed")!= null);
-				assertTrue(procedure.get("ac_id")!= null);
-				assertTrue(procedure.get("faculty")!= null);
+				QAPIEvent_Procedures_Test_Utilities.checkProcedure(procedure);
 			}
+			
+			salt = ((String)response.get("salt"));
+			assertTrue(salt != null);
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+
+		/**** Now test add procedures with bad credentials****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/add/procedure")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									.setParameter("shsid",SHA256.sha256(session_id+salt,1))
+									.setParameter("shsk","bad"+SHA256.sha256(session_key+salt,1))
+									.setParameter("patient_id",patient_id);
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("true",response.get("error"));
+			assertTrue(((String)response.get("version")).equals(version));
+			
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+		
+		/**** Now test add procedures with good credentials, but no paitent_id****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/add/procedure")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									.setParameter("shsid",SHA256.sha256(session_id+salt,1))
+									.setParameter("shsk",SHA256.sha256(session_key+salt,1));
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		
+		//System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("true",response.get("error"));
+			assertTrue(((String)response.get("version")).equals(version));
+			
+			salt = ((String)response.get("salt"));
+			assertTrue(salt != null);
+		} catch (ClassCastException e) {
+			fail("Bad JSON Response");
+		}
+		
+		
+		/**** Now test add procedures with good credentials****/
+		responseString = null;
+		try {
+			URIBuilder uriBuilder = new URIBuilder()
+									.setScheme("http")
+									.setHost("localhost")
+									.setPort(ws.getInputChannel().getPort())
+									.setPath("/add/procedure")
+									.setParameter("version", version)
+									.setParameter("user_id","test_user")
+									.setParameter("shsid",SHA256.sha256(session_id+salt,1))
+									.setParameter("shsk",SHA256.sha256(session_key+salt,1))
+									.setParameter("patient_id",patient_id);
+			responseString = WebUtil.fetchWebPage(uriBuilder, null,null, null, 30 * 1000);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			fail("Bad URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IO Exception");
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail("URISyntaxException");
+		}
+		
+		System.out.println(responseString);
+
+		response = null;
+		try {
+			response = (JSONObject) JSONValue.parse(responseString);
+			assertEquals("false",response.get("error"));
+			assertTrue(((String)response.get("version")).equals(version));
+			
+			assertTrue(response.size()==5);// salt, procedure_id,error,errors,version
+			String procedure_id = (String) response.get("procedure_id");
+			assertTrue(procedure_id != null);
 			
 			salt = ((String)response.get("salt"));
 			assertTrue(salt != null);

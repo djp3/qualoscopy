@@ -6,9 +6,6 @@ import java.util.Date;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.PrimaryKey;
-
 import net.minidev.json.JSONObject;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import edu.uci.ics.luci.utility.CalendarCache;
 
-@PersistenceCapable
 public class Procedure {
 	
 	public static final String acIDSyntax = "..*";
@@ -136,7 +132,6 @@ public class Procedure {
 	public final SimpleDateFormat sdf;
 	public final SimpleDateFormat shortSdf;
 	
-	@PrimaryKey
 	String procedureID = null;
 	String acID = null;
 	Long dateTimeOfService = null;

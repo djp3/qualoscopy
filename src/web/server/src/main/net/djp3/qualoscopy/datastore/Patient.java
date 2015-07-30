@@ -14,10 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.uci.ics.luci.utility.CalendarCache;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.PrimaryKey;
 
-@PersistenceCapable
 public class Patient {
 	private static final Random r = new Random(System.currentTimeMillis()-234134);
 	
@@ -84,7 +81,6 @@ public class Patient {
 	
 	private final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	
-	@PrimaryKey
 	private String patientID = null;
 	private String medicalRecordID = null;
 	private String firstName = null;
