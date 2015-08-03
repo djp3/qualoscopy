@@ -186,6 +186,23 @@ $(document).ready(function() {
           $('#extent #extent_other').prop('required',true);
         }
       });
+    });
+
+    $("#btn_quality").click(function(){
+      $("#quality .prep_left #" + procedure.prep_quality_left).addClass("active");
+      $("#quality .prep_left #" + procedure.prep_quality_left + " input").prop('checked', "checked");
+
+      $("#quality .prep_mid #" + procedure.prep_quality_mid).addClass("active");
+      $("#quality .prep_mid #" + procedure.prep_quality_mid + " input").prop('checked', "checked");
+
+      $("#quality .prep_right #" + procedure.prep_quality_right).addClass("active");
+      $("#quality .prep_right #" + procedure.prep_quality_right + " input").prop('checked', "checked");
+    });
+
+    $("#btn_times").click(function(){
+      $("#times #time_insertion").val(procedure.time_insertion);
+      $("#times #time_begin_withdrawal").val(procedure.time_begin_withdrawal);
+      $("#times #time_scope_withdrawn").val(procedure.time_scope_withdrawn);
 
     });
 
@@ -498,6 +515,31 @@ $(document).ready(function() {
 
   });
 
+  $("#qualityForm").submit(function(){
+    event.preventDefault();
+    var prep_quality_left = $('#quality input[name=prepLeft]:checked').val();
+    var prep_quality_mid = $('#quality input[name=prepMid]:checked').val();
+    var prep_quality_right = $('#quality input[name=prepRight]:checked').val();
+
+    saveProcedureForm({"prep_quality_left": prep_quality_left,
+    "prep_quality_mid": prep_quality_mid, "prep_quality_right": prep_quality_right},
+    "qualityForm", "#quality");
+
+  });
+
+  $("#timesForm").submit(function(){
+    event.preventDefault();
+    var time_insertion = $('#times #time_insertion').val();
+    var time_begin_withdrawal = $('#times #time_begin_withdrawal').val();
+    var time_scope_withdrawn = $('#times #time_scope_withdrawn').val();
+
+    saveProcedureForm({"time_insertion": time_insertion,
+    "time_begin_withdrawal": time_begin_withdrawal,
+    "time_scope_withdrawn": time_scope_withdrawn},
+    "timesForm", "#times");
+
+  });
+
   $(function () {
     $(".today").click(function(){
       var today = new Date();
@@ -537,13 +579,13 @@ $(document).ready(function() {
       format: 'HH:mm'
     });
 
-    $('#timepicker1').datetimepicker({
+    $('#time_insertion').datetimepicker({
       format: 'HH:mm'
     });
-    $('#timepicker2').datetimepicker({
+    $('#time_begin_withdrawal').datetimepicker({
       format: 'HH:mm'
     });
-    $('#timepicker3').datetimepicker({
+    $('#time_scope_withdrawn').datetimepicker({
       format: 'HH:mm'
     });
     $('#timepicker4').datetimepicker({
@@ -554,12 +596,12 @@ $(document).ready(function() {
     });
 
     // Link Timepickers
-    $("#timepicker1").on("dp.change", function (e) {
-        $('#timepicker2').data("DateTimePicker").minDate(e.date);
+    $("#time_insertion").on("dp.change", function (e) {
+        $('#time_begin_withdrawal').data("DateTimePicker").minDate(e.date);
     });
 
-    $("#timepicker2").on("dp.change", function (e) {
-        $('#timepicker3').data("DateTimePicker").minDate(e.date);
+    $("#time_begin_withdrawal").on("dp.change", function (e) {
+        $('#time_scope_withdrawn').data("DateTimePicker").minDate(e.date);
     });
 
     $("#timepicker4").on("dp.change", function (e) {
