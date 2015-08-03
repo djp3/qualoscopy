@@ -57,6 +57,7 @@ $(document).ready(function() {
 
   // Create click functions for buttons
   var createButtonFunctions = function(procedure){
+
     $("#btn_identifiers").click(function(){
       $("#ac_id").val(procedure.ac_id);
       // document.getElementById("location").value = procedure.location;
@@ -71,7 +72,6 @@ $(document).ready(function() {
 
       $("#identifiers #" + procedure.fellow).addClass("active");
       $("#identifiers #" + procedure.fellow + " input").prop('checked', "checked");
-
     });
 
     $("#btn_preparation").click(function(){
@@ -107,7 +107,6 @@ $(document).ready(function() {
     $("#btn_indications").click(function(){
       $("#indications #" + procedure.last_colon).addClass("active");
       $("#indications #" + procedure.last_colon + " input").prop('checked', "checked");
-
     });
 
     $("#btn_scope").click(function(){
@@ -163,6 +162,28 @@ $(document).ready(function() {
           $('#sedation #moderate_sed').removeClass('hide');
         } else {
           $('#sedation #moderate_sed').addClass('hide');
+        }
+      });
+    });
+
+    $("#btn_extent").click(function(){
+      $("#extent #" + procedure.extent).addClass("active");
+      $("#extent #" + procedure.extent + " input").prop('checked', "checked");
+
+
+      if(!(procedure.extent  == "ti" || procedure.extent  == "cecum" || procedure.extent  == "ileocolonic_anastomosis")){
+        $('#extent .other').removeClass('hide');
+        $('#extent #extent_other').prop('required',true);
+      }
+
+      $("#extent_selector label").click(function(){
+        var extent = $(this).prop('id');
+        if(extent == "ti" || extent == "cecum" || extent == "ileocolonic_anastomosis"){
+          $('#extent .other').addClass('hide');
+          $('#extent #extent_other').removeAttr('required');
+        } else {
+          $('#extent .other').removeClass('hide');
+          $('#extent #extent_other').prop('required',true);
         }
       });
 
@@ -341,6 +362,13 @@ $(document).ready(function() {
     $("#sedation #fentanyl_selector").append(buttonListMaker("", fentanylIDTextArray,
     fentanylIDTextArray, "fentanyl", "200px"));
 
+    var extentTextArray = ["TI", "Cecum", "Ileocolonic Anastomosis", "Ascending",
+    "Hepatic Flexure", "Transverse", "Splenic Flexure", "Decending", "Sigmoid", "Rectsigmoid"];
+    var extentIDArray = ["ti", "cecum", "ileocolonic_anastomosis", "ascending",
+    "hepatic_flexure", "transverse", "splenic_flexure", "decending", "sigmoid", "rectsigmoid"];
+    $("#extent #extent_selector").append(buttonListMaker("required", extentIDArray,
+    extentTextArray, "extentReached", "350px"));
+
     var demerolIDTextArray = [];
     for(var i = 0; i <= 300; i +=25){
       demerolIDTextArray.push(i);
@@ -454,6 +482,20 @@ $(document).ready(function() {
 
     saveProcedureForm({"sedation_level": sedation_level, "versed": versed,
   "fentanyl": fentanyl, "demerol": demerol, "benadryl": benadryl}, "sedationForm", "#sedation");
+  });
+
+  $("#extentForm").submit(function(){
+    event.preventDefault();
+    var extent = $('#extent input[name=extentReached]:checked').val();
+
+    if (extent == "ti" || extent == "cecum" || extent == "ileocolonic_anastomosis"){
+      saveProcedureForm({"extent": extent}, "extentForm", "#extent");
+    } else {
+      var incomplete = $("#extent #extent_other").val();
+      if (debug) console.log(incomplete);
+      saveProcedureForm({"extent": extent}, "extentForm", "#extent");
+    }
+
   });
 
   $(function () {

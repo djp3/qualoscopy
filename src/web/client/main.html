@@ -383,7 +383,7 @@
                       <input id="scope_other" class="form-control" type="text" name="scope_other">
                     </label>
                   </div>
-              </div>
+                </div>
               </div>
 
               <!-- Radio Group -->
@@ -550,58 +550,44 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3 class="modal-title">Extent</h3>
           </div>
+          <form id="extentForm">
           <div class="modal-body">
             <div class="form-group">
 
               <!-- Radio Group -->
               <div class="row">
-                <div class="col-md-12">
-                  <h4>Extent</h4>
-                  <form role="form">
-                    <div class="radio btn-group-vertical">
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">TI
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Cecum
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">LLeocolonic Anatomosis
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Ascending
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Hepatic Flexure
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Transverse
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Splenic Flexure
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Descending
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Sigmond
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Rectosigmoid
-                      </label>
-                      <label class="btn btn-primary">
-                        <input type="radio" name="optradio">Rectum
-                      </label>
-                    </div>
-                  </form>
+                <div class="col-md-6">
+                  <h4>Extent Reached</h4>
+                  <div id="extent_selector"></div>
+                </div>
+                <div class='col-md-6'>
+                  <div class='other hide'>
+                    <h4>Reason Incomplete</h4>
+                    <label>
+                      <input id="extent_other" class="form-control" type="text" name="extent_other">
+                    </label>
+                  </div>
                 </div>
               </div>
 
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+              <div class="row">
+                <div class='col-md-10'>
+                  <div class="progress hide">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar"
+                    aria-valuenow="0" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+                    Saving
+                    </div>
+                  </div>
+                </div>
+                <div class='col-md-2'>
+                  <input type="submit" class="btn btn-default" value="Save"/>
+                </div>
+              </div>
             </div>
+          </form>
           </div>
         </div>
       </div>
@@ -617,28 +603,26 @@
           <div class="modal-body">
             <div class="form-group">
 
-              <div class="row">
-                <div class="col-md-12">
-                  <img src="assets/BBP.png">
-                </div>
-              </div>
-
               <!-- Radio Group -->
               <div class="row">
                 <div class="col-md-12">
                   <h4>Prep Left</h4>
                   <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">0
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP0.png">
                     </label>
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">1
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP1.png">
                     </label>
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">2
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP2.png">
                     </label>
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">3
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP3.png">
                     </label>
                   </div>
                 </div>
@@ -650,16 +634,20 @@
                   <h4>Prep Mid</h4>
                   <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">0
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP0.png">
                     </label>
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">1
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP1.png">
                     </label>
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">2
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP2.png">
                     </label>
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">3
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP3.png">
                     </label>
                   </div>
                 </div>
@@ -671,16 +659,20 @@
                   <h4>Prep Right</h4>
                   <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">0
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP0.png">
                     </label>
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">1
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP1.png">
                     </label>
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">2
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP2.png">
                     </label>
                     <label class="btn btn-primary btn-lg">
-                      <input type="radio" name="optradio">3
+                      <input type="radio" name="optradio">
+                      <img src="assets/BBP3.png">
                     </label>
                   </div>
                 </div>
@@ -689,7 +681,19 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+            <div class="row">
+              <div class='col-md-10'>
+                <div class="progress hide">
+                  <div class="progress-bar progress-bar-striped active" role="progressbar"
+                  aria-valuenow="0" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+                  Saving
+                  </div>
+                </div>
+              </div>
+              <div class='col-md-2'>
+                <input type="submit" class="btn btn-default" value="Save"/>
+              </div>
+            </div>
           </div>
         </div>
       </div>
