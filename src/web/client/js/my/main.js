@@ -51,6 +51,12 @@ $(document).ready(function() {
           ["Loc", "Phe", "Num", "Size", "Tx", "Residual", "Bottle", "Path"],
           ["NA", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE"]));
 
+          $("#btn_addPolypOrMass").click(function(){
+            // $("#addPolypOrMass #location").val("Cecum");
+
+          });
+
+
         }
       });
   }
@@ -328,6 +334,31 @@ $(document).ready(function() {
      return $(elementString);
   }
 
+  var buttonListMaker2 = function(required, valueList, textList, buttonGroupName, height){
+    var elementString = "<div class='button-list' style='height:" + height + "'> \
+      <div class='btn-group-vertical center-block' data-toggle='buttons'>";
+
+
+    for (var i = 0; i < valueList.length; i++){
+      elementString += " \
+      <label id=" + valueList[i] + " class='btn btn-primary'> \
+        <input " + required + " type='radio' name=" + buttonGroupName +
+        " value=" + valueList[i]  + ">" + textList[i]  +" \
+      </label>";
+    }
+
+     return $(elementString);
+  }
+
+  var selectOptionsMaker = function(textList){
+    var elementString = "";
+    for (var i = 0; i < textList.length; i++){
+      elementString += "<option class='my-option'>" +  textList[i] + "</option>";
+    }
+
+     return $(elementString);
+  }
+
   // Populate all the button list with these arrays
   var loadButtonLists = function() {
     var locationTextArray = ["Bldg200", "CathLab", "OSS", "OR", "CDDC", "UCI 1", "UCI 2"];
@@ -402,6 +433,58 @@ $(document).ready(function() {
     $("#sedation #benadryl_selector").append(buttonListMaker("", benadrylIDTextArray,
     benadrylIDTextArray, "benadryl", "200px"));
 
+    var testIDTextArray = [];
+    for(var i = 0; i <= 300; i +=10){
+      testIDTextArray.push(i);
+    }
+    //TODO fix this
+    $("#primaryIndication #screening_selector").append(buttonListMaker2("", testIDTextArray,
+    testIDTextArray, "primary", "325px"));
+
+    // $("#addPolypOrMassForm #location_selector").append(buttonListMaker("", testIDTextArray,
+    // testIDTextArray, "test", "100px"));
+    //
+    // $("#primaryIndication #diagnostic_selector").append(buttonListMaker("", testIDTextArray,
+    // testIDTextArray, "primary", "325px"));
+    //
+    // $("#primaryIndication #therapeutic_selector").append(buttonListMaker("", testIDTextArray,
+    // testIDTextArray, "primary", "325px"));
+
+    var locationArray = ["TI", "Cecum", "Ascending", "Hepatic Flexure", "Transverse",
+    "Splenic Flexure", "Decending", "Sigmoid", "Rectsigmoid", "Rectum", "Anus",
+    "Ileocolonic Anastomosis", "colocolonic Anastomosis"];
+    $("#addPolypOrMass #location").append(selectOptionsMaker(locationArray));
+
+    var phenotypeArray = ["Flat", "Sessile", "Stalk", "Mass", "Submucosal"];
+    $("#addPolypOrMass #phenotype").append(selectOptionsMaker(phenotypeArray));
+
+    var numberArray = [1,2,3,4,5,6,7,8,9,"10 or more"];
+    $("#addPolypOrMass #number").append(selectOptionsMaker(numberArray));
+
+    var sizeArray = [1,2,3,4,5,6,7,8,9,"10-14","15-19","20-29","30-39","40-49",">49"];
+    $("#addPolypOrMass #size").append(selectOptionsMaker(sizeArray));
+
+    var treatmentArray = ["Cold Bx", "Cold Snare", "EMR (lifted)", "EMR (under water)",
+    "Hot Snare", "Hot Biopsy", "None", "Other"];
+    $("#addPolypOrMass #treatment").append(selectOptionsMaker(treatmentArray));
+
+    var residualArray = ["No", "Indeterminant", "Yes"];
+    $("#addPolypOrMass #residual").append(selectOptionsMaker(residualArray));
+
+    var bottleArray = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
+    $("#addPolypOrMass #bottle").append(selectOptionsMaker(bottleArray));
+
+    var primaryNiceArray = ["Bland/capillaries", "Dark Spots", "Light Spots",
+    "Tubulogyrus", "Other"];
+    $("#addPolypOrMass #primary_nice").append(selectOptionsMaker(primaryNiceArray));
+
+    var secondaryNiceArray = ["NA","Bland/capillaries", "Dark Spots", "Light Spots",
+    "Tubulogyrus", "Other"];
+    $("#addPolypOrMass #secondary_nice").append(selectOptionsMaker(secondaryNiceArray));
+
+    var pathGuessArray = ["Adenoma", "Hyperplastic", "SSA", "Infalammatory",
+     "Lymphoid", "Maligancy","Other"];
+    $("#addPolypOrMass #path_guess").append(selectOptionsMaker(pathGuessArray));
   }
 
   // Populate the tables on reloads
@@ -540,6 +623,28 @@ $(document).ready(function() {
 
   });
 
+  $("#addPolypOrMassForm").submit(function(){
+    event.preventDefault();
+
+    var location = $("#addPolypOrMass #location").val();
+    var phenotype = $("#addPolypOrMass #phenotype").val();
+    var number = $("#addPolypOrMass #number").val();
+    var size = $("#addPolypOrMass #size").val();
+    // var clipped = $("#addPolypOrMass #clipped_selector").val();
+    var bottle = $("#addPolypOrMass #bottle").val();
+    var start_polyp = $("#addPolypOrMass #start_polyp").val();
+    var primary_nice = $("#addPolypOrMass #primary_nice").val();
+    var secondary_nice = $("#addPolypOrMass #secondary_nice").val();
+    var path_guess = $("#addPolypOrMass #path_guess").val();
+
+    var pic = $("#addPolypOrMass #pic").val();
+    if (debug) console.log(pic);
+
+
+    saveProcedureForm({}, "addPolypOrMassForm", "#addPolypOrMass");
+
+  });
+
   $(function () {
     $(".today").click(function(){
       var today = new Date();
@@ -588,10 +693,10 @@ $(document).ready(function() {
     $('#time_scope_withdrawn').datetimepicker({
       format: 'HH:mm'
     });
-    $('#timepicker4').datetimepicker({
+    $('#start_polyp').datetimepicker({
       format: 'HH:mm'
     });
-    $('#timepicker5').datetimepicker({
+    $('#end_polyp').datetimepicker({
       format: 'HH:mm'
     });
 
@@ -604,8 +709,8 @@ $(document).ready(function() {
         $('#time_scope_withdrawn').data("DateTimePicker").minDate(e.date);
     });
 
-    $("#timepicker4").on("dp.change", function (e) {
-        $('#timepicker5').data("DateTimePicker").minDate(e.date);
+    $("#start_polyp").on("dp.change", function (e) {
+        $('#end_polyp').data("DateTimePicker").minDate(e.date);
     });
   });
 
