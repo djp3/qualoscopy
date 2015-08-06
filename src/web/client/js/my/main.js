@@ -113,6 +113,11 @@ $(document).ready(function() {
     $("#btn_indications").click(function(){
       $("#indications #" + procedure.last_colon).addClass("active");
       $("#indications #" + procedure.last_colon + " input").prop('checked', "checked");
+
+      $("#primaryIndication #pill_selector").click(function(){
+        if(debug) console.log($(this));
+      });
+
     });
 
     $("#btn_scope").click(function(){
@@ -334,18 +339,33 @@ $(document).ready(function() {
      return $(elementString);
   }
 
-  var buttonListMaker2 = function(required, valueList, textList, buttonGroupName, height){
+  var buttonListMakerTwoCol = function(required, idList1, idList2,
+    textList1, textList2, buttonGroupName, height){
+
     var elementString = "<div class='button-list' style='height:" + height + "'> \
-      <div class='btn-group-vertical center-block' data-toggle='buttons'>";
+      <div data-toggle='buttons'> \
+        <div class='col-md-6 btn-group-vertical center-block two-col-list'>";
 
 
-    for (var i = 0; i < valueList.length; i++){
+    for (var i = 0; i < idList1.length; i++){
       elementString += " \
-      <label id=" + valueList[i] + " class='btn btn-primary'> \
+      <label id=" + idList1[i] + " class='btn btn-primary'> \
         <input " + required + " type='radio' name=" + buttonGroupName +
-        " value=" + valueList[i]  + ">" + textList[i]  +" \
+        " value=" + idList1[i]  + ">" + textList1[i]  +" \
       </label>";
     }
+
+    elementString += "</div><div class='col-md-6 btn-group-vertical center-block two-col-list'>";
+
+    for (var i = 0; i < idList2.length; i++){
+      elementString += " \
+      <label id=" + idList2[i] + " class='btn btn-primary'> \
+        <input " + required + " type='radio' name=" + buttonGroupName +
+        " value=" + idList2[i]  + ">" + textList2[i]  +" \
+      </label>";
+    }
+
+    elementString += "</div>";
 
      return $(elementString);
   }
@@ -433,22 +453,29 @@ $(document).ready(function() {
     $("#sedation #benadryl_selector").append(buttonListMaker("", benadrylIDTextArray,
     benadrylIDTextArray, "benadryl", "200px"));
 
-    var testIDTextArray = [];
-    for(var i = 0; i <= 300; i +=10){
-      testIDTextArray.push(i);
-    }
-    //TODO fix this
-    $("#primaryIndication #screening_selector").append(buttonListMaker2("", testIDTextArray,
-    testIDTextArray, "primary", "325px"));
 
-    // $("#addPolypOrMassForm #location_selector").append(buttonListMaker("", testIDTextArray,
-    // testIDTextArray, "test", "100px"));
-    //
-    // $("#primaryIndication #diagnostic_selector").append(buttonListMaker("", testIDTextArray,
-    // testIDTextArray, "primary", "325px"));
-    //
-    // $("#primaryIndication #therapeutic_selector").append(buttonListMaker("", testIDTextArray,
-    // testIDTextArray, "primary", "325px"));
+    var screening1IDArray = [1,2,3,4,5,6,7];
+    var screening1TextArray = ["Average Rist No Gi Sx, Signs, Hx or FHx",
+    "Family History Colorectal Cancer <br> (One immediate family member (age 50-75))",
+    "Family History Colorectal Cancer <br> (2 or more immediate family members)",
+    "Family History Colorectal Cancer <br> (one or more family members under age 50)",
+    "Family History Colorectal Cancer <br> (Unknown number/relationships)",
+    "Family History Genetic Cancer Syndrome <br> (Lynch Syndrome HNPCC)",
+    "Family History Genetic Cancer Syndrome <br> (Familial Colon Cancer Type X FCCTX)"];
+
+    var screening2IDArray = [8,9,10,11,12,13,14,15,16];
+    var screening2TextArray = ["Family History Genetic Cancer Syndrome <br> (Peutz-Jegher Syndrome)",
+    "Family History Genetic Cancer Syndrome <br> (MYH-Associated Polyposis)",
+    "Family History Genetic Cancer Syndrome <br> (Cowden's)",
+    "Family History Polyp(s) (Unknown number/type)",
+    "Family History Polyp(s) (Multiple Adenomas)",
+    "Family History Polyp(s) (Serrated Polyposis)",
+    "Fecal Test DNA", "Fecal Test FIT", "Fecal Test FOBT"];
+
+    $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
+    "required", screening1IDArray, screening2IDArray, screening1TextArray,
+    screening2TextArray, "primary", "380px"));
+
 
     var locationArray = ["TI", "Cecum", "Ascending", "Hepatic Flexure", "Transverse",
     "Splenic Flexure", "Decending", "Sigmoid", "Rectsigmoid", "Rectum", "Anus",
@@ -541,6 +568,14 @@ $(document).ready(function() {
     "bisacodyl": bisacodyl}, "preparationForm", "#preparation");
   });
 
+  $("#primaryIndicationForm").submit(function(){
+    event.preventDefault();
+
+    var primary = $("#primaryIndication input[name=primary]:checked").val();
+
+    if(debug) console.log(primary);
+  });
+
   $("#indicationForm").submit(function(){
     event.preventDefault();
 
@@ -581,7 +616,7 @@ $(document).ready(function() {
     }
 
     saveProcedureForm({"sedation_level": sedation_level, "versed": versed,
-  "fentanyl": fentanyl, "demerol": demerol, "benadryl": benadryl}, "sedationForm", "#sedation");
+   "fentanyl": fentanyl, "demerol": demerol, "benadryl": benadryl}, "sedationForm", "#sedation");
   });
 
   $("#extentForm").submit(function(){
