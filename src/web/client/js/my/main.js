@@ -61,9 +61,8 @@ $(document).ready(function() {
       });
   }
 
-  // Create click functions for buttons
-  var createButtonFunctions = function(procedure){
-
+  // populate identifiers Form
+  var populateIdentifiersForm = function(procedure){
     $("#btn_identifiers").click(function(){
       $("#ac_id").val(procedure.ac_id);
       // document.getElementById("location").value = procedure.location;
@@ -79,7 +78,10 @@ $(document).ready(function() {
       $("#identifiers #" + procedure.fellow).addClass("active");
       $("#identifiers #" + procedure.fellow + " input").prop('checked', "checked");
     });
+  }
 
+  // populate preparation Form
+  var populatePreparationForm = function(procedure){
     $("#btn_preparation").click(function(){
       $("#preparation #" + procedure.pre_drug).addClass("active");
       $("#preparation #" + procedure.pre_drug + " input").prop('checked', "checked");
@@ -98,7 +100,6 @@ $(document).ready(function() {
         $('#pre_drug_other').prop('required',true);
       }
 
-
       $("#preparation #pre_drug_selector label").click(function(){
         if($(this).prop('id') == "Other"){
           $('#preparation .other').removeClass('hide');
@@ -109,7 +110,10 @@ $(document).ready(function() {
         }
       });
     });
+  }
 
+  // populate Indications Form
+  var populateIndicationsForm = function(procedure){
     $("#btn_indications").click(function(){
       $("#indications #" + procedure.last_colon).addClass("active");
       $("#indications #" + procedure.last_colon + " input").prop('checked', "checked");
@@ -117,9 +121,11 @@ $(document).ready(function() {
       $("#primaryIndication #pill_selector").click(function(){
         if(debug) console.log($(this));
       });
-
     });
+  }
 
+  // populate Scope Form
+  var populateScopeForm = function(procedure){
     $("#btn_scope").click(function(){
       $("#scope #" + procedure.scope).addClass("active");
       $("#scope #" + procedure.scope + " input").prop('checked', "checked");
@@ -148,7 +154,10 @@ $(document).ready(function() {
         }
       });
     });
+  }
 
+  // populate Sedation Form
+  var populateSedationForm = function(procedure){
     $("#btn_sedation").click(function(){
       $("#sedation #" + procedure.sedation_level).addClass("active");
       $("#sedation #" + procedure.sedation_level + " input").prop('checked', "checked");
@@ -176,7 +185,10 @@ $(document).ready(function() {
         }
       });
     });
+  }
 
+  // populate Extent Form
+  var populateExtentForm = function(procedure){
     $("#btn_extent").click(function(){
       $("#extent #" + procedure.extent).addClass("active");
       $("#extent #" + procedure.extent + " input").prop('checked', "checked");
@@ -198,7 +210,10 @@ $(document).ready(function() {
         }
       });
     });
+  }
 
+  // populate quality Form
+  var populateQualityForm = function(procedure){
     $("#btn_quality").click(function(){
       $("#quality .prep_left #" + procedure.prep_quality_left).addClass("active");
       $("#quality .prep_left #" + procedure.prep_quality_left + " input").prop('checked', "checked");
@@ -209,16 +224,30 @@ $(document).ready(function() {
       $("#quality .prep_right #" + procedure.prep_quality_right).addClass("active");
       $("#quality .prep_right #" + procedure.prep_quality_right + " input").prop('checked', "checked");
     });
+  }
 
+  // populate quality Form
+  var populateTimesForm = function(procedure){
     $("#btn_times").click(function(){
       $("#times #time_insertion").val(procedure.time_insertion);
       $("#times #time_begin_withdrawal").val(procedure.time_begin_withdrawal);
       $("#times #time_scope_withdrawn").val(procedure.time_scope_withdrawn);
-
     });
-
   }
 
+  // Create click functions for buttons
+  var createButtonFunctions = function(procedure){
+    populateIdentifiersForm(procedure);
+    populatePreparationForm(procedure);
+    populateIndicationsForm(procedure);
+    populateScopeForm(procedure);
+    populateSedationForm(procedure);
+    populateExtentForm(procedure);
+    populateQualityForm(procedure);
+    populateTimesForm(procedure);
+  }
+
+  // Populate the tables of the main screen with Procedure Info
   var populateTables = function(procedure){
     // For all the tables
     var $allTables = [];
@@ -271,11 +300,13 @@ $(document).ready(function() {
     populatePolypsTable();
   }
 
+  // Update the tables be deleting them and creating them with new data
   var updateTables = function(procedure){
     $("#tables").empty();
     populateTables(procedure);
   }
 
+  // Turn on off the elements in an form
   var toggleForm = function(id, disabled){
     var form = document.getElementById(id);
     var elements = form.elements;
@@ -290,6 +321,7 @@ $(document).ready(function() {
     }
   }
 
+  // Toggle the progress bar on and off
   var toggleProgressBar = function(show){
     if (show == true){
       $('.progress').removeClass('hide');
@@ -298,7 +330,7 @@ $(document).ready(function() {
     }
   }
 
-
+  // Save the procuder form (ops is an javascript object with mutiple keys and values)
   var saveProcedureForm = function(opts, formID, modalID){
     toggleProgressBar(true);
     toggleForm(formID, true);
@@ -323,6 +355,7 @@ $(document).ready(function() {
       }
   }
 
+  // Create HTML button list
   var buttonListMaker = function(required, valueList, textList, buttonGroupName, height){
     var elementString = "<div class='button-list' style='height:" + height + "'> \
       <div class='btn-group-vertical center-block' data-toggle='buttons'>";
@@ -339,6 +372,7 @@ $(document).ready(function() {
      return $(elementString);
   }
 
+  // Create HTML button list with 2 columns
   var buttonListMakerTwoCol = function(required, idList1, idList2,
     textList1, textList2, buttonGroupName, height){
 
@@ -370,6 +404,7 @@ $(document).ready(function() {
      return $(elementString);
   }
 
+  // Create a list of <option> HTML elements from an array
   var selectOptionsMaker = function(textList){
     var elementString = "";
     for (var i = 0; i < textList.length; i++){
@@ -379,8 +414,8 @@ $(document).ready(function() {
      return $(elementString);
   }
 
-  // Populate all the button list with these arrays
-  var loadButtonLists = function() {
+  // Load the button list for Identifiers Modal
+  var loadIdentifiersButtonList = function(){
     var locationTextArray = ["Bldg200", "CathLab", "OSS", "OR", "CDDC", "UCI 1", "UCI 2"];
     var locationIDArray = ["bldg200", "cathlab", "OSS", "OR", "CDDC", "UCI_1", "UCI_2"];
     $("#location_selector").append(buttonListMaker("required", locationIDArray,
@@ -396,6 +431,10 @@ $(document).ready(function() {
     $("#fellow_selector").append(buttonListMaker("required", fellowIDArray,
     fellowTextArray, "fellow", "175px"));
 
+  }
+
+  // Load the button list for Preparation Modal
+  var loadPrepButtonList = function(){
     var preDrugTextArray = ["Miralax (or generic)", "PEG w lytes (Golytely, Trilyte, etc)",
     "Sodium picosulfate (Prepopik, Picoprepm, etc)", "MoviPrep", "Suprep",
     "Sodium phosphate (OsmoPrep, Visicol, etc)", "Magnesium citrate", "Other"];
@@ -403,57 +442,22 @@ $(document).ready(function() {
     "MoviPrep", "Suprep", "Sodium_phosphate", "Magnesium_citrate", "Other"];
     $("#pre_drug_selector").append(buttonListMaker("required", preDrugIDArray,
     preDrugTextArray, "pre_drug", "275px"));
+  }
 
+  // Load the button list for Indications Modal
+  var loadIndicationsButtonList = function(){
     var lastColonTextArray = ["None", "< 6 months",
     "6-12 months", "1 year", "2 years", "3 years", "4 years", "5 years",
     "6 years", "7 years", "8 years", "9 years", "10 or more years"];
-    var lastColonIDArray = ["None", "<6_m",
+    var lastColonIDArray = ["None", "6_m",
     "6-12_m", "1_yr", "2_yr", "3_yr", "4_yr", "5_yr",
     "6_yr", "7_yr", "8_yr", "9_yr", "10_yr"];
     $("#indications #last_colon_selector").append(buttonListMaker("required",
     lastColonIDArray, lastColonTextArray, "last_colon", "275px"));
+  }
 
-    var scopeTextArray = ["Pediatric Colonscope", "Adult Colonscope", "EGD Scope",
-    "Entro Scope", "Sigmoido Scope", "Other"];
-    var scopeIDArray = ["Pediatric", "Adult", "EGD", "Entro", "Sigmoido", "Other"];
-    $("#scope #scope_selector").append(buttonListMaker("required", scopeIDArray,
-    scopeTextArray, "scope", "200px"));
-
-    var versedIDTextArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    $("#sedation #versed_selector").append(buttonListMaker("", versedIDTextArray,
-    versedIDTextArray, "versed", "200px"));
-
-    var fentanylIDTextArray = [];
-    for(var i = 0; i <= 300; i +=25){
-      fentanylIDTextArray.push(i);
-    }
-    $("#sedation #fentanyl_selector").append(buttonListMaker("", fentanylIDTextArray,
-    fentanylIDTextArray, "fentanyl", "200px"));
-
-    var extentTextArray = ["TI", "Cecum", "Ileocolonic Anastomosis", "Ascending",
-    "Hepatic Flexure", "Transverse", "Splenic Flexure", "Decending", "Sigmoid", "Rectsigmoid"];
-    var extentIDArray = ["ti", "cecum", "ileocolonic_anastomosis", "ascending",
-    "hepatic_flexure", "transverse", "splenic_flexure", "decending", "sigmoid", "rectsigmoid"];
-    $("#extent #extent_selector").append(buttonListMaker("required", extentIDArray,
-    extentTextArray, "extentReached", "350px"));
-
-    var demerolIDTextArray = [];
-    for(var i = 0; i <= 300; i +=25){
-      demerolIDTextArray.push(i);
-      if(i == 25) demerolIDTextArray.push(37.5);
-      if(i == 50) demerolIDTextArray.push(62.5);
-    }
-    $("#sedation #demerol_selector").append(buttonListMaker("", demerolIDTextArray,
-    demerolIDTextArray, "demerol", "200px"));
-
-    var benadrylIDTextArray = [];
-    for(var i = 0; i <= 100; i +=25){
-      benadrylIDTextArray.push(i);
-    }
-    $("#sedation #benadryl_selector").append(buttonListMaker("", benadrylIDTextArray,
-    benadrylIDTextArray, "benadryl", "200px"));
-
-
+  // Load the button list for Primary Indications Modal
+  var loadPrimaryIndicationsButtonList = function(){
     var screening1IDArray = [1,2,3,4,5,6,7];
     var screening1TextArray = ["Average Rist No Gi Sx, Signs, Hx or FHx",
     "Family History Colorectal Cancer <br> (One immediate family member (age 50-75))",
@@ -475,8 +479,59 @@ $(document).ready(function() {
     $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
     "required", screening1IDArray, screening2IDArray, screening1TextArray,
     screening2TextArray, "primary", "380px"));
+  }
 
+  // Load the button list for Scope Modal
+  var loadScopeButtonList = function(){
+      var scopeTextArray = ["Pediatric Colonscope", "Adult Colonscope", "EGD Scope",
+      "Entro Scope", "Sigmoido Scope", "Other"];
+      var scopeIDArray = ["Pediatric", "Adult", "EGD", "Entro", "Sigmoido", "Other"];
+      $("#scope #scope_selector").append(buttonListMaker("required", scopeIDArray,
+      scopeTextArray, "scope", "200px"));
+  }
 
+  // Load the button list for Sedation Modal
+  var loadSedationButtonList = function(){
+    var versedIDTextArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    $("#sedation #versed_selector").append(buttonListMaker("", versedIDTextArray,
+    versedIDTextArray, "versed", "200px"));
+
+    var fentanylIDTextArray = [];
+    for(var i = 0; i <= 300; i +=25){
+      fentanylIDTextArray.push(i);
+    }
+    $("#sedation #fentanyl_selector").append(buttonListMaker("", fentanylIDTextArray,
+    fentanylIDTextArray, "fentanyl", "200px"));
+
+    var demerolIDTextArray = [];
+    for(var i = 0; i <= 300; i +=25){
+      demerolIDTextArray.push(i);
+      if(i == 25) demerolIDTextArray.push(37.5);
+      if(i == 50) demerolIDTextArray.push(62.5);
+    }
+    $("#sedation #demerol_selector").append(buttonListMaker("", demerolIDTextArray,
+    demerolIDTextArray, "demerol", "200px"));
+
+    var benadrylIDTextArray = [];
+    for(var i = 0; i <= 100; i +=25){
+      benadrylIDTextArray.push(i);
+    }
+    $("#sedation #benadryl_selector").append(buttonListMaker("", benadrylIDTextArray,
+    benadrylIDTextArray, "benadryl", "200px"));
+  }
+
+  // Load the button list for Extent Modal
+  var loadExtentButtonList = function(){
+    var extentTextArray = ["TI", "Cecum", "Ileocolonic Anastomosis", "Ascending",
+    "Hepatic Flexure", "Transverse", "Splenic Flexure", "Decending", "Sigmoid", "Rectsigmoid"];
+    var extentIDArray = ["ti", "cecum", "ileocolonic_anastomosis", "ascending",
+    "hepatic_flexure", "transverse", "splenic_flexure", "decending", "sigmoid", "rectsigmoid"];
+    $("#extent #extent_selector").append(buttonListMaker("required", extentIDArray,
+    extentTextArray, "extentReached", "350px"));
+  }
+
+  // Load the button list for Extent Modal
+  var loadAddPolypSelectOptions = function(){
     var locationArray = ["TI", "Cecum", "Ascending", "Hepatic Flexure", "Transverse",
     "Splenic Flexure", "Decending", "Sigmoid", "Rectsigmoid", "Rectum", "Anus",
     "Ileocolonic Anastomosis", "colocolonic Anastomosis"];
@@ -514,6 +569,18 @@ $(document).ready(function() {
     $("#addPolypOrMass #path_guess").append(selectOptionsMaker(pathGuessArray));
   }
 
+  // Populate all the button list with these arrays
+  var loadButtonLists = function() {
+    loadIdentifiersButtonList();
+    loadPrepButtonList();
+    loadIndicationsButtonList();
+    loadPrimaryIndicationsButtonList();
+    loadScopeButtonList();
+    loadSedationButtonList();
+    loadExtentButtonList();
+    loadAddPolypSelectOptions();
+  }
+
   // Populate the tables on reloads
   var onLoad = function(){
     var salts = JSON.parse(Cookies.getCookie("salts"));
@@ -531,8 +598,6 @@ $(document).ready(function() {
   }
 
   onLoad();
-
-
 
 
   $("#identifiersForm").submit(function(){
@@ -680,6 +745,7 @@ $(document).ready(function() {
 
   });
 
+  // Sets up date and timepicker Widgets
   $(function () {
     $(".today").click(function(){
       var today = new Date();
