@@ -254,8 +254,8 @@
               <div class='col-md-6'>
                 <h4>Primary Indication</h4>
                 <div class="btn-group" data-toggle="buttons">
-                  <label class="btn btn-primary btn-lg" data-toggle='modal' data-target="#primaryIndication">
-                    <input required type="radio" name="primary">Click to Select
+                  <label id="primaryLabel" class="btn btn-primary btn-lg" data-toggle='modal' data-target="#primaryIndication">
+                    <input id="primary" required type="radio" name="primary">Click to Select
                   </label>
                 </div>
                 <h4>Other Indication</h4>
@@ -307,12 +307,12 @@
 
               <div class="row">
                 <div class='col-md-12'>
-                  <ul id="pill_selector" class="nav nav-pills nav-justified">
-                    <li role="presentation" class="active"><a>Screening</a></li>
-                    <li role="presentation"><a>Surveillance</a></li>
-                    <li role="presentation"><a>Diagnostic</a></li>
-                    <li role="presentation"><a>Therapeutic</a></li>
-                    <li role="presentation"><a>Preoperative</a></li>
+                  <ul id="pill_selector" class="nav nav-pills nav-justified btn-group" data-toggle="buttons">
+                    <li id="1" role="presentation" class="active"><a>Screening</a></li>
+                    <li id="2" role="presentation"><a>Surveillance</a></li>
+                    <li id="3" role="presentation"><a>Diagnostic</a></li>
+                    <li id="4" role="presentation"><a>Therapeutic</a></li>
+                    <li id="5" role="presentation"><a>Preoperative</a></li>
                   </ul>
                 </div>
               </div>

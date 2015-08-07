@@ -49,7 +49,7 @@ $(document).ready(function() {
 
           $("#tables").append(tableMaker("Add Polyps or Mass", "btn_addPolypOrMass", 8, "#addPolypOrMass", "col-md-8", "table7",
           ["Loc", "Phe", "Num", "Size", "Tx", "Residual", "Bottle", "Path"],
-          ["NA", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE"]));
+          [polyps[0].polyp_id, "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE"]));
 
           $("#btn_addPolypOrMass").click(function(){
             // $("#addPolypOrMass #location").val("Cecum");
@@ -118,8 +118,23 @@ $(document).ready(function() {
       $("#indications #" + procedure.last_colon).addClass("active");
       $("#indications #" + procedure.last_colon + " input").prop('checked', "checked");
 
-      $("#primaryIndication #pill_selector").click(function(){
-        if(debug) console.log($(this));
+      $("#primaryIndication #pill_selector li").on("click", function(){
+        $(".nav.nav-pills li").removeClass("active");
+        $(this).addClass("active");
+
+        $("#primaryIndication #indication_selector").empty();
+        var pill_id = $(this).attr('id');
+        if(pill_id == 1) {
+          loadScreeningIndicationsButtonList();
+        }else if(pill_id == 2){
+          loadSurveillanceIndicationsButtonList();
+        }else if(pill_id == 3){
+          loadDiagnosticIndicationsButtonList();
+        }else if(pill_id == 4){
+          loadTherapeuticIndicationsButtonList();
+        }else if(pill_id == 5){
+          loadPreoperativeIndicationsButtonList();
+        }
       });
     });
   }
@@ -323,7 +338,7 @@ $(document).ready(function() {
 
     var elementString = "<div class='button-list' style='height:" + height + "'> \
       <div data-toggle='buttons'> \
-        <div class='col-md-6 btn-group-vertical center-block two-col-list'>";
+        <div class='col-md-6 btn-group-vertical center-block btn-group'>";
 
 
     for (var i = 0; i < idList1.length; i++){
@@ -334,13 +349,54 @@ $(document).ready(function() {
       </label>";
     }
 
-    elementString += "</div><div class='col-md-6 btn-group-vertical center-block two-col-list'>";
+    elementString += "</div><div class='col-md-6 btn-group-vertical center-block btn-group'>";
 
     for (var i = 0; i < idList2.length; i++){
       elementString += " \
       <label id=" + idList2[i] + " class='btn btn-primary'> \
         <input " + required + " type='radio' name=" + buttonGroupName +
         " value=" + idList2[i]  + ">" + textList2[i]  +" \
+      </label>";
+    }
+
+    elementString += "</div>";
+
+     return $(elementString);
+  }
+
+  // Create HTML button list with 3 columns
+  var buttonListMakerThreeCol = function(required, idList1, idList2, idList3,
+    textList1, textList2, textList3, buttonGroupName, height){
+    var elementString = "<div class='button-list' style='height:" + height + "'> \
+      <div data-toggle='buttons'> \
+        <div class='col-md-4 btn-group-vertical center-block btn-group'>";
+
+
+    for (var i = 0; i < idList1.length; i++){
+      elementString += " \
+      <label id=" + idList1[i] + " class='btn btn-primary'> \
+        <input " + required + " type='radio' name=" + buttonGroupName +
+        " value=" + idList1[i]  + ">" + textList1[i]  +" \
+      </label>";
+    }
+
+    elementString += "</div><div class='col-md-4 btn-group-vertical center-block btn-group'>";
+
+    for (var i = 0; i < idList2.length; i++){
+      elementString += " \
+      <label id=" + idList2[i] + " class='btn btn-primary'> \
+        <input " + required + " type='radio' name=" + buttonGroupName +
+        " value=" + idList2[i]  + ">" + textList2[i]  +" \
+      </label>";
+    }
+
+    elementString += "</div><div class='col-md-4 btn-group-vertical center-block btn-group'>";
+
+    for (var i = 0; i < idList3.length; i++){
+      elementString += " \
+      <label id=" + idList3[i] + " class='btn btn-primary'> \
+        <input " + required + " type='radio' name=" + buttonGroupName +
+        " value=" + idList3[i]  + ">" + textList3[i]  +" \
       </label>";
     }
 
@@ -401,29 +457,160 @@ $(document).ready(function() {
     lastColonIDArray, lastColonTextArray, "last_colon", "275px"));
   }
 
-  // Load the button list for Primary Indications Modal
-  var loadPrimaryIndicationsButtonList = function(){
-    var screening1IDArray = [1,2,3,4,5,6,7];
-    var screening1TextArray = ["Average Rist No Gi Sx, Signs, Hx or FHx",
-    "Family History Colorectal Cancer <br> (One immediate family member (age 50-75))",
-    "Family History Colorectal Cancer <br> (2 or more immediate family members)",
-    "Family History Colorectal Cancer <br> (one or more family members under age 50)",
-    "Family History Colorectal Cancer <br> (Unknown number/relationships)",
-    "Family History Genetic Cancer Syndrome <br> (Lynch Syndrome HNPCC)",
-    "Family History Genetic Cancer Syndrome <br> (Familial Colon Cancer Type X FCCTX)"];
+  // Load the button list for Screening Indications Modal
+  var loadScreeningIndicationsButtonList = function(){
+    var screening1IDArray = ["Screening:1","Screening:2","Screening:3","Screening:4",
+    "Screening:5","Screening:6","Screening:7"];
+    var screening1TextArray = [
+    "1. Average Rist No Gi Sx, Signs, Hx or FHx",
+    "2. Family History Colorectal Cancer <br> (One immediate family member (age 50-75))",
+    "3. Family History Colorectal Cancer <br> (2 or more immediate family members)",
+    "4. Family History Colorectal Cancer <br> (one or more family members under age 50)",
+    "5. Family History Colorectal Cancer <br> (Unknown number/relationships)",
+    "6. Family History Genetic Cancer Syndrome <br> (Lynch Syndrome HNPCC)",
+    "7. Family History Genetic Cancer Syndrome <br> (Familial Colon Cancer Type X FCCTX)"];
 
-    var screening2IDArray = [8,9,10,11,12,13,14,15,16];
-    var screening2TextArray = ["Family History Genetic Cancer Syndrome <br> (Peutz-Jegher Syndrome)",
-    "Family History Genetic Cancer Syndrome <br> (MYH-Associated Polyposis)",
-    "Family History Genetic Cancer Syndrome <br> (Cowden's)",
-    "Family History Polyp(s) (Unknown number/type)",
-    "Family History Polyp(s) (Multiple Adenomas)",
-    "Family History Polyp(s) (Serrated Polyposis)",
-    "Fecal Test DNA", "Fecal Test FIT", "Fecal Test FOBT"];
+    var screening2IDArray = ["Screening:8","Screening:9","Screening:10","Screening:11",
+    "Screening:12","Screening:13","Screening:14","Screening:15","Screening:16"];
+    var screening2TextArray = [
+    "8. Family History Genetic Cancer Syndrome <br> (Peutz-Jegher Syndrome)",
+    "9. Family History Genetic Cancer Syndrome <br> (MYH-Associated Polyposis)",
+    "10. Family History Genetic Cancer Syndrome <br> (Cowden's)",
+    "11. Family History Polyp(s) (Unknown number/type)",
+    "12. Family History Polyp(s) (Multiple Adenomas)",
+    "13. Family History Polyp(s) (Serrated Polyposis)",
+    "14. Fecal Test DNA",
+    "15. Fecal Test FIT",
+    "16. Fecal Test FOBT"];
 
     $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
     "required", screening1IDArray, screening2IDArray, screening1TextArray,
-    screening2TextArray, "primary", "380px"));
+    screening2TextArray, "primary", "390px"));
+  }
+
+  // Load the button list for Surveillance Indications Modal
+  var loadSurveillanceIndicationsButtonList = function(){
+    var surveillance1IDArray = ["Surveillance:1","Surveillance:2","Surveillance:3","Surveillance:4",
+    "Surveillance:5","Surveillance:6","Surveillance:7","Surveillance:8"];
+    var surveillance1TextArray = [
+    "1. Personal History Colorectal Cancer (one)",
+    "2. Personal History Colorectal Cancer <br> (more than one)",
+    "3. Personal History Colorectal Cancer <br> (under age 50)",
+    "4. Personal History Colorectal Cancer <br> (Unknown number/type)",
+    "5. Personal History Infalmmatory Bowel Disease <br> (Pancolits => 8 years)",
+    "6. Personal History Infalmmatory Bowel Disease <br> (Left-sided Colitis => 15 years)",
+    "7. Personal History Polyps Adenomas (2 or less)",
+    "8. Personal History Polyps Adenomas (3-10)"];
+
+    var surveillance2IDArray = ["Surveillance:9","Surveillance:10",
+    "Surveillance:11","Surveillance:12","Surveillance:13","Surveillance:14","Surveillance:15","Surveillance:16"];
+    var surveillance2TextArray = [
+    "9. Personal History Polyps Adenomas (11-19)",
+    "10. Personal History Polyps Adenomas (20 or more)",
+    "11. Personal History Polyps Adenomas (Villous adenoma)",
+    "12. Personal History Polyps Serrated Polyps <br> (1-5, None > 9 mm)",
+    "13. Personal History Polyps Serrated Polyps <br> (1-5, Any > 9 mm)",
+    "14. Personal History Polyps Serrated Polyps <br> (5-19, right-sided, one > 9 mm)",
+    "15. Personal History Polyps Serrated Polyps <br> (20 or more, any size, anywhere)",
+    "16. Personal History Polyps Serrated Polyps with dysplasia"];
+
+    $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
+    "required", surveillance1IDArray, surveillance2IDArray, surveillance1TextArray,
+    surveillance2TextArray, "primary", "390px"));
+  }
+
+  // Load the button list for Diagnostic Indications Modal
+  var loadDiagnosticIndicationsButtonList = function(){
+    var diagnostic1IDArray = ["Diagnostic:1","Diagnostic:2","Diagnostic:3",
+    "Diagnostic:4","Diagnostic:5","Diagnostic:6","Diagnostic:7","Diagnostic:8",
+    "Diagnostic:9","Diagnostic:10"];
+    var diagnostic1TextArray = [
+    "1. Abnormal Finding Endoscopic",
+    "2. Abnormal Finding Imaging",
+    "3. Abnormal Finding Surgical",
+    "4. Altered Stool Change <br> in bowel movements",
+    "5. Anemia Iron Deficiency",
+    "6. Anemia Unspecified",
+    "7. Bleeding Melena",
+    "8. Bleedning Rectal",
+    "9. Constipation Chronic (>6week)",
+    "10. Diarrhea Chronic (>6 week)"];
+
+    var diagnostic2IDArray = ["Diagnostic:11","Diagnostic:12","Diagnostic:13"
+    ,"Diagnostic:14","Diagnostic:15","Diagnostic:16","Diagnostic:17","Diagnostic:18"
+    ,"Diagnostic:19"];
+    var diagnostic2TextArray = [
+    "11. Inflammatory Bowel Disease <br> Assess Extent/Severity",
+    "12. Inflammatory Bowel Disease <br> Establish Specific Diagnosis",
+    "13. Pain Abdomen (RLQ)",
+    "14. Pain Abdomen (LLQ)",
+    "15. Pain Abdomen (Suprapubic)",
+    "16. Pain Abdomen (Periumbilical)",
+    "17. Pain Abdomen (RUQ)",
+    "18. Pain Abdomen (Epigastric)",
+    "19. Pain Abdomen (LUQ)"];
+
+    var diagnostic3IDArray = ["Diagnostic:20","Diagnostic:21",
+    "Diagnostic:22","Diagnostic:23","Diagnostic:24"];
+    var diagnostic3TextArray = [
+    "20. Pain Abdomen (Generalized)",
+    "21. Pain Anorectal",
+    "22. Pain Back",
+    "23. Pain Chest",
+    "24. Weight Loss (Unexplained)"];
+
+    $("#primaryIndication #indication_selector").append(buttonListMakerThreeCol(
+    "required", diagnostic1IDArray, diagnostic2IDArray, diagnostic3IDArray,
+     diagnostic1TextArray, diagnostic2TextArray, diagnostic3TextArray,
+     "primary", "390px"));
+  }
+
+  // Load the button list for Therapeutic Indications Modal
+  var loadTherapeuticIndicationsButtonList = function(){
+    var therapeutic1IDArray = ["Therapeutic:1","Therapeutic:2","Therapeutic:3","Therapeutic:4",
+    "Therapeutic:5","Therapeutic:6","Therapeutic:7","Therapeutic:8","Therapeutic:9",
+    "Therapeutic:10"];
+    var therapeutic1TextArray = [
+    "1. Bleeding Control of Bleeding (Known AVM(s))",
+    "2. Bleeding Control of Bleeding (post-polypectomy bleed)",
+    "3. Bleeding Control of Bleeding (Known Mass/Polyp)",
+    "4. Bleeding Control of Bleeding <br> (Known Diverticular bleed)",
+    "5. Bleeding Control of Bleeding (Other)",
+    "6. C. Difficle Fecal Microbiota Transplantaion",
+    "7. Foreign Body Stent (Removal)",
+    "8. Foreign Body Unspecified (Removal)",
+    "9. IBD Fecal Microbiota Transplantaion",
+    "10. Mass/Polup Resection"];
+
+    var therapeutic2IDArray = ["Therapeutic:11","Therapeutic:12",
+    "Therapeutic:13"];
+    var therapeutic2TextArray = [
+    "11. Stricture Dilation",
+    "12. Stricture Stent (Placement)",
+    "13. Stricture Stent (Replacement or Repeat)"];
+
+    $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
+    "required", therapeutic1IDArray, therapeutic2IDArray, therapeutic1TextArray,
+    therapeutic2TextArray, "primary", "390px"));
+  }
+
+  // Load the button list for Preoperative Indications Modal
+  var loadPreoperativeIndicationsButtonList = function(){
+
+    var preoperative1IDArray = ["Preoperative:1","Preoperative:2",
+    "Preoperative:3"];
+    var preoperative1TextArray = [
+    "1. Colostomy takedown",
+    "2. Indentify or Clear Synchronoous Lesion",
+    "3. Mass/Polyp Mark/Tatoo"];
+
+    var preoperative2IDArray = [];
+    var preoperative2TextArray = [];
+
+    $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
+    "required", preoperative1IDArray, preoperative2IDArray,
+     preoperative1TextArray, preoperative2TextArray, "primary", "390px"));
+
   }
 
   // Load the button list for Scope Modal
@@ -519,7 +706,7 @@ $(document).ready(function() {
     loadIdentifiersButtonList();
     loadPrepButtonList();
     loadIndicationsButtonList();
-    loadPrimaryIndicationsButtonList();
+    loadScreeningIndicationsButtonList();
     loadScopeButtonList();
     loadSedationButtonList();
     loadExtentButtonList();
@@ -637,8 +824,9 @@ $(document).ready(function() {
     event.preventDefault();
 
     var primary = $("#primaryIndication input[name=primary]:checked").val();
-
-    if(debug) console.log(primary);
+    $("#indications #primary").val(primary);
+    $("#indications #primaryLabel").text(primary);
+    $("#primaryIndication").modal('toggle');
   });
 
   $("#indicationForm").submit(function(){
@@ -646,8 +834,12 @@ $(document).ready(function() {
 
     var last_colon = $("#indications input[name=last_colon]:checked").val();
     var filter = $('input[name=filter]:checked').val();
+    // Getting the text might not be the best way to do this but it works
+    var primary_indication = $("#indications #primaryLabel").text();
+    if(debug) console.log(primary_indication);
 
-    saveProcedureForm({"last_colon": last_colon}, "indicationForm", "#indications");
+    saveProcedureForm({"last_colon": last_colon,
+    "primary_indication": primary_indication}, "indicationForm", "#indications");
   });
 
   $("#scopeForm").submit(function(){

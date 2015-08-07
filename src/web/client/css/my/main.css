@@ -2,10 +2,6 @@
   overflow: auto;
 }
 
-.two-col-list input[type="radio"]{
-    visibility:hidden;
-}
-
 li {
     cursor: pointer;
 }
