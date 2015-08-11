@@ -8,7 +8,7 @@
          any other head content must come *after* these tags -->
     <meta name="description" content="HTML Document
       for main screen of application">
-    <meta name="author" content="Luke Raus">
+    <meta name="author" content="Luke Raus 2015">
 
     <title>Qualoscopy:Main</title>
 
@@ -251,93 +251,28 @@
                 <h4>Last Colon</h4>
                 <div id="last_colon_selector"></div>
               </div>
-
-              <!-- Radio Group -->
-              <div class="col-md-6">
-                <h4>Indication Filter</h4>
-                <div class="btn-group-vertical" data-toggle="buttons">
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="filter" value="Screening">Screening
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="filter" value="Surveillance">Surveillance
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="filter" value="Diagnostic">Diagnostic
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="filter" value="T">T
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="filter" value="Therapeutic">Therapeutic
-                  </label>
-                  <label class="btn btn-primary btn-lg">
-                    <input required type="radio" name="filter" value="Preoperatice">Preoperatice
-                  </label>
-                </div>
-              </div>
-              </div>
-            </div>
-
-            <div class="row">
               <div class='col-md-6'>
                 <h4>Primary Indication</h4>
-                <select class="selectpicker show-tick" data-live-search="true">
-                  <option>Indication 1</option>
-                  <option>Indication 2</option>
-                  <option>Indication 3</option>
-                  <option>Indication 4</option>
-                  <option>Indication 5</option>
-                  <option>Indication 6</option>
-                  <option>Indication 7</option>
-                  <option>Indication 8</option>
-                  <option>Indication 9</option>
-                </select>
-              </div>
-              <div class='col-md-6'>
-                <h4>Add Indications</h4>
-                <select class="selectpicker show-tick" multiple data-live-search="true">
-                  <optgroup label="Screening">
-                    <option>Avg Risk</option>
-                    <option>FHx CRC</option>
-                    <option>FHx Polyps</option>
-                    <option>+FIT</option>
-                    <option>+Hemoccult</option>
-                    <option>+Stool DNA</option>
-                  </optgroup>
-                  <optgroup label="Surveilance">
-                    <option>Hx Polyps</option>
-                    <option>Hx CRC</option>
-                    <option>Hc IBD</option>
-                  </optgroup>
-                  <optgroup label="Diagnostic">
-                    <option>Anemia</option>
-                    <option>Bleeding</option>
-                    <option>Abd Pain</option>
-                    <option>Diarrhea</option>
-                    <option>Constipation</option>
-                    <option>Alt Stool</option>
-                    <option>Abn X-ray</option>
-                  </optgroup>
-                  <optgroup label="Therapeutic">
-                    <option>Knwn Polyp</option>
-                    <option>Knwn Structure</option>
-                    <option>Bleeding Source</option>
-                    <option>FMT</option>
-                  </optgroup>
-                </select>
-              </div>
-            </div>
-
-            <!-- Text input -->
-            <div class="row">
-              <div class="col-md-12">
+                <div class="btn-group" data-toggle="buttons">
+                  <label id="primaryLabel" class="btn btn-primary btn-lg" data-toggle='modal' data-target="#primaryIndication">
+                    <input id="primary" required type="radio" name="primary">Click to Select
+                  </label>
+                </div>
+                <h4>Other Indication</h4>
+                <div class="btn-group" data-toggle="buttons">
+                  <label class="btn btn-primary btn-lg">
+                    <input required type="radio" name="secondary">Click to Select
+                  </label>
+                </div>
                 <h4>Other Indications</h4>
-                <label><input class="form-control" type="text" name="indications"></label>
+                <label>
+                  <input class="form-control" type="text">
+                </label>
               </div>
             </div>
           </div>
 
+        </div>
           <div class="modal-footer">
             <div class="row">
               <div class='col-md-10'>
@@ -357,6 +292,56 @@
         </div>
       </div>
     </div>
+
+    <!-- Popup for Indications -->
+    <div class="modal fade" id="primaryIndication" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Primary Indication</h3>
+          </div>
+          <form id="primaryIndicationForm">
+          <div class="modal-body">
+            <div class="form-group">
+
+              <div class="row">
+                <div class='col-md-12'>
+                  <ul id="pill_selector" class="nav nav-pills nav-justified btn-group" data-toggle="buttons">
+                    <li id="1" role="presentation" class="active"><a>Screening</a></li>
+                    <li id="2" role="presentation"><a>Surveillance</a></li>
+                    <li id="3" role="presentation"><a>Diagnostic</a></li>
+                    <li id="4" role="presentation"><a>Therapeutic</a></li>
+                    <li id="5" role="presentation"><a>Preoperative</a></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="row">
+                <div id="indication_selector"></div>
+              </div>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="row">
+                <div class='col-md-10'>
+                  <div class="progress hide">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar"
+                    aria-valuenow="0" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+                    Saving
+                    </div>
+                  </div>
+                </div>
+                <div class='col-md-2'>
+                  <input type="submit" class="btn btn-default" value="Save"/>
+                </div>
+              </div>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
 
     <!-- Scope popup -->
     <div class="modal fade" id="scope" role="dialog">
@@ -785,6 +770,7 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3 class="modal-title">Add Edit Polyps or Mass</h3>
           </div>
+          <form id="addPolypOrMassForm">
           <div class="modal-body">
             <div class="form-group">
 
@@ -792,88 +778,76 @@
               <div class="row">
                 <div class='col-md-2'>
                   <h4>Location</h4>
-                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                    <option>None</option>
-                    <option>Drug 1</option>
-                    <option>Drug 2</option>
-                  </select>
+                  <select id='location' class="form-control"></select>
                 </div>
                 <div class='col-md-2'>
                   <h4>Phenotype</h4>
-                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                    <option>None</option>
-                    <option>Drug 1</option>
-                    <option>Drug 2</option>
-                  </select>
+                  <select id='phenotype' class="form-control"></select>
                 </div>
                 <div class='col-md-2'>
                   <h4>Number</h4>
-                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                    <option>None</option>
-                    <option>Drug 1</option>
-                    <option>Drug 2</option>
-                  </select>
+                  <select id='number' class="form-control"></select>
                 </div>
                 <div class='col-md-2'>
                   <h4>Size (mm)</h4>
-                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                    <option>None</option>
-                    <option>Drug 1</option>
-                    <option>Drug 2</option>
-                  </select>
+                  <select id='size' class="form-control"></select>
                 </div>
                 <div class='col-md-2'>
                   <h4>Treatment</h4>
-                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                    <option>None</option>
-                    <option>Drug 1</option>
-                    <option>Drug 2</option>
-                  </select>
+                  <select id='treatment' class="form-control"></select>
                 </div>
                 <div class='col-md-2'>
                   <h4>Residual</h4>
-                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                    <option>None</option>
-                    <option>Drug 1</option>
-                    <option>Drug 2</option>
-                  </select>
+                  <select id='residual' class="form-control"></select>
                 </div>
               </div>
 
               <!-- Dropdown row -->
               <div class="row">
                 <div class='col-md-2'>
-                  <div class="checkbox">
-                    <label class="btn btn-primary">
-                      <input type="checkbox" value="">Clipped?
-                    </label>
-                    <label class="btn btn-primary" >
-                      <input type="checkbox" value="">Submitted?
-                    </label>
+                  <h4>Clipped?</h4>
+                  <div id="clipped_selector">
+                    <div class="btn-group" data-toggle="buttons">
+                      <label id="Y" class="btn btn-primary">
+                        <input required type="radio" name="clipped" value="Y">Yes
+                      </label>
+                      <label id="N" class="btn btn-primary">
+                        <input required type="radio" name="clipped" value="N">No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class='col-md-2'>
+                  <h4>Submitted?</h4>
+                  <div id="submitted_selector">
+                    <div class="btn-group" data-toggle="buttons">
+                      <label id="Y" class="btn btn-primary">
+                        <input required type="radio" name="submitted" value="Y">Yes
+                      </label>
+                      <label id="N" class="btn btn-primary">
+                        <input required type="radio" name="submitted" value="N">No
+                      </label>
+                    </div>
                   </div>
                 </div>
                 <div class='col-md-2'>
                   <h4>Bottle</h4>
-                  <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                    <option>None</option>
-                    <option>1</option>
-                    <option>2</option>
-                  </select>
+                    <select id='bottle' class="form-control"></select>
                 </div>
 
-                <div class='col-md-3'>
+                <div class='col-md-2'>
                   <h4>Time Start</h4>
                   <div class='input-group date'>
-                    <input id='timepicker4' type='text' class="form-control" />
+                    <input id='start_polyp' type='text' class="form-control" />
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-time"></span>
                     </span>
                   </div>
                 </div>
-                <div class='col-md-3'>
+                <div class='col-md-2'>
                   <h4>Time End</h4>
                   <div class='input-group date'>
-                    <input id='timepicker5' type='text' class="form-control" />
+                    <input id='end_polyp' type='text' class="form-control" />
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-time"></span>
                     </span>
@@ -892,46 +866,30 @@
                   <div class="row">
                     <div class="col-md-6">
                       <h5>Primary NICECriteria</h5>
-                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                        <option>None</option>
-                        <option>Bland/capillaries</option>
-                        <option>Dark Spots</option>
-                        <option>Light Spots</option>
-                        <option>Tubulogyrus</option>
-                      </select>
+                      <select id='primary_nice' class="form-control"></select>
                     </div>
                     <div class="col-md-6">
                       <h5>Secondary NICECriteria</h5>
-                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                        <option>None</option>
-                        <option>Bland/capillaries</option>
-                        <option>Dark Spots</option>
-                        <option>Light Spots</option>
-                        <option>Tubulogyrus</option>
-                      </select>
+                      <select id='secondary_nice' class="form-control"></select>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6">
                       <h5>Path Best Guess</h5>
-                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                        <option>None</option>
-                        <option>Adenoma</option>
-                        <option>Hyperplastic</option>
-                        <option>SSA</option>
-                        <option>Inflamatory</option>
-                        <option>Lymphoid</option>
-                        <option>Malignancy</option>
-                        <option>Other</option>
-                      </select>
+                      <select id='path_guess' class="form-control"></select>
                     </div>
                     <div class="col-md-6">
                       <h5>Guess Confidence</h5>
-                      <select class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                        <option>None</option>
-                        <option>High</option>
-                        <option>Low</option>
-                      </select>
+                      <div id="guess_confidence_selector">
+                        <div class="btn-group" data-toggle="buttons">
+                          <label id="High" class="btn btn-primary">
+                            <input required type="radio" name="guess_confidence" value="High">High
+                          </label>
+                          <label id="Low" class="btn btn-primary">
+                            <input required type="radio" name="guess_confidence" value="Low">Low
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -939,10 +897,12 @@
                   <img src="assets/addImage.png" class="img-responsive" alt="Add Image">
                   <div class="row">
                     <div class="col-md-6">
-                      <button class='btn btn-primary pull-right'>Add Image</button>
+                      <span class="btn btn-primary btn-file">
+                          Add Image <input id="pic" type="file" name="pic" accept="image/*">
+                      </span>
                     </div>
                     <div class="col-md-6">
-                      <button class='btn btn-primary pull-left'>Remove Image</button>
+                      <button class='btn btn-primary'>Remove Image</button>
                     </div>
                   </div>
                 </div>
@@ -951,8 +911,21 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+            <div class="row">
+              <div class='col-md-10'>
+                <div class="progress hide">
+                  <div class="progress-bar progress-bar-striped active" role="progressbar"
+                  aria-valuenow="0" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+                  Saving
+                  </div>
+                </div>
+              </div>
+              <div class='col-md-2'>
+                <input type="submit" class="btn btn-default" value="Save"/>
+              </div>
+            </div>
           </div>
+        </form>
         </div>
       </div>
     </div>

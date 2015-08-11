@@ -1,4 +1,4 @@
-// @Author Luke Raus
+// (c) Luke Raus 2015
 // This js if for managing cookies on the site
 
 // @namespace Initialize

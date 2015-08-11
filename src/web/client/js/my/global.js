@@ -1,3 +1,4 @@
+// (c) Luke Raus 2015
 // These are global variables/functions used throughout site
 
 // https://104.237.152.218:9021/
