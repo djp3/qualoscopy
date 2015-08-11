@@ -1,3 +1,4 @@
+// (c) Luke Raus 2015
 $(document).ready(function() {
 
   // The function tableMaker

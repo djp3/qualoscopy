@@ -1,3 +1,4 @@
+// (c) Luke Raus 2015
 // My functions for server api calls
 
 // add a patient to the databese

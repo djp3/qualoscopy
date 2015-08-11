@@ -1,3 +1,4 @@
+// (c) Luke Raus 2015
 // JS for patient screen
 $(document).ready(function() {
 

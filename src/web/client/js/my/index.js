@@ -1,3 +1,4 @@
+// (c) Luke Raus 2015
 $(document).ready(function() {
   // For the Login
   $('#login-form').keypress(function(event){
