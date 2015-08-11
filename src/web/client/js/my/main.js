@@ -120,21 +120,45 @@ $(document).ready(function() {
       $("#indications #" + procedure.last_colon + " input").prop('checked', "checked");
 
       $("#primaryIndication #pill_selector li").on("click", function(){
-        $(".nav.nav-pills li").removeClass("active");
+        $("#primaryIndication .nav.nav-pills li").removeClass("active");
         $(this).addClass("active");
 
         $("#primaryIndication #indication_selector").empty();
         var pill_id = $(this).attr('id');
         if(pill_id == 1) {
-          loadScreeningIndicationsButtonList();
+          loadScreeningIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
         }else if(pill_id == 2){
-          loadSurveillanceIndicationsButtonList();
+          loadSurveillanceIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
         }else if(pill_id == 3){
-          loadDiagnosticIndicationsButtonList();
+          loadDiagnosticIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
         }else if(pill_id == 4){
-          loadTherapeuticIndicationsButtonList();
+          loadTherapeuticIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
         }else if(pill_id == 5){
-          loadPreoperativeIndicationsButtonList();
+          loadPreoperativeIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
+        }
+      });
+
+      $("#otherIndication #pill_selector li").on("click", function(){
+        $("#otherIndication .nav.nav-pills li").removeClass("active");
+        $(this).addClass("active");
+
+        $("#otherIndication #indication_selector .button-list").addClass("hide");
+        var pill_id = $(this).attr('id');
+        if(pill_id == 1) {
+          loadScreeningIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
+        }else if(pill_id == 2){
+          loadSurveillanceIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
+        }else if(pill_id == 3){
+          loadDiagnosticIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
+        }else if(pill_id == 4){
+          loadTherapeuticIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
+        }else if(pill_id == 5){
+          loadPreoperativeIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
         }
       });
     });
@@ -335,7 +359,7 @@ $(document).ready(function() {
 
   // Create HTML button list with 2 columns
   var buttonListMakerTwoCol = function(required, idList1, idList2,
-    textList1, textList2, buttonGroupName, height){
+    textList1, textList2, buttonGroupName, height, type){
 
     var elementString = "<div class='button-list' style='height:" + height + "'> \
       <div data-toggle='buttons'> \
@@ -345,7 +369,7 @@ $(document).ready(function() {
     for (var i = 0; i < idList1.length; i++){
       elementString += " \
       <label id=" + idList1[i] + " class='btn btn-primary'> \
-        <input " + required + " type='radio' name=" + buttonGroupName +
+        <input " + required + " type=" + type + " name=" + buttonGroupName +
         " value=" + idList1[i]  + ">" + textList1[i]  +" \
       </label>";
     }
@@ -355,7 +379,7 @@ $(document).ready(function() {
     for (var i = 0; i < idList2.length; i++){
       elementString += " \
       <label id=" + idList2[i] + " class='btn btn-primary'> \
-        <input " + required + " type='radio' name=" + buttonGroupName +
+        <input " + required + " type=" + type + " name=" + buttonGroupName +
         " value=" + idList2[i]  + ">" + textList2[i]  +" \
       </label>";
     }
@@ -367,7 +391,7 @@ $(document).ready(function() {
 
   // Create HTML button list with 3 columns
   var buttonListMakerThreeCol = function(required, idList1, idList2, idList3,
-    textList1, textList2, textList3, buttonGroupName, height){
+    textList1, textList2, textList3, buttonGroupName, height, type){
     var elementString = "<div class='button-list' style='height:" + height + "'> \
       <div data-toggle='buttons'> \
         <div class='col-md-4 btn-group-vertical center-block btn-group'>";
@@ -376,7 +400,7 @@ $(document).ready(function() {
     for (var i = 0; i < idList1.length; i++){
       elementString += " \
       <label id=" + idList1[i] + " class='btn btn-primary'> \
-        <input " + required + " type='radio' name=" + buttonGroupName +
+        <input " + required + " type=" + type + " name=" + buttonGroupName +
         " value=" + idList1[i]  + ">" + textList1[i]  +" \
       </label>";
     }
@@ -386,7 +410,7 @@ $(document).ready(function() {
     for (var i = 0; i < idList2.length; i++){
       elementString += " \
       <label id=" + idList2[i] + " class='btn btn-primary'> \
-        <input " + required + " type='radio' name=" + buttonGroupName +
+        <input " + required + " type=" + type + " name=" + buttonGroupName +
         " value=" + idList2[i]  + ">" + textList2[i]  +" \
       </label>";
     }
@@ -396,7 +420,7 @@ $(document).ready(function() {
     for (var i = 0; i < idList3.length; i++){
       elementString += " \
       <label id=" + idList3[i] + " class='btn btn-primary'> \
-        <input " + required + " type='radio' name=" + buttonGroupName +
+        <input " + required + " type=" + type + " name=" + buttonGroupName +
         " value=" + idList3[i]  + ">" + textList3[i]  +" \
       </label>";
     }
@@ -459,7 +483,7 @@ $(document).ready(function() {
   }
 
   // Load the button list for Screening Indications Modal
-  var loadScreeningIndicationsButtonList = function(){
+  var loadScreeningIndicationsButtonList = function(screenID, required, type){
     var screening1IDArray = ["Screening:1","Screening:2","Screening:3","Screening:4",
     "Screening:5","Screening:6","Screening:7"];
     var screening1TextArray = [
@@ -484,13 +508,13 @@ $(document).ready(function() {
     "15. Fecal Test FIT",
     "16. Fecal Test FOBT"];
 
-    $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
-    "required", screening1IDArray, screening2IDArray, screening1TextArray,
-    screening2TextArray, "primary", "390px"));
+    $(screenID).append(buttonListMakerTwoCol(
+    required, screening1IDArray, screening2IDArray, screening1TextArray,
+    screening2TextArray, "primary", "390px", type));
   }
 
   // Load the button list for Surveillance Indications Modal
-  var loadSurveillanceIndicationsButtonList = function(){
+  var loadSurveillanceIndicationsButtonList = function(screenID, required, type){
     var surveillance1IDArray = ["Surveillance:1","Surveillance:2","Surveillance:3","Surveillance:4",
     "Surveillance:5","Surveillance:6","Surveillance:7","Surveillance:8"];
     var surveillance1TextArray = [
@@ -515,13 +539,13 @@ $(document).ready(function() {
     "15. Personal History Polyps Serrated Polyps <br> (20 or more, any size, anywhere)",
     "16. Personal History Polyps Serrated Polyps with dysplasia"];
 
-    $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
-    "required", surveillance1IDArray, surveillance2IDArray, surveillance1TextArray,
-    surveillance2TextArray, "primary", "390px"));
+    $(screenID).append(buttonListMakerTwoCol(
+    required, surveillance1IDArray, surveillance2IDArray, surveillance1TextArray,
+    surveillance2TextArray, "primary", "390px", type));
   }
 
   // Load the button list for Diagnostic Indications Modal
-  var loadDiagnosticIndicationsButtonList = function(){
+  var loadDiagnosticIndicationsButtonList = function(screenID, required, type){
     var diagnostic1IDArray = ["Diagnostic:1","Diagnostic:2","Diagnostic:3",
     "Diagnostic:4","Diagnostic:5","Diagnostic:6","Diagnostic:7","Diagnostic:8",
     "Diagnostic:9","Diagnostic:10"];
@@ -560,14 +584,14 @@ $(document).ready(function() {
     "23. Pain Chest",
     "24. Weight Loss (Unexplained)"];
 
-    $("#primaryIndication #indication_selector").append(buttonListMakerThreeCol(
-    "required", diagnostic1IDArray, diagnostic2IDArray, diagnostic3IDArray,
+    $(screenID).append(buttonListMakerThreeCol(
+    required, diagnostic1IDArray, diagnostic2IDArray, diagnostic3IDArray,
      diagnostic1TextArray, diagnostic2TextArray, diagnostic3TextArray,
-     "primary", "390px"));
+     "primary", "390px", type));
   }
 
   // Load the button list for Therapeutic Indications Modal
-  var loadTherapeuticIndicationsButtonList = function(){
+  var loadTherapeuticIndicationsButtonList = function(screenID, required, type){
     var therapeutic1IDArray = ["Therapeutic:1","Therapeutic:2","Therapeutic:3","Therapeutic:4",
     "Therapeutic:5","Therapeutic:6","Therapeutic:7","Therapeutic:8","Therapeutic:9",
     "Therapeutic:10"];
@@ -590,13 +614,13 @@ $(document).ready(function() {
     "12. Stricture Stent (Placement)",
     "13. Stricture Stent (Replacement or Repeat)"];
 
-    $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
-    "required", therapeutic1IDArray, therapeutic2IDArray, therapeutic1TextArray,
-    therapeutic2TextArray, "primary", "390px"));
+    $(screenID).append(buttonListMakerTwoCol(
+    required, therapeutic1IDArray, therapeutic2IDArray, therapeutic1TextArray,
+    therapeutic2TextArray, "primary", "390px", type));
   }
 
   // Load the button list for Preoperative Indications Modal
-  var loadPreoperativeIndicationsButtonList = function(){
+  var loadPreoperativeIndicationsButtonList = function(screenID, required, type){
 
     var preoperative1IDArray = ["Preoperative:1","Preoperative:2",
     "Preoperative:3"];
@@ -608,9 +632,9 @@ $(document).ready(function() {
     var preoperative2IDArray = [];
     var preoperative2TextArray = [];
 
-    $("#primaryIndication #indication_selector").append(buttonListMakerTwoCol(
-    "required", preoperative1IDArray, preoperative2IDArray,
-     preoperative1TextArray, preoperative2TextArray, "primary", "390px"));
+    $(screenID).append(buttonListMakerTwoCol(
+    required, preoperative1IDArray, preoperative2IDArray,
+     preoperative1TextArray, preoperative2TextArray, "primary", "390px", type));
 
   }
 
@@ -707,7 +731,8 @@ $(document).ready(function() {
     loadIdentifiersButtonList();
     loadPrepButtonList();
     loadIndicationsButtonList();
-    loadScreeningIndicationsButtonList();
+    loadScreeningIndicationsButtonList("#primaryIndication #indication_selector", "required", "radio");
+    loadScreeningIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
     loadScopeButtonList();
     loadSedationButtonList();
     loadExtentButtonList();
@@ -824,23 +849,45 @@ $(document).ready(function() {
   $("#primaryIndicationForm").submit(function(){
     event.preventDefault();
 
-    var primary = $("#primaryIndication input[name=primary]:checked").val();
-    $("#indications #primary").val(primary);
+    var primary = $("#primaryIndication input[name=primary]:checked").val()
+    $("#indications #primaryLabel").val(primary);
     $("#indications #primaryLabel").text(primary);
     $("#primaryIndication").modal('toggle');
   });
+
+  $("#otherIndicationForm").submit(function(){
+    event.preventDefault();
+
+    var checkedIndications = [];
+    var checkedString = ""
+    $("#otherIndication input[type=checkbox]").each(function (){
+      if (this.checked){
+        checkedIndications.push($(this).val());
+        checkedString +="(" + $(this).val() + ")";
+      }
+
+    });
+
+    if(debug) console.log(checkedIndications);
+    $("#indications #otherLabel").val(checkedString);
+    $("#indications #otherLabel").text(checkedIndications.length + " Checked");
+    $("#otherIndication").modal('toggle');
+  });
+
 
   $("#indicationForm").submit(function(){
     event.preventDefault();
 
     var last_colon = $("#indications input[name=last_colon]:checked").val();
     var filter = $('input[name=filter]:checked').val();
-    // Getting the text might not be the best way to do this but it works
-    var primary_indication = $("#indications #primaryLabel").text();
+    var primary_indication = $("#indications #primaryLabel").val();
+    var other_indication = $("#indications #otherLabel").val();
     if(debug) console.log(primary_indication);
+    if(debug) console.log(other_indication);
 
     saveProcedureForm({"last_colon": last_colon,
-    "primary_indication": primary_indication}, "indicationForm", "#indications");
+    "primary_indication": primary_indication,
+    "other_indication": other_indication}, "indicationForm", "#indications");
   });
 
   $("#scopeForm").submit(function(){
