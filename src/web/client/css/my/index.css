@@ -1,0 +1,7 @@
+/*(c) Luke Raus 2015*/
+.italic  {
+  font-style: italic;
+}
+.main-pic {
+  background-image: url("/qualoscopy/assets/medical.jpg");
+}

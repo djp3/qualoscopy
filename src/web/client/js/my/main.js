@@ -874,7 +874,6 @@ $(document).ready(function() {
     $("#otherIndication").modal('toggle');
   });
 
-
   $("#indicationForm").submit(function(){
     event.preventDefault();
 
