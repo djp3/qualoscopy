@@ -99,18 +99,22 @@
               </div>
               <div class="col-md-2">
                 <h4>Gender*</h4>
-                <select id='gender' class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                  <option>M</option>
-                  <option>F</option>
-                  <option>O</option>
+                <select id='gender' class="form-control my-option">
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                  <option value="O">Other</option>
                 </select>
               </div>
             </div><!-- /.row -->
 
             <!-- Schedual Operation -->
             <div class="row">
-              <div class="col-md-12">
-                <h3>Schedual a Procedure (Optional)</h3>
+              <div class="col-md-6">
+                <input type="checkbox" name="schedule" id="schedule">
+                <label for="schedule"><h3>Schedule a Procedure</h3></label>
+              </div>
+              <div class="col-md-6">
+
               </div>
             </div>
 
@@ -143,16 +147,9 @@
               <div class="col-md-3">
                 <h4>Faculty</h4>
                 <select id='faculty' class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                  <option>None</option>
                   <option>Karnes, Willam</option>
                   <option>Saget, Bob</option>
-                  <option>Doctor, 3</option>
-                  <option>Doctor, 4</option>
-                  <option>Doctor, 5</option>
-                  <option>Doctor, 6</option>
-                  <option>Doctor, 7</option>
-                  <option>Doctor, 8</option>
-                  <option>Doctor, 9</option>
+                  <option>Doctor, 3</option> 
                 </select>
               </div>
             </div><!-- /.row -->

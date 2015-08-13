@@ -113,11 +113,53 @@ $(document).ready(function() {
     });
   }
 
-  // populate Indications Form
-  var populateIndicationsForm = function(procedure){
-    $("#btn_indications").click(function(){
-      $("#indications #" + procedure.last_colon).addClass("active");
-      $("#indications #" + procedure.last_colon + " input").prop('checked', "checked");
+  // populate primary indications form
+  var polulatePrimaryIndicationForm = function(procedure){
+    $("#indications #primaryLabel").click(function(){
+      $("#primaryIndication .nav.nav-pills li").removeClass("active");
+      $("#primaryIndication #indication_selector").empty();
+      var primary = procedure.primary_indication;
+      var primary_label = $("#indications #primaryLabel").val();
+      if (primary != null || primary_label != ""){
+        var primary_category;
+        var primary_id;
+        if (primary_label == ""){
+          primary_category = primary.split("-")[0];
+        } else {
+          primary_category = primary_label.split("-")[0];
+          primary = primary_label;
+        }
+
+        if (primary_category == "Screening"){
+          $("#primaryIndication #pill_selector #1").addClass("active");
+          loadScreeningIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
+
+        } else if (primary_category == "Surveillance"){
+          $("#primaryIndication #pill_selector #2").addClass("active");
+          loadSurveillanceIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
+
+        } else if (primary_category == "Diagnostic"){
+          $("#primaryIndication #pill_selector #3").addClass("active");
+          loadDiagnosticIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
+
+        } else if (primary_category == "Therapeutic"){
+          $("#primaryIndication #pill_selector #4").addClass("active");
+          loadTherapeuticIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
+
+        } else if (primary_category == "Preoperative"){
+          $("#primaryIndication #pill_selector #5").addClass("active");
+          loadPreoperativeIndicationsButtonList(
+            "#primaryIndication #indication_selector", "required", "radio");
+        }
+
+        $("#primaryIndication #" + primary).addClass("active");
+        $("#primaryIndication #" + primary + " input").prop('checked', "checked");
+
+      }
 
       $("#primaryIndication #pill_selector li").on("click", function(){
         $("#primaryIndication .nav.nav-pills li").removeClass("active");
@@ -143,6 +185,16 @@ $(document).ready(function() {
         }
       });
 
+    });
+  }
+
+  // populate other indications form
+  var populateOtherIndicationsForm = function(procedure){
+    $("#indications #otherLabel").click(function(){
+      loadScreeningIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
+      $(this).removeClass("active");
+
+
       $("#otherIndication #pill_selector li").on("click", function(){
         $("#otherIndication .nav.nav-pills li").removeClass("active");
         $(this).addClass("active");
@@ -161,6 +213,16 @@ $(document).ready(function() {
           loadPreoperativeIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
         }
       });
+    });
+  }
+
+  // populate Indications Form
+  var populateIndicationsForm = function(procedure){
+    $("#btn_indications").click(function(){
+      $("#indications #" + procedure.last_colon).addClass("active");
+      $("#indications #" + procedure.last_colon + " input").prop('checked', "checked");
+      polulatePrimaryIndicationForm(procedure);
+      populateOtherIndicationsForm(procedure);
     });
   }
 
@@ -484,8 +546,8 @@ $(document).ready(function() {
 
   // Load the button list for Screening Indications Modal
   var loadScreeningIndicationsButtonList = function(screenID, required, type){
-    var screening1IDArray = ["Screening:1","Screening:2","Screening:3","Screening:4",
-    "Screening:5","Screening:6","Screening:7"];
+    var screening1IDArray = ["Screening-1","Screening-2","Screening-3","Screening-4",
+    "Screening-5","Screening-6","Screening-7"];
     var screening1TextArray = [
     "1. Average Rist No Gi Sx, Signs, Hx or FHx",
     "2. Family History Colorectal Cancer <br> (One immediate family member (age 50-75))",
@@ -495,8 +557,8 @@ $(document).ready(function() {
     "6. Family History Genetic Cancer Syndrome <br> (Lynch Syndrome HNPCC)",
     "7. Family History Genetic Cancer Syndrome <br> (Familial Colon Cancer Type X FCCTX)"];
 
-    var screening2IDArray = ["Screening:8","Screening:9","Screening:10","Screening:11",
-    "Screening:12","Screening:13","Screening:14","Screening:15","Screening:16"];
+    var screening2IDArray = ["Screening-8","Screening-9","Screening-10","Screening-11",
+    "Screening-12","Screening-13","Screening-14","Screening-15","Screening-16"];
     var screening2TextArray = [
     "8. Family History Genetic Cancer Syndrome <br> (Peutz-Jegher Syndrome)",
     "9. Family History Genetic Cancer Syndrome <br> (MYH-Associated Polyposis)",
@@ -515,8 +577,8 @@ $(document).ready(function() {
 
   // Load the button list for Surveillance Indications Modal
   var loadSurveillanceIndicationsButtonList = function(screenID, required, type){
-    var surveillance1IDArray = ["Surveillance:1","Surveillance:2","Surveillance:3","Surveillance:4",
-    "Surveillance:5","Surveillance:6","Surveillance:7","Surveillance:8"];
+    var surveillance1IDArray = ["Surveillance-1","Surveillance-2","Surveillance-3","Surveillance-4",
+    "Surveillance-5","Surveillance-6","Surveillance-7","Surveillance-8"];
     var surveillance1TextArray = [
     "1. Personal History Colorectal Cancer (one)",
     "2. Personal History Colorectal Cancer <br> (more than one)",
@@ -527,8 +589,8 @@ $(document).ready(function() {
     "7. Personal History Polyps Adenomas (2 or less)",
     "8. Personal History Polyps Adenomas (3-10)"];
 
-    var surveillance2IDArray = ["Surveillance:9","Surveillance:10",
-    "Surveillance:11","Surveillance:12","Surveillance:13","Surveillance:14","Surveillance:15","Surveillance:16"];
+    var surveillance2IDArray = ["Surveillance-9","Surveillance-10",
+    "Surveillance-11","Surveillance-12","Surveillance-13","Surveillance-14","Surveillance-15","Surveillance-16"];
     var surveillance2TextArray = [
     "9. Personal History Polyps Adenomas (11-19)",
     "10. Personal History Polyps Adenomas (20 or more)",
@@ -546,9 +608,9 @@ $(document).ready(function() {
 
   // Load the button list for Diagnostic Indications Modal
   var loadDiagnosticIndicationsButtonList = function(screenID, required, type){
-    var diagnostic1IDArray = ["Diagnostic:1","Diagnostic:2","Diagnostic:3",
-    "Diagnostic:4","Diagnostic:5","Diagnostic:6","Diagnostic:7","Diagnostic:8",
-    "Diagnostic:9","Diagnostic:10"];
+    var diagnostic1IDArray = ["Diagnostic-1","Diagnostic-2","Diagnostic-3",
+    "Diagnostic-4","Diagnostic-5","Diagnostic-6","Diagnostic-7","Diagnostic-8",
+    "Diagnostic-9","Diagnostic-10"];
     var diagnostic1TextArray = [
     "1. Abnormal Finding Endoscopic",
     "2. Abnormal Finding Imaging",
@@ -561,9 +623,9 @@ $(document).ready(function() {
     "9. Constipation Chronic (>6week)",
     "10. Diarrhea Chronic (>6 week)"];
 
-    var diagnostic2IDArray = ["Diagnostic:11","Diagnostic:12","Diagnostic:13"
-    ,"Diagnostic:14","Diagnostic:15","Diagnostic:16","Diagnostic:17","Diagnostic:18"
-    ,"Diagnostic:19"];
+    var diagnostic2IDArray = ["Diagnostic-11","Diagnostic-12","Diagnostic-13"
+    ,"Diagnostic-14","Diagnostic-15","Diagnostic-16","Diagnostic-17","Diagnostic-18"
+    ,"Diagnostic-19"];
     var diagnostic2TextArray = [
     "11. Inflammatory Bowel Disease <br> Assess Extent/Severity",
     "12. Inflammatory Bowel Disease <br> Establish Specific Diagnosis",
@@ -575,8 +637,8 @@ $(document).ready(function() {
     "18. Pain Abdomen (Epigastric)",
     "19. Pain Abdomen (LUQ)"];
 
-    var diagnostic3IDArray = ["Diagnostic:20","Diagnostic:21",
-    "Diagnostic:22","Diagnostic:23","Diagnostic:24"];
+    var diagnostic3IDArray = ["Diagnostic-20","Diagnostic-21",
+    "Diagnostic-22","Diagnostic-23","Diagnostic-24"];
     var diagnostic3TextArray = [
     "20. Pain Abdomen (Generalized)",
     "21. Pain Anorectal",
@@ -592,9 +654,9 @@ $(document).ready(function() {
 
   // Load the button list for Therapeutic Indications Modal
   var loadTherapeuticIndicationsButtonList = function(screenID, required, type){
-    var therapeutic1IDArray = ["Therapeutic:1","Therapeutic:2","Therapeutic:3","Therapeutic:4",
-    "Therapeutic:5","Therapeutic:6","Therapeutic:7","Therapeutic:8","Therapeutic:9",
-    "Therapeutic:10"];
+    var therapeutic1IDArray = ["Therapeutic-1","Therapeutic-2","Therapeutic-3","Therapeutic-4",
+    "Therapeutic-5","Therapeutic-6","Therapeutic-7","Therapeutic-8","Therapeutic-9",
+    "Therapeutic-10"];
     var therapeutic1TextArray = [
     "1. Bleeding Control of Bleeding (Known AVM(s))",
     "2. Bleeding Control of Bleeding (post-polypectomy bleed)",
@@ -607,8 +669,8 @@ $(document).ready(function() {
     "9. IBD Fecal Microbiota Transplantaion",
     "10. Mass/Polup Resection"];
 
-    var therapeutic2IDArray = ["Therapeutic:11","Therapeutic:12",
-    "Therapeutic:13"];
+    var therapeutic2IDArray = ["Therapeutic-11","Therapeutic-12",
+    "Therapeutic-13"];
     var therapeutic2TextArray = [
     "11. Stricture Dilation",
     "12. Stricture Stent (Placement)",
@@ -622,8 +684,8 @@ $(document).ready(function() {
   // Load the button list for Preoperative Indications Modal
   var loadPreoperativeIndicationsButtonList = function(screenID, required, type){
 
-    var preoperative1IDArray = ["Preoperative:1","Preoperative:2",
-    "Preoperative:3"];
+    var preoperative1IDArray = ["Preoperative-1","Preoperative-2",
+    "Preoperative-3"];
     var preoperative1TextArray = [
     "1. Colostomy takedown",
     "2. Indentify or Clear Synchronoous Lesion",
@@ -731,8 +793,6 @@ $(document).ready(function() {
     loadIdentifiersButtonList();
     loadPrepButtonList();
     loadIndicationsButtonList();
-    loadScreeningIndicationsButtonList("#primaryIndication #indication_selector", "required", "radio");
-    loadScreeningIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
     loadScopeButtonList();
     loadSedationButtonList();
     loadExtentButtonList();
@@ -863,7 +923,7 @@ $(document).ready(function() {
     $("#otherIndication input[type=checkbox]").each(function (){
       if (this.checked){
         checkedIndications.push($(this).val());
-        checkedString +="(" + $(this).val() + ")";
+        checkedString += $(this).val() + "_";
       }
 
     });

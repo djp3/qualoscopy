@@ -10,3 +10,7 @@ body {
 .patient-table tr {
     cursor: pointer;
 }
+
+.my-option {
+  font-size: large;
+}
