@@ -132,27 +132,27 @@ $(document).ready(function() {
 
         if (primary_category == "Screening"){
           $("#primaryIndication #pill_selector #1").addClass("active");
-          loadScreeningIndicationsButtonList(
+          loadScreeningIndicationsButtonList("screening_list",
             "#primaryIndication #indication_selector", "required", "radio");
 
         } else if (primary_category == "Surveillance"){
           $("#primaryIndication #pill_selector #2").addClass("active");
-          loadSurveillanceIndicationsButtonList(
+          loadSurveillanceIndicationsButtonList("surveillance_list",
             "#primaryIndication #indication_selector", "required", "radio");
 
         } else if (primary_category == "Diagnostic"){
           $("#primaryIndication #pill_selector #3").addClass("active");
-          loadDiagnosticIndicationsButtonList(
+          loadDiagnosticIndicationsButtonList("diagnostic_list",
             "#primaryIndication #indication_selector", "required", "radio");
 
         } else if (primary_category == "Therapeutic"){
           $("#primaryIndication #pill_selector #4").addClass("active");
-          loadTherapeuticIndicationsButtonList(
+          loadTherapeuticIndicationsButtonList("therapeutic_list",
             "#primaryIndication #indication_selector", "required", "radio");
 
         } else if (primary_category == "Preoperative"){
           $("#primaryIndication #pill_selector #5").addClass("active");
-          loadPreoperativeIndicationsButtonList(
+          loadPreoperativeIndicationsButtonList("preoperative_list",
             "#primaryIndication #indication_selector", "required", "radio");
         }
 
@@ -168,19 +168,19 @@ $(document).ready(function() {
         $("#primaryIndication #indication_selector").empty();
         var pill_id = $(this).attr('id');
         if(pill_id == 1) {
-          loadScreeningIndicationsButtonList(
+          loadScreeningIndicationsButtonList("screening_list",
             "#primaryIndication #indication_selector", "required", "radio");
         }else if(pill_id == 2){
-          loadSurveillanceIndicationsButtonList(
+          loadSurveillanceIndicationsButtonList("surveillance_list",
             "#primaryIndication #indication_selector", "required", "radio");
         }else if(pill_id == 3){
-          loadDiagnosticIndicationsButtonList(
+          loadDiagnosticIndicationsButtonList("diagnostic_list",
             "#primaryIndication #indication_selector", "required", "radio");
         }else if(pill_id == 4){
-          loadTherapeuticIndicationsButtonList(
+          loadTherapeuticIndicationsButtonList("therapeutic_list",
             "#primaryIndication #indication_selector", "required", "radio");
         }else if(pill_id == 5){
-          loadPreoperativeIndicationsButtonList(
+          loadPreoperativeIndicationsButtonList("preoperative_list",
             "#primaryIndication #indication_selector", "required", "radio");
         }
       });
@@ -191,9 +191,41 @@ $(document).ready(function() {
   // populate other indications form
   var populateOtherIndicationsForm = function(procedure){
     $("#indications #otherLabel").click(function(){
-      loadScreeningIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
-      $(this).removeClass("active");
+      $("#otherIndication #indication_selector").empty();
+      var other;
+      var other_array;
+      if (procedure.other_indication != null){
+        other = procedure.other_indication;
+        other_array = other.split("_");
+      }
 
+      loadScreeningIndicationsButtonList("1",
+        "#otherIndication #indication_selector", "", "checkbox");
+      loadSurveillanceIndicationsButtonList("2",
+        "#otherIndication #indication_selector", "", "checkbox");
+      loadDiagnosticIndicationsButtonList("3",
+        "#otherIndication #indication_selector", "", "checkbox");
+      loadTherapeuticIndicationsButtonList("4",
+        "#otherIndication #indication_selector", "", "checkbox");
+      loadPreoperativeIndicationsButtonList("5",
+        "#otherIndication #indication_selector", "", "checkbox");
+
+      for(var i = 0; i < other_array.length; i++){
+        $("#otherIndication #" + other_array[i]).addClass("active");
+        $("#otherIndication #" + other_array[i] + " input").prop('checked', "checked");
+      }
+
+      for (var i = 1; i <= 5; i++){
+        var count = $("#otherIndication #indication_selector #"+ i +" :checked").length;
+        $("#otherIndication #pill_selector #"+ i +" .badge").text(count);
+      }
+
+      for (var i = 1; i <=5; i++ ){
+        $("#otherIndication #indication_selector #"+ i).addClass("hide");
+      }
+      $(this).removeClass("active");
+      var init_pill_id = $('#otherIndication .nav.nav-pills li.active').attr('id');
+      $("#otherIndication #indication_selector #"+ init_pill_id).removeClass("hide");
 
       $("#otherIndication #pill_selector li").on("click", function(){
         $("#otherIndication .nav.nav-pills li").removeClass("active");
@@ -201,17 +233,13 @@ $(document).ready(function() {
 
         $("#otherIndication #indication_selector .button-list").addClass("hide");
         var pill_id = $(this).attr('id');
-        if(pill_id == 1) {
-          loadScreeningIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
-        }else if(pill_id == 2){
-          loadSurveillanceIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
-        }else if(pill_id == 3){
-          loadDiagnosticIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
-        }else if(pill_id == 4){
-          loadTherapeuticIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
-        }else if(pill_id == 5){
-          loadPreoperativeIndicationsButtonList("#otherIndication #indication_selector", "", "checkbox");
-        }
+        $("#otherIndication #indication_selector #" + pill_id).removeClass("hide");
+      });
+
+      $("#otherIndication #indication_selector .button-list input").change(function(){
+        var id = $('#otherIndication .nav.nav-pills li.active').attr('id');
+        var count = $("#otherIndication #indication_selector #" + id +" :checked").length;
+        $("#otherIndication #pill_selector #"+ id +" .badge").text(count);
       });
     });
   }
@@ -221,6 +249,20 @@ $(document).ready(function() {
     $("#btn_indications").click(function(){
       $("#indications #" + procedure.last_colon).addClass("active");
       $("#indications #" + procedure.last_colon + " input").prop('checked', "checked");
+      if(procedure.primary_indication != null){
+        var primary = procedure.primary_indication;
+        $("#indications #primaryLabel").val(primary);
+        $("#indications #primaryLabel").text(primary);
+      }
+
+      if (procedure.other_indication != null){
+        var other = procedure.other_indication;
+        $("#indications #otherLabel").val(other);
+        var other_array = other.split("_");
+        if(debug) console.log(other_array);
+        $("#indications #otherLabel").text(other_array.length + " Checked");
+      }
+
       polulatePrimaryIndicationForm(procedure);
       populateOtherIndicationsForm(procedure);
     });
@@ -420,10 +462,10 @@ $(document).ready(function() {
   }
 
   // Create HTML button list with 2 columns
-  var buttonListMakerTwoCol = function(required, idList1, idList2,
+  var buttonListMakerTwoCol = function(listID, required, idList1, idList2,
     textList1, textList2, buttonGroupName, height, type){
 
-    var elementString = "<div class='button-list' style='height:" + height + "'> \
+    var elementString = "<div id=" + listID + " class='button-list' style='height:" + height + "'> \
       <div data-toggle='buttons'> \
         <div class='col-md-6 btn-group-vertical center-block btn-group'>";
 
@@ -452,9 +494,9 @@ $(document).ready(function() {
   }
 
   // Create HTML button list with 3 columns
-  var buttonListMakerThreeCol = function(required, idList1, idList2, idList3,
+  var buttonListMakerThreeCol = function(listID, required, idList1, idList2, idList3,
     textList1, textList2, textList3, buttonGroupName, height, type){
-    var elementString = "<div class='button-list' style='height:" + height + "'> \
+    var elementString = "<div id=" + listID + " class='button-list' style='height:" + height + "'> \
       <div data-toggle='buttons'> \
         <div class='col-md-4 btn-group-vertical center-block btn-group'>";
 
@@ -545,7 +587,7 @@ $(document).ready(function() {
   }
 
   // Load the button list for Screening Indications Modal
-  var loadScreeningIndicationsButtonList = function(screenID, required, type){
+  var loadScreeningIndicationsButtonList = function(listID, screenID, required, type){
     var screening1IDArray = ["Screening-1","Screening-2","Screening-3","Screening-4",
     "Screening-5","Screening-6","Screening-7"];
     var screening1TextArray = [
@@ -570,13 +612,13 @@ $(document).ready(function() {
     "15. Fecal Test FIT",
     "16. Fecal Test FOBT"];
 
-    $(screenID).append(buttonListMakerTwoCol(
+    $(screenID).append(buttonListMakerTwoCol(listID,
     required, screening1IDArray, screening2IDArray, screening1TextArray,
     screening2TextArray, "primary", "390px", type));
   }
 
   // Load the button list for Surveillance Indications Modal
-  var loadSurveillanceIndicationsButtonList = function(screenID, required, type){
+  var loadSurveillanceIndicationsButtonList = function(listID, screenID, required, type){
     var surveillance1IDArray = ["Surveillance-1","Surveillance-2","Surveillance-3","Surveillance-4",
     "Surveillance-5","Surveillance-6","Surveillance-7","Surveillance-8"];
     var surveillance1TextArray = [
@@ -601,13 +643,13 @@ $(document).ready(function() {
     "15. Personal History Polyps Serrated Polyps <br> (20 or more, any size, anywhere)",
     "16. Personal History Polyps Serrated Polyps with dysplasia"];
 
-    $(screenID).append(buttonListMakerTwoCol(
+    $(screenID).append(buttonListMakerTwoCol(listID,
     required, surveillance1IDArray, surveillance2IDArray, surveillance1TextArray,
     surveillance2TextArray, "primary", "390px", type));
   }
 
   // Load the button list for Diagnostic Indications Modal
-  var loadDiagnosticIndicationsButtonList = function(screenID, required, type){
+  var loadDiagnosticIndicationsButtonList = function(listID, screenID, required, type){
     var diagnostic1IDArray = ["Diagnostic-1","Diagnostic-2","Diagnostic-3",
     "Diagnostic-4","Diagnostic-5","Diagnostic-6","Diagnostic-7","Diagnostic-8",
     "Diagnostic-9","Diagnostic-10"];
@@ -646,14 +688,14 @@ $(document).ready(function() {
     "23. Pain Chest",
     "24. Weight Loss (Unexplained)"];
 
-    $(screenID).append(buttonListMakerThreeCol(
+    $(screenID).append(buttonListMakerThreeCol(listID,
     required, diagnostic1IDArray, diagnostic2IDArray, diagnostic3IDArray,
      diagnostic1TextArray, diagnostic2TextArray, diagnostic3TextArray,
      "primary", "390px", type));
   }
 
   // Load the button list for Therapeutic Indications Modal
-  var loadTherapeuticIndicationsButtonList = function(screenID, required, type){
+  var loadTherapeuticIndicationsButtonList = function(listID, screenID, required, type){
     var therapeutic1IDArray = ["Therapeutic-1","Therapeutic-2","Therapeutic-3","Therapeutic-4",
     "Therapeutic-5","Therapeutic-6","Therapeutic-7","Therapeutic-8","Therapeutic-9",
     "Therapeutic-10"];
@@ -676,13 +718,13 @@ $(document).ready(function() {
     "12. Stricture Stent (Placement)",
     "13. Stricture Stent (Replacement or Repeat)"];
 
-    $(screenID).append(buttonListMakerTwoCol(
+    $(screenID).append(buttonListMakerTwoCol(listID,
     required, therapeutic1IDArray, therapeutic2IDArray, therapeutic1TextArray,
     therapeutic2TextArray, "primary", "390px", type));
   }
 
   // Load the button list for Preoperative Indications Modal
-  var loadPreoperativeIndicationsButtonList = function(screenID, required, type){
+  var loadPreoperativeIndicationsButtonList = function(listID, screenID, required, type){
 
     var preoperative1IDArray = ["Preoperative-1","Preoperative-2",
     "Preoperative-3"];
@@ -694,7 +736,7 @@ $(document).ready(function() {
     var preoperative2IDArray = [];
     var preoperative2TextArray = [];
 
-    $(screenID).append(buttonListMakerTwoCol(
+    $(screenID).append(buttonListMakerTwoCol(listID,
     required, preoperative1IDArray, preoperative2IDArray,
      preoperative1TextArray, preoperative2TextArray, "primary", "390px", type));
 
@@ -927,6 +969,8 @@ $(document).ready(function() {
       }
 
     });
+
+    checkedString = checkedString.substring(0, checkedString.length - 1);
 
     if(debug) console.log(checkedIndications);
     $("#indications #otherLabel").val(checkedString);
