@@ -6,13 +6,16 @@ $(document).ready(function() {
       tableLength, tableId, columnNames, columnValues){
 
        var tableHeading = "";
-       for(var i = 0; i < numberOfColumns; i++){
-         tableHeading += "<th>" + columnNames[i] + "</th>\n";
-       }
-
        var tableValues = "";
        for(var i = 0; i < numberOfColumns; i++){
-         tableValues += "<td>" + columnValues[i] + "</td>\n";
+         var status;
+         if(columnValues[i] == null){
+           status = "incomplete";
+         } else {
+           status = "complete";
+         }
+         tableHeading += "<th class=" + status + ">" + columnNames[i] + "</th>\n";
+         tableValues += "<td class=" + status + ">" + columnValues[i] + "</td>\n";
        }
 
        var $element = $(" \
@@ -130,6 +133,7 @@ $(document).ready(function() {
           primary = primary_label;
         }
 
+
         if (primary_category == "Screening"){
           $("#primaryIndication #pill_selector #1").addClass("active");
           loadScreeningIndicationsButtonList("screening_list",
@@ -159,6 +163,10 @@ $(document).ready(function() {
         $("#primaryIndication #" + primary).addClass("active");
         $("#primaryIndication #" + primary + " input").prop('checked', "checked");
 
+      } else {
+        $("#primaryIndication #pill_selector #1").addClass("active");
+        loadScreeningIndicationsButtonList("screening_list",
+          "#primaryIndication #indication_selector", "required", "radio");
       }
 
       $("#primaryIndication #pill_selector li").on("click", function(){
@@ -192,12 +200,6 @@ $(document).ready(function() {
   var populateOtherIndicationsForm = function(procedure){
     $("#indications #otherLabel").click(function(){
       $("#otherIndication #indication_selector").empty();
-      var other;
-      var other_array;
-      if (procedure.other_indication != null){
-        other = procedure.other_indication;
-        other_array = other.split("_");
-      }
 
       loadScreeningIndicationsButtonList("1",
         "#otherIndication #indication_selector", "", "checkbox");
@@ -210,11 +212,6 @@ $(document).ready(function() {
       loadPreoperativeIndicationsButtonList("5",
         "#otherIndication #indication_selector", "", "checkbox");
 
-      for(var i = 0; i < other_array.length; i++){
-        $("#otherIndication #" + other_array[i]).addClass("active");
-        $("#otherIndication #" + other_array[i] + " input").prop('checked', "checked");
-      }
-
       for (var i = 1; i <= 5; i++){
         var count = $("#otherIndication #indication_selector #"+ i +" :checked").length;
         $("#otherIndication #pill_selector #"+ i +" .badge").text(count);
@@ -223,9 +220,27 @@ $(document).ready(function() {
       for (var i = 1; i <=5; i++ ){
         $("#otherIndication #indication_selector #"+ i).addClass("hide");
       }
+
       $(this).removeClass("active");
-      var init_pill_id = $('#otherIndication .nav.nav-pills li.active').attr('id');
-      $("#otherIndication #indication_selector #"+ init_pill_id).removeClass("hide");
+
+
+      if (procedure.other_indication != null){
+        var other = procedure.other_indication;;
+        var other_array = other_array = other.split("_");
+        for(var i = 0; i < other_array.length; i++){
+          $("#otherIndication #" + other_array[i]).addClass("active");
+          $("#otherIndication #" + other_array[i] + " input").prop('checked', "checked");
+        }
+
+        var init_pill_id = $('#otherIndication .nav.nav-pills li.active').attr('id');
+        $("#otherIndication #indication_selector #"+ init_pill_id).removeClass("hide");
+      } else {
+        $('#otherIndication .nav.nav-pills li #1').addClass("active");
+        $("#otherIndication #indication_selector #1").removeClass("hide");
+      }
+
+
+
 
       $("#otherIndication #pill_selector li").on("click", function(){
         $("#otherIndication .nav.nav-pills li").removeClass("active");
@@ -408,9 +423,13 @@ $(document).ready(function() {
     [procedure.pre_drug, procedure.prep_liters, procedure.split_prep, procedure.bisacodyl]));
 
     // Indications
-    $allTables.push(tableMaker("Indications", "btn_indications", 5, "#indications", "col-md-5", "table2",
-    ["Last Colon", "Indication", "Category", "Subcategory", "Specifics"],
-    [procedure.last_colon, procedure.primary_indication, "NA", "NA", "NA"]));
+    var other_indication_count = 0;
+    if (procedure.other_indication != null){
+      other_indication_count = procedure.other_indication.split("_").length;
+    }
+    $allTables.push(tableMaker("Indications", "btn_indications", 3, "#indications", "col-md-5", "table2",
+    ["Last Colon", "Indication", "Other Indications"],
+    [procedure.last_colon, procedure.primary_indication, other_indication_count + " Selected"]));
 
     // Scope
     $allTables.push(tableMaker("Scope", "btn_scope", 4, "#scope", "col-md-4", "table3",

@@ -86,7 +86,7 @@ $(document).ready(function() {
     );
 
     var doctors = ["Karnes","Raus","Don"];
-    $("#schedualProcedure #faculty").append(selectOptionsMaker(doctors));
+    $("#scheduleProcedure #faculty").append(selectOptionsMaker(doctors));
 
     $("#addProcedure").click(function(){
       var salts = JSON.parse(Cookies.getCookie("salts"));
