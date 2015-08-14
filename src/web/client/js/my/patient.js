@@ -28,6 +28,15 @@ $(document).ready(function() {
     return $element;
   };
 
+  // Create a list of <option> HTML elements from an array
+  var selectOptionsMaker = function(textList){
+    var elementString = "";
+    for (var i = 0; i < textList.length; i++){
+      elementString += "<option>" +  textList[i] + "</option>";
+    }
+    return $(elementString);
+  }
+
 
   var patient_id = Cookies.getCookie("patient_id");
   var mr_id = Cookies.getCookie("mr_id");
@@ -76,9 +85,12 @@ $(document).ready(function() {
       format: 'HH:mm'}
     );
 
+    var doctors = ["Karnes","Raus","Don"];
+    $("#schedualProcedure #faculty").append(selectOptionsMaker(doctors));
+
     $("#addProcedure").click(function(){
       var salts = JSON.parse(Cookies.getCookie("salts"));
-      addProcedure(salts, session_id, session_key, user_id, mr_id, patient_id);
+      addProcedure(salts, session_id, session_key, user_id, patient_id);
     });
 
     $("#addProcedureForm").submit(function(){

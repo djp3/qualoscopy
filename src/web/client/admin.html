@@ -22,7 +22,6 @@
 
   <!-- Downaloded CSS files -->
   <link rel="stylesheet" href="css/downloaded/bootstrap-datetimepicker.css">
-  <link rel="stylesheet" href="css/downloaded/bootstrap-select.css">
   <link rel="stylesheet" href="css/downloaded/dataTables.bootstrap.css">
 
   <!-- HTML5 shim and Respond.js for IE8 support
@@ -109,12 +108,9 @@
 
             <!-- Schedual Operation -->
             <div class="row">
-              <div class="col-md-6">
-                <input type="checkbox" name="schedule" id="schedule">
-                <label for="schedule"><h3>Schedule a Procedure</h3></label>
-              </div>
-              <div class="col-md-6">
-
+              <div class="col-md-12 ">
+                <input class="pointer" type="checkbox" name="schedule" id="schedule">
+                <label class="pointer" for="schedule"><h3>Schedule a Procedure (Optional)</h3></label>
               </div>
             </div>
 
@@ -123,13 +119,13 @@
               <div class="col-md-3">
                 <h4>AC</h4>
                 <label>
-                  <input id="ac" class="form-control" type="text" placeholder="Enter AC">
+                  <input disabled id="ac" class="form-control" type="text" placeholder="Enter AC">
                 </label>
               </div>
               <div class="col-md-3">
                 <h4>Operation Date</h4>
                 <div class='input-group date'>
-                  <input id='operationDate' type='text' class="form-control" />
+                  <input disabled id='operationDate' type='text' class="form-control" />
                   <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                   </span>
@@ -138,7 +134,7 @@
               <div class="col-md-3">
                 <h4>Operation Time</h4>
                 <div class='input-group date'>
-                  <input id='operationTime' type='text' class="form-control" />
+                  <input disabled id='operationTime' type='text' class="form-control" />
                   <span class="input-group-addon">
                     <span class="glyphicon glyphicon-time"></span>
                   </span>
@@ -146,18 +142,26 @@
               </div>
               <div class="col-md-3">
                 <h4>Faculty</h4>
-                <select id='faculty' class="selectpicker show-tick" data-width="100%" data-live-search="true">
-                  <option>Karnes, Willam</option>
-                  <option>Saget, Bob</option>
-                  <option>Doctor, 3</option> 
-                </select>
+                <select disabled id='faculty' class="form-control my-option"></select>
               </div>
             </div><!-- /.row -->
 
           </div><!-- form-group -->
         </div><!-- modal-body -->
         <div class="modal-footer">
-          <input id="save" type="submit" class="btn btn-default" value="save"/>
+          <div class="row">
+            <div class='col-md-10'>
+              <div class="progress hide">
+                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                aria-valuenow="0" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+                Saving
+                </div>
+              </div>
+            </div>
+            <div class='col-md-2'>
+              <input type="submit" class="btn btn-default" value="Save"/>
+            </div>
+          </div>
         </div>
       </form>
     </div>
@@ -216,7 +220,6 @@
 <!-- Downloaded JS Files -->
 <script src="js/downloaded/moment.min.js"></script>
 <script src="js/downloaded/bootstrap-datetimepicker.js"></script>
-<script src="js/downloaded/bootstrap-select.js"></script>
 <script src="js/downloaded/jquery.dataTables.min.js"></script>
 <script src="js/downloaded/dataTables.bootstrap.js"></script>
 <!-- My JS -->

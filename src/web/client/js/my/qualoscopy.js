@@ -43,7 +43,7 @@ addPatient = function(salts, session_id, session_key, user_id){
   });
 }
 
-addProcedure = function(salts, session_id, session_key, user_id, mr_id, patient_id){
+addProcedure = function(salts, session_id, session_key, user_id, patient_id){
   var usedSalt = Cookies.popFromCookieArray("salts", salts, 1);
   $.ajax({
     dataType: 'jsonp',
@@ -51,8 +51,7 @@ addProcedure = function(salts, session_id, session_key, user_id, mr_id, patient_
     + "/add/procedure",
     data: {"version": versionNumber, "user_id": user_id,
     "shsid": Sha256.hash(session_id + "" + usedSalt),
-    "shsk": Sha256.hash(session_key + "" + usedSalt),
-    "mr_id": mr_id, "patient_id": patient_id},
+    "shsk": Sha256.hash(session_key + "" + usedSalt), "patient_id": patient_id},
     context: document.body
   }).done(function(data) {
     if (debug) console.log(data);

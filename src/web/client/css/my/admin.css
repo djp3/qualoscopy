@@ -11,6 +11,10 @@ body {
     cursor: pointer;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .my-option {
   font-size: large;
 }
