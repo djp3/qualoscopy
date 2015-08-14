@@ -7,6 +7,10 @@ li {
     cursor: pointer;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .my-table {
   margin-top: 10px;
 }

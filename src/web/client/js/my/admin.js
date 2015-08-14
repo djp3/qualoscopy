@@ -36,6 +36,35 @@ $(document).ready(function() {
      return $(elementString);
   }
 
+  var updateProcedureHelper = function(){
+    // Update procedure if checkbox checked
+
+      salts = JSON.parse(Cookies.getCookie("salts"));
+      var ac_id = $("#addPatient #ac").val();
+      var date_of_service = $("#addPatient #operationDate").val();
+      var service_time = $("#addPatient #operationTime").val();
+      var date_time_of_service = date_of_service + " " + service_time;
+      var faculty_id = $("#addPatient #faculty").val();
+      var patient_id = Cookies.getCookie("patient_id");
+      var procedure_id = Cookies.getCookie("procedure_id");
+
+      updateProcedure(salts, user_id, session_id, session_key, patient_id,
+        procedure_id, {"ac_id": ac_id,
+        "date_time_of_service": date_time_of_service,
+        "faculty_id": faculty_id}).done(
+          function(data) {
+            if (debug) console.log(data);
+            if(data.error == "false"){
+              Cookies.addToCookieArray("salts", data.salt, 1);
+              toggleForm("addPatientForm", false);
+              toggleProgressBar(false);
+              window.document.location = "admin.html";
+            } else {
+              // Error catch
+            }
+          });
+  }
+
   // Row maker for tables
   var rowMaker = function(number, medicalRecord, lastName, firstName,
     dateOfBirth, gender, nextProcedure){
@@ -159,34 +188,6 @@ $(document).ready(function() {
       }
     });
 
-    var updateProcedureHelper = function(){
-      // Update procedure if checkbox checked
-
-        salts = JSON.parse(Cookies.getCookie("salts"));
-        var ac_id = $("#addPatient #ac").val();
-        var date_of_service = $("#addPatient #operationDate").val();
-        var service_time = $("#addPatient #operationTime").val();
-        var date_time_of_service = date_of_service + " " + service_time;
-        var faculty_id = $("#addPatient #faculty").val();
-        var patient_id = Cookies.getCookie("patient_id");
-        var procedure_id = Cookies.getCookie("procedure_id");
-
-        updateProcedure(salts, user_id, session_id, session_key, patient_id,
-          procedure_id, {"ac_id": ac_id,
-          "date_time_of_service": date_time_of_service,
-          "faculty_id": faculty_id}).done(
-            function(data) {
-              if (debug) console.log(data);
-              if(data.error == "false"){
-                Cookies.addToCookieArray("salts", data.salt, 1);
-                toggleForm("addPatientForm", false);
-                toggleProgressBar(false);
-                window.document.location = "admin.html";
-              } else {
-                // Error catch
-              }
-            });
-    }
 
     $("#addPatientForm").submit(function(){
       event.preventDefault();

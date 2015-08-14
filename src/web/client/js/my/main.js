@@ -8,14 +8,14 @@ $(document).ready(function() {
        var tableHeading = "";
        var tableValues = "";
        for(var i = 0; i < numberOfColumns; i++){
-         var status;
          if(columnValues[i] == null){
-           status = "incomplete";
+           tableHeading += "<th class=incomplete>" + columnNames[i] + "</th>\n";
+           tableValues += "<td class=incomplete>NONE</td>\n";
          } else {
-           status = "complete";
+           tableHeading += "<th class=complete>" + columnNames[i] + "</th>\n";
+           tableValues += "<td class=complete>" + columnValues[i] + "</td>\n";
          }
-         tableHeading += "<th class=" + status + ">" + columnNames[i] + "</th>\n";
-         tableValues += "<td class=" + status + ">" + columnValues[i] + "</td>\n";
+
        }
 
        var $element = $(" \
@@ -39,10 +39,24 @@ $(document).ready(function() {
         return $element;
   };
 
+  // The function rowMakerPolyps
+  var rowMakerPolyps = function(data){
+
+       var $element = "<tr class='clickable-row pointer'>";
+       for(var i = 0; i < data.length; i++){
+         $element += "<td>" + data[i] + "</td>";
+       }
+      $element += "</tr>";
+
+       return $element;
+  };
+
   // Populating Polyps table
   var populatePolypsTable = function(){
     var salts = JSON.parse(Cookies.getCookie("salts"));
     var procedure_id = Cookies.getCookie("procedure_id");
+
+
     getProceduresPolyps(salts, user_id, session_id, session_key,
       procedure_id).done(function(data){
         if (debug) console.log(data);
@@ -51,9 +65,21 @@ $(document).ready(function() {
           Cookies.addToCookieArray("salts", data.salt, 1);
           // Add Polyps or Mass
 
-          $("#tables").append(tableMaker("Add Polyps or Mass", "btn_addPolypOrMass", 8, "#addPolypOrMass", "col-md-8", "table7",
-          ["Loc", "Phe", "Num", "Size", "Tx", "Residual", "Bottle", "Path"],
-          [polyps[0].polyp_id, "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE"]));
+          for (var i = 0; i < polyps.length; i++){
+            $("#tableBody").append(rowMakerPolyps(
+            [polyps[i].polyp_id, polyps[i].time_removed, "NONE", "NONE", "NONE", "NONE", "NONE", "NONE"]));
+          }
+          $(".clickable-row").click(function() {
+            $('#addPolypOrMass').modal("toggle");
+          });
+
+
+          $('#tablePolyps').dataTable( {
+            "paging": false,
+            "bFilter": false,
+            "info": false
+          });
+
 
           $("#btn_addPolypOrMass").click(function(){
             // $("#addPolypOrMass #location").val("Cecum");
@@ -459,8 +485,9 @@ $(document).ready(function() {
     for (var i = 0; i < $allTables.length; i++) {
       $("#tables").append($allTables[i]);
     }
-    createButtonFunctions(procedure);
     populatePolypsTable();
+    createButtonFunctions(procedure);
+
   }
 
   // Create HTML button list

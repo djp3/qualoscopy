@@ -985,6 +985,32 @@
       <div class="container-fluid">
         <!-- ID used to load the tables via Javascript -->
         <div id="tables"></div>
+
+        <div class='row'>
+          <div class='col-md-2'>
+            <button id='btn_addPolypOrMass' class='btn btn-primary pull-right' data-toggle='modal'
+            data-target='#addPolypOrMass'>Add Polyps or Mass</button>
+          </div>
+          <div class="col-md-8">
+            <table id="tablePolyps" class='table table-hover table-condensed table-striped'>
+              <thead>
+                <tr>
+                  <th>Loc</th>
+                  <th>Phe</th>
+                  <th>Num</th>
+                  <th>Size</th>
+                  <th>Tx</th>
+                  <th>Residual</th>
+                  <th>Bottle</th>
+                  <th>Path</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </div>
 
