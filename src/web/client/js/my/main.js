@@ -64,7 +64,7 @@ $(document).ready(function() {
           var polyps = data.polyps;
           Cookies.addToCookieArray("salts", data.salt, 1);
           // Add Polyps or Mass
-
+          $("#tableBody").empty();
           for (var i = 0; i < polyps.length; i++){
             $("#tableBody").append(rowMakerPolyps(
             [polyps[i].polyp_id, polyps[i].time_removed, "NONE", "NONE", "NONE", "NONE", "NONE", "NONE"]));
@@ -73,12 +73,15 @@ $(document).ready(function() {
             $('#addPolypOrMass').modal("toggle");
           });
 
-
-          $('#tablePolyps').dataTable( {
-            "paging": false,
-            "bFilter": false,
-            "info": false
-          });
+          if ( ! $.fn.DataTable.isDataTable( '#tablePolyps' ) ){
+            $('#tablePolyps').dataTable( {
+              "paging": false,
+              "bFilter": false,
+              "info": false
+            });
+          } else {
+            // if (debug) console.log("loaded")
+          }
 
 
           $("#btn_addPolypOrMass").click(function(){

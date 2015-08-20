@@ -128,30 +128,36 @@ $(document).ready(function() {
         Cookies.addToCookieArray("salts", data.salt, 1);
         var patientsArray = data.patients;
 
+        // populate Table
         for (var i = 0; i < patientsArray.length; i++) {
           var patient = patientsArray[i];
-          $("#paitent-rows").append(rowMaker(i, patient.mr_id,
-            patient.last, patient.first, patient.dob, patient.gender,
-            patient.next_procedure));
-          }
-          $(".clickable-row").click(function() {
-            var mr_id = $(this).find('.mr-id').text();
-            var last_name = $(this).find('.last-name').text();
-            var firt_name = $(this).find('.firt-name').text();
-            var dob = $(this).find('.dob').text();
-            var next_procedure = $(this).find('.next-procedure').text();
-            var patientNumber = $(this).find('.number').text();
-            var patient_id = patientsArray[patientNumber].patient_id;
+          // Uncomment to hide null
+          // if (patient.mr_id != null){
+            $("#paitent-rows").append(rowMaker(i, patient.mr_id,
+              patient.last, patient.first, patient.dob, patient.gender,
+              patient.next_procedure));
+            // }
+        }
 
-            Cookies.setCookie("mr_id", mr_id, 1);
-            Cookies.setCookie("last_name", last_name, 1);
-            Cookies.setCookie("firt_name", firt_name, 1);
-            Cookies.setCookie("dob", dob, 1);
-            Cookies.setCookie("next_procedure", next_procedure, 1);
-            Cookies.setCookie("patient_id", patient_id, 1);
-            window.document.location = $(this).data("href");
-          });
-          $('#paitents').dataTable();
+        // Add clicks to bring to patients
+        $(".clickable-row").click(function() {
+          var mr_id = $(this).find('.mr-id').text();
+          var last_name = $(this).find('.last-name').text();
+          var firt_name = $(this).find('.firt-name').text();
+          var dob = $(this).find('.dob').text();
+          var next_procedure = $(this).find('.next-procedure').text();
+          var patientNumber = $(this).find('.number').text();
+          var patient_id = patientsArray[patientNumber].patient_id;
+
+          Cookies.setCookie("mr_id", mr_id, 1);
+          Cookies.setCookie("last_name", last_name, 1);
+          Cookies.setCookie("firt_name", firt_name, 1);
+          Cookies.setCookie("dob", dob, 1);
+          Cookies.setCookie("next_procedure", next_procedure, 1);
+          Cookies.setCookie("patient_id", patient_id, 1);
+          window.document.location = $(this).data("href");
+        });
+        $('#paitents').dataTable();
       } else {
         // TODO: Do something
       }

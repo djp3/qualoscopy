@@ -27,4 +27,6 @@ $(document).ready(function() {
       sessionCheck(salts, session_id, session_key, user_id);
     }
 
+    //u: demo p: 2015_08_20_01
+
 });
