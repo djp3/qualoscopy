@@ -27,6 +27,11 @@ $(document).ready(function() {
       sessionCheck(salts, session_id, session_key, user_id);
     }
 
-    //u: demo p: 2015_08_20_01
+    //u: demo p: 2015_08_20_01 Can replace with anything
+    $('#demo').click(function() {
+      $('#userID').val("Luke");
+      $('#pword').val("Raus");
+      login();
+    });
 
 });
