@@ -154,7 +154,6 @@ $(document).ready(function() {
       var primary_label = $("#indications #primaryLabel").val();
       if (primary != null || primary_label != ""){
         var primary_category;
-        var primary_id;
         if (primary_label == ""){
           primary_category = primary.split("-")[0];
         } else {
@@ -241,10 +240,6 @@ $(document).ready(function() {
       loadPreoperativeIndicationsButtonList("5",
         "#otherIndication #indication_selector", "", "checkbox");
 
-      for (var i = 1; i <= 5; i++){
-        var count = $("#otherIndication #indication_selector #"+ i +" :checked").length;
-        $("#otherIndication #pill_selector #"+ i +" .badge").text(count);
-      }
 
       for (var i = 1; i <=5; i++ ){
         $("#otherIndication #indication_selector #"+ i).addClass("hide");
@@ -259,6 +254,10 @@ $(document).ready(function() {
         for(var i = 0; i < other_array.length; i++){
           $("#otherIndication #" + other_array[i]).addClass("active");
           $("#otherIndication #" + other_array[i] + " input").prop('checked', "checked");
+        }
+        for (var i = 1; i <= 5; i++){
+          var count = $("#otherIndication #indication_selector #"+ i +" :checked").length;
+          $("#otherIndication #pill_selector #"+ i +" .badge").text(count);
         }
 
         var init_pill_id = $('#otherIndication .nav.nav-pills li.active').attr('id');

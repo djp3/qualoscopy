@@ -83,8 +83,13 @@ $(document).ready(function() {
       return $element;
     };
 
+    var default_dob = new Date();
+    default_dob.setFullYear(default_dob.getFullYear() - 50);
+
+
     $('#dob').datetimepicker({
-      format: 'MM/DD/YYYY'}
+      format: 'MM/DD/YYYY',
+      defaultDate: default_dob}
     );
     $('#operationDate').datetimepicker({
       format: 'MM/DD/YYYY'}
@@ -93,32 +98,6 @@ $(document).ready(function() {
       format: 'HH:mm'}
     );
 
-    $("#viewTodaysPatients").click(function(){
-      var search = document.getElementById('search');
-      var today = new Date();
-      var dd = today.getDate();
-      var mm = today.getMonth()+1; //January is 0!
-
-      var yyyy = today.getFullYear();
-      if(dd<10){
-          dd='0'+dd
-      }
-      if(mm<10){
-          mm='0'+mm
-      }
-      var today = mm+'/'+dd+'/'+yyyy;
-      search.value = today;
-      search.focus();
-      // TODO: make it so a keypress happens
-    });
-
-
-    $("#viewAllPatients").click(function(){
-      var search = document.getElementById('search');
-      search.value = "";
-      search.focus();
-      // TODO: make it so a keypress happens
-    });
 
     var salts = JSON.parse(Cookies.getCookie("salts"));
     // Ajax call
@@ -161,6 +140,32 @@ $(document).ready(function() {
       } else {
         // TODO: Do something
       }
+    });
+
+    $("#viewTodaysPatients").click(function(){
+      var search = document.getElementById('search');
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth()+1; //January is 0!
+
+      var yyyy = today.getFullYear();
+      if(dd<10){
+          dd='0'+dd
+      }
+      if(mm<10){
+          mm='0'+mm
+      }
+      var today = mm+'/'+dd+'/'+yyyy;
+      search.value = today;
+      search.focus();
+      $('#paitents').DataTable().search(today).draw();
+    });
+
+    $("#viewAllPatients").click(function(){
+      var search = document.getElementById('search');
+      search.value = "";
+      search.focus();
+      $('#paitents').DataTable().search("").draw();
     });
 
     var doctors = ["Karnes","Raus","Don"];

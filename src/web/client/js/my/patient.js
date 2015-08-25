@@ -15,13 +15,18 @@ $(document).ready(function() {
   };
 
   var procedureRowMaker = function(ac, dos, completed, factulty, procedure_id){
-
+    var complete_check;
+    if(completed == true){
+      complete_check = "Yes";
+    } else {
+      complete_check = "No";
+    }
     var $element = $(" \
     <tr class='clickable-row' data-href='main.html'> \
     <td style='display:none' class='procedure_id'>" + procedure_id + "</td> \
     <td class='ac_id'>" + ac + "</td> \
     <td>"+ dos + "</td> \
-    <td>"+ completed + "</td> \
+    <td>"+ complete_check + "</td> \
     <td>"+ factulty +"</td> \
     </tr>");
 

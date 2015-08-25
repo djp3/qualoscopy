@@ -48,9 +48,9 @@
           </button>
           <a class="navbar-brand" href="index.html">Home</a>
           <a class="navbar-brand" href="javascript:history.back()">Back</a>
-          <a class="navbar-brand">Complications</a>
+          <!-- <a class="navbar-brand">Complications</a>
           <a class="navbar-brand">Fellow Eval</a>
-          <a class="navbar-brand">Delete</a>
+          <a class="navbar-brand">Delete</a> -->
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <div class="navbar-form navbar-right">
@@ -944,15 +944,13 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <img src="assets/addImage.png" class="img-responsive" alt="Add Image">
+                  <span class="btn btn-file">
+                      <img src="assets/addImage.png" class="img-responsive" alt="Add Image">
+                      <input id="pic" type="file" name="pic" accept="image/*">
+                  </span>
                   <div class="row">
-                    <div class="col-md-6">
-                      <span class="btn btn-primary btn-file">
-                          Add Image <input id="pic" type="file" name="pic" accept="image/*">
-                      </span>
-                    </div>
-                    <div class="col-md-6">
-                      <button class='btn btn-primary'>Remove Image</button>
+                    <div class="col-md-12">
+                      <button class='btn btn-primary center-block'>Remove Image</button>
                     </div>
                   </div>
                 </div>
