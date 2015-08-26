@@ -1136,6 +1136,37 @@ $(document).ready(function() {
 
   });
 
+  $("#addPolypOrMass #pic").change(function(e) {
+      var preview = document.getElementById('preview') //selects the query named img
+      var file    = document.getElementById('pic').files[0]; //sames as here
+      var reader  = new FileReader();
+
+      reader.onloadend = function () {
+          preview.src = reader.result;
+      }
+
+      if (file) {
+          reader.readAsDataURL(file); //reads the data as a URL
+      } else {
+          preview.src = "assets/addImage.png";
+      }
+      $("#addPolypOrMass #preview").attr("height", "271px");
+ });
+
+ $("#addPolypOrMass #remove").click(function() {
+     var preview = document.getElementById('preview') //selects the query named img
+     var reader  = new FileReader();
+
+     reader.onloadend = function () {
+         preview.src = reader.result;
+     }
+
+    preview.src = "assets/addImage.png";
+
+     $("#addPolypOrMass #preview").attr("height", "271px");
+  });
+
+
   // Sets up date and timepicker Widgets
   $(function () {
     $(".today").click(function(){
