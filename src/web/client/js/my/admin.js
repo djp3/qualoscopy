@@ -200,8 +200,8 @@ $(document).ready(function() {
     });
 
 
-    $("#addPatientForm").submit(function(){
-      event.preventDefault();
+    $("#addPatientForm").submit(function(evt){
+      evt.preventDefault();
       var salts = JSON.parse(Cookies.getCookie("salts"));
       var patient_id = Cookies.getCookie("patient_id");
       if(patient_id != null){
@@ -212,6 +212,7 @@ $(document).ready(function() {
         var lastName = $("#last-name").val();
         var gender = $("#gender").val();
         var dob = $("#dob").val();
+        if (debug) console.log(dob);
         if (debug) console.log(mrid + "" + firstName + lastName + gender + dob);
 
         // Update Patient First

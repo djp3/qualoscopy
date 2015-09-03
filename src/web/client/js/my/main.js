@@ -5,8 +5,8 @@ $(document).ready(function() {
   onLoad();
 
   // Set up save buttons for each form
-  $("#identifiersForm").submit(function(){
-    event.preventDefault();
+  $("#identifiersForm").submit(function(evt){
+    evt.preventDefault();
 
     var ac_id = $("#ac_id").val();
     var date_of_service = $("#date_of_service").val();
@@ -21,8 +21,8 @@ $(document).ready(function() {
     "faculty_id": faculty_id, "fellow": fellow_id}, "identifiersForm", "#identifiers");
   });
 
-  $("#preparationForm").submit(function(){
-    event.preventDefault();
+  $("#preparationForm").submit(function(evt){
+    evt.preventDefault();
 
     var pre_drug = $("input[name=pre_drug]:checked").val();
     if (pre_drug == "Other"){
@@ -38,8 +38,8 @@ $(document).ready(function() {
     "bisacodyl": bisacodyl}, "preparationForm", "#preparation");
   });
 
-  $("#primaryIndicationForm").submit(function(){
-    event.preventDefault();
+  $("#primaryIndicationForm").submit(function(evt){
+    evt.preventDefault();
 
     var primary = $("#primaryIndication input[name=primary]:checked").val()
     $("#indications #primaryLabel").val(primary);
@@ -47,8 +47,8 @@ $(document).ready(function() {
     $("#primaryIndication").modal('toggle');
   });
 
-  $("#otherIndicationForm").submit(function(){
-    event.preventDefault();
+  $("#otherIndicationForm").submit(function(evt){
+    evt.preventDefault();
 
     var checkedIndications = [];
     var checkedString = ""
@@ -68,8 +68,8 @@ $(document).ready(function() {
     $("#otherIndication").modal('toggle');
   });
 
-  $("#indicationForm").submit(function(){
-    event.preventDefault();
+  $("#indicationForm").submit(function(evt){
+    evt.preventDefault();
 
     var last_colon = $("#indications input[name=last_colon]:checked").val();
     var filter = $('input[name=filter]:checked').val();
@@ -83,8 +83,8 @@ $(document).ready(function() {
     "other_indication": other_indication}, "indicationForm", "#indications");
   });
 
-  $("#scopeForm").submit(function(){
-    event.preventDefault();
+  $("#scopeForm").submit(function(evt){
+    evt.preventDefault();
 
     var scope = $("#scope input[name=scope]:checked").val();
     if (scope == "Other"){
@@ -99,8 +99,8 @@ $(document).ready(function() {
     "cap_assisted": cap_assisted, "underwater": underwater}, "scopeForm", "#scope");
   });
 
-  $("#sedationForm").submit(function(){
-    event.preventDefault();
+  $("#sedationForm").submit(function(evt){
+    evt.preventDefault();
     var sedation_level = $('#sedation input[name=sedation_level]:checked').val();
     var versed = null;
     var fentanyl = null;
@@ -117,8 +117,8 @@ $(document).ready(function() {
    "fentanyl": fentanyl, "demerol": demerol, "benadryl": benadryl}, "sedationForm", "#sedation");
   });
 
-  $("#extentForm").submit(function(){
-    event.preventDefault();
+  $("#extentForm").submit(function(evt){
+    evt.preventDefault();
     var extent = $('#extent input[name=extentReached]:checked').val();
 
     if (extent == "ti" || extent == "cecum" || extent == "ileocolonic_anastomosis"){
@@ -131,8 +131,8 @@ $(document).ready(function() {
 
   });
 
-  $("#qualityForm").submit(function(){
-    event.preventDefault();
+  $("#qualityForm").submit(function(evt){
+    evt.preventDefault();
     var prep_quality_left = $('#quality input[name=prepLeft]:checked').val();
     var prep_quality_mid = $('#quality input[name=prepMid]:checked').val();
     var prep_quality_right = $('#quality input[name=prepRight]:checked').val();
@@ -143,8 +143,8 @@ $(document).ready(function() {
 
   });
 
-  $("#timesForm").submit(function(){
-    event.preventDefault();
+  $("#timesForm").submit(function(evt){
+    evt.preventDefault();
     var time_insertion = $('#times #time_insertion').val();
     var time_begin_withdrawal = $('#times #time_begin_withdrawal').val();
     var time_scope_withdrawn = $('#times #time_scope_withdrawn').val();
@@ -156,8 +156,8 @@ $(document).ready(function() {
 
   });
 
-  $("#addPolypOrMassForm").submit(function(){
-    event.preventDefault();
+  $("#addPolypOrMassForm").submit(function(evt){
+    evt.preventDefault();
 
     var location = $("#addPolypOrMass #location").val();
     var phenotype = $("#addPolypOrMass #phenotype").val();
@@ -185,6 +185,7 @@ $(document).ready(function() {
 
       reader.onloadend = function () {
           preview.src = reader.result; // Bytes
+          if (debug) console.log(preview.src);
       }
 
       if (file) {

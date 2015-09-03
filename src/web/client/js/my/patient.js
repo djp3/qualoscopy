@@ -98,8 +98,8 @@ $(document).ready(function() {
       addProcedure(salts, session_id, session_key, user_id, patient_id);
     });
 
-    $("#addProcedureForm").submit(function(){
-      event.preventDefault();
+    $("#addProcedureForm").submit(function(evt){
+      evt.preventDefault();
       var salts = JSON.parse(Cookies.getCookie("salts"));
       var ac_id = $("#ac").val();
       var date_of_service = $("#operationDate").val();
@@ -109,7 +109,7 @@ $(document).ready(function() {
       var procedure_id = Cookies.getCookie("procedure_id");
 
       if (procedure_id != null){
-        if (debug) console.log(ac_id + "" + date_time_of_service
+        if (debug) console.log(ac_id + ":" + date_time_of_service
         + faculty_id + procedure_id);
         updateProcedure(salts, user_id, session_id, session_key, patient_id,
           procedure_id, {"ac_id": ac_id,
